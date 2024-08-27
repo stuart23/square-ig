@@ -104,22 +104,13 @@ Resources:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmDescription: Errors in Lambda Function on AddInstagramUser
-      AlarmName: !Join
-      - '-'
-      - - 'LambdaInvocationsAlarm'
-        - !Ref NameSuffixParameter
+      AlarmName: LambdaInvocationsAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: FunctionName
-        Value: !Join
-        - '-'
-        - - 'IngestFunction'
-          - !Ref NameSuffixParameter
+        Value: IngestFunction
       - Name: Resource
-        Value: !Join
-        - '-'
-        - - 'IngestFunction'
-          - !Ref NameSuffixParameter
+        Value: IngestFunction
       EvaluationPeriods: 1
       Namespace: AWS/Lambda
       MetricName: Errors
