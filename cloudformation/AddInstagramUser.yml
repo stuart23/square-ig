@@ -4,6 +4,11 @@
 
 AWSTemplateFormatVersion: "2010-09-09"
 
+Parameters:
+  LambdaFunctionsBucketName:
+    Type: String
+    Description: Bucket that the Lambda functions are deployed to
+
 Resources:
   LambdaRole:
     Type: AWS::IAM::Role
@@ -24,7 +29,6 @@ Resources:
     Type: AWS::Lambda::Function
     DependsOn:
     - LambdaRole
-    - APIFunctions
     Properties:
       FunctionName: AddInstagramUser
       Runtime: python3.11
@@ -35,8 +39,8 @@ Resources:
       TracingConfig:
         Mode: Active
       Code:
-        S3Bucket: !Ref APIFunctions
-        S3Key: Tests3.zip
+        S3Bucket: !Ref LambdaFunctionsBucketName
+        S3Key: add_update_user.py
 
   ###############################
   #  API Gateway Authorization  #
