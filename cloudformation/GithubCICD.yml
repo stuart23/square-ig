@@ -1,0 +1,63 @@
+# This stack is used to create the OIDC provider and role that can be used to deploy CloudFormation Stacks.
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Parameters:
+  GitHubOrganizationParameter:
+    Type: String
+    Default: stuart23
+    Description: The GitHub organization that contains the repo that will run actions as this role.
+  GitHubRepoParameter:
+    Type: String
+    Default: square-ig
+    Description: The GitHub repo that will run actions as this role.
+
+Resources:
+  GitHubOIDC:
+    Type: AWS::IAM::OIDCProvider
+    Properties:
+      ClientIdList:
+      - sts.amazonaws.com
+      ThumbprintList:
+      - 6938fd4d98bab03faadb97b34396831e3780aea1
+      - 1c58a3a8518e8759bf075b76b750d4f2df264fcd
+      Url: "https://token.actions.githubusercontent.com"
+
+  CICDRole:
+    Type: AWS::IAM::Role
+    DependsOn:
+    - GitHubOIDC
+    Properties:
+      RoleName: CICDRole
+      Description: Role used by GitHub Actions to deploy airline CloudFormation stack(s)
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Federated:
+            - !Ref GitHubOIDC
+          Action:
+          - 'sts:AssumeRoleWithWebIdentity'
+          Condition:
+            StringLike:
+              token.actions.githubusercontent.com:sub:
+                Fn::Sub:
+                - repo:${Org}/${Repo}:*
+                - Org: !Ref GitHubOrganizationParameter
+                  Repo: !Ref GitHubRepoParameter
+            StringEquals:
+              token.actions.githubusercontent.com:aud: sts.amazonaws.com
+      Policies:
+      - PolicyName: root
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action: '*'
+            Resource: '*'
+
+Outputs:
+  RoleARN:
+    Description: The ARN that you can assume from GitHub Actions.
+    Value: !GetAtt CICDRole.Arn
