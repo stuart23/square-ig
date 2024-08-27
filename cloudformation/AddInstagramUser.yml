@@ -1,0 +1,151 @@
+# This stack sets up an API gateway with a lambda function. The endpoint can then be called by the
+# customer.created and customer.updated Square webhook to add the user to instagram.
+
+
+AWSTemplateFormatVersion: "2010-09-09"
+
+Resources:
+  LambdaRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - 'sts:AssumeRole'
+
+  AddInstagramUserFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
+    Properties:
+      FunctionName: AddInstagramUser
+      Runtime: python3.11
+      Role: !GetAtt LambdaRole.Arn
+      Description: Adds new user to instagram
+      Handler: index.handler
+      Timeout: 30
+      TracingConfig:
+        Mode: Active
+      Code:
+        ZipFile: |
+          from json import dumps, loads
+          from os import environ
+
+          def handler(event, context):
+              body = loads(event['body'])
+              print(body)
+
+
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Description: Endpoint for Square webhooks.
+      Name: SquareIngress
+      ProtocolType: HTTP
+
+  AddInstagramUserPermission:
+    Type: AWS::Lambda::Permission
+    DependsOn:
+    - HttpApi
+    - AddInstagramUserFunction
+    Properties:
+      FunctionName: !Ref AddInstagramUserFunction
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+
+  AddInstagramUserIntegration:
+    Type: 'AWS::ApiGatewayV2::Integration'
+    DependsOn:
+    - HttpApi
+    - AddInstagramUserFunction
+    Properties:
+      ApiId: !Ref HttpApi
+      Description: Lambda Add User
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !GetAtt AddInstagramUserFunction.Arn
+      IntegrationMethod: POST
+      PayloadFormatVersion: '2.0'
+
+  AddInstagramUserFunctionRoute:
+    Type: AWS::ApiGatewayV2::Route
+    DependsOn:
+    - HttpApi
+    Properties:
+      ApiId: !Ref HttpApi
+      RouteKey: $default
+      Target: !Join ['/', ['integrations', !Ref AddInstagramUserIntegration]]
+
+  AddInstagramUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: AddInstagramUser
+      RetentionInDays: 7
+
+  IngestStage:
+    Type: AWS::ApiGatewayV2::Stage
+    DependsOn:
+    - AddInstagramUserLogGroup
+    - HttpApi
+    Properties:
+      StageName: AddInstagramUser
+      Description: Stage for AddInstagramUser Webhook with logging.
+      AutoDeploy: true
+      ApiId: !Ref HttpApi
+      AccessLogSettings:
+        DestinationArn: !GetAtt IngestLogGroup.Arn
+        Format: $context.identity.sourceIp - - [$context.requestTime] "$context.httpMethod $context.routeKey $context.protocol" $context.status $context.responseLength $context.requestId $context.integrationErrorMessage
+
+  LambdaInvocationsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Errors in Lambda Function on AddInstagramUser
+      AlarmName: !Join
+      - '-'
+      - - 'LambdaInvocationsAlarm'
+        - !Ref NameSuffixParameter
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: FunctionName
+        Value: !Join
+        - '-'
+        - - 'IngestFunction'
+          - !Ref NameSuffixParameter
+      - Name: Resource
+        Value: !Join
+        - '-'
+        - - 'IngestFunction'
+          - !Ref NameSuffixParameter
+      EvaluationPeriods: 1
+      Namespace: AWS/Lambda
+      MetricName: Errors
+      Period: 300
+      Statistic: Maximum
+      Threshold: 0
+
+  APIIngestAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmDescription: Errors from API on AddInstagramUser
+      AlarmName: APIIngestAlarm
+      ComparisonOperator: GreaterThanThreshold
+      Dimensions:
+      - Name: Stage
+        Value: !Ref IngestStage
+      - Name: ApiId
+        Value: !Ref HttpApi
+      EvaluationPeriods: 1
+      Namespace: AWS/ApiGateway
+      MetricName: 5xx
+      Period: 300
+      Statistic: Maximum
+      Threshold: 0
+
+Outputs:
+  WebhookAddress:
+    Description: The address to configure Square webook
+    Value: !Join ['/', [!GetAtt HttpApi.ApiEndpoint, !Ref IngestStage]]
