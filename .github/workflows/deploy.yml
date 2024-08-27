@@ -22,7 +22,7 @@ jobs:
     - name: Get Instagram User Access Token
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
-        secret-ids: instagram_token
+        secret-ids: instagram_tokenzzzzz
 
   deploy-instagram-user:
     runs-on: ubuntu-latest
