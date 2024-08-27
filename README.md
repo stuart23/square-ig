@@ -29,3 +29,10 @@ Now that there is a Role in AWS that can deploy the rest of the tooling, we need
 - Enter 'cloudformation_role_arn' for the secret name. This cannot change as it is referenced in the Github Action with this name.
 - In the secret value, enter the output RoleARN from the CloudFormation stack output in step 1.
 - Create a second secret following the same process. In this secret, the name shouls be 'aws_region', and the value is the StackRegion from the CloudFormation stack output.
+
+### Step 3 - Create Instagram User Access Token Secret
+
+After following the Instagram documentation on how to 
+
+
+Square API version 2024-08-21
