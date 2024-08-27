@@ -14,7 +14,8 @@ Resources:
         BlockPublicAcls: true
         IgnorePublicAcls: true
         RestrictPublicBuckets: true
-      VersioningConfiguration: Enabled
+      VersioningConfiguration:
+        Status: Enabled
 
 Outputs:
   BucketName:
