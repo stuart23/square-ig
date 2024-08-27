@@ -6,7 +6,7 @@ Parameters:
   GitHubOrganizationParameter:
     Type: String
     Default: stuart23
-    Description: The GitHub organization that contains the repo that will run actions as this role.
+    Description: The GitHub user or organization that contains the repo that will run actions as this role.
   GitHubRepoParameter:
     Type: String
     Default: square-ig
@@ -61,3 +61,5 @@ Outputs:
   RoleARN:
     Description: The ARN that you can assume from GitHub Actions.
     Value: !GetAtt CICDRole.Arn
+  StackRegion:
+    Value: !Ref "AWS::Region"
