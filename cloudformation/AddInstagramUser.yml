@@ -40,7 +40,7 @@ Resources:
         Mode: Active
       Code:
         S3Bucket: !Ref LambdaFunctionsBucketName
-        S3Key: add_update_user.py
+        S3Key: add_update_user.py.zip
 
   ###############################
   #  API Gateway Authorization  #
