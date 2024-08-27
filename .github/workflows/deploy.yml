@@ -10,7 +10,7 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
-  check-secret:
+  deploy:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -38,10 +38,11 @@ jobs:
     - name: Deploy code to S3
       run: aws s3 sync ./scripts/ s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
 
-    # - name: Deploy template to AWS CloudFormation
-    #   uses: aws-actions/aws-cloudformation-github-deploy@v1
-    #   with:
-    #     name: AddInstagramUser
-    #     template: cloudformation/AddInstagramUser.yml
-    #     no-fail-on-empty-changeset: "1"
-    #     capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
+    - name: Deploy template to AWS CloudFormation
+      uses: aws-actions/aws-cloudformation-github-deploy@v1
+      with:
+        name: AddInstagramUser
+        template: cloudformation/AddInstagramUser.yml
+        no-fail-on-empty-changeset: "1"
+        capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
+        parameter-overrides: LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }}

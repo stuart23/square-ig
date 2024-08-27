@@ -6,7 +6,7 @@ AWSTemplateFormatVersion: "2010-09-09"
 
 Resources:
   LambdaRole:
-    Type: 'AWS::IAM::Role'
+    Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
@@ -17,11 +17,14 @@ Resources:
             - lambda.amazonaws.com
           Action:
           - 'sts:AssumeRole'
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/AWSLambdaExecute
 
   AddInstagramUserFunction:
     Type: AWS::Lambda::Function
     DependsOn:
     - LambdaRole
+    - APIFunctions
     Properties:
       FunctionName: AddInstagramUser
       Runtime: python3.11
@@ -32,21 +35,44 @@ Resources:
       TracingConfig:
         Mode: Active
       Code:
-        ZipFile: |
-          from json import dumps, loads
-          from os import environ
+        S3Bucket: !Ref APIFunctions
+        S3Key: Tests3.zip
 
-          def handler(event, context):
-              body = loads(event['body'])
-              print(body)
-
-
-  HttpApi:
-    Type: AWS::ApiGatewayV2::Api
+  ###############################
+  #  API Gateway Authorization  #
+  ###############################
+  AuthorizeIPAddressFunction:
+    Type: AWS::Lambda::Function
+    DependsOn:
+    - LambdaRole
     Properties:
-      Description: Endpoint for Square webhooks.
-      Name: SquareIngress
-      ProtocolType: HTTP
+      FunctionName: AuthorizeIPAddress
+      Runtime: python3.11
+      Role: !GetAtt LambdaRole.Arn
+      Description: Check that the request is coming from square IP addresses.
+      Handler: index.handler
+      Timeout: 5
+      Code:
+        ZipFile: |
+          def handler(event, context):
+              permitted_ips = ('54.245.1.154', '34.202.99.168', '54.212.177.79', '107.20.218.8')
+              if event['requestContext']['http']['sourceIp'] in permitted_ips:
+                  print('permitted')
+              else:
+                  raise Exception('Unauthorized')
+
+  Authorizer:
+    Type: AWS::ApiGatewayV2::Authorizer
+    Properties:
+      Name: SquareIPFilter
+      ApiId: !Ref HttpApi
+      AuthorizerType: REQUEST
+      AuthorizerPayloadFormatVersion: '2.0'
+      AuthorizerCredentialsArn: !GetAtt LambdaRole.Arn
+      EnableSimpleResponses: true
+      AuthorizerUri: !Sub
+      - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${lambdaArn}/invocations
+      - lambdaArn: !GetAtt AuthorizeIPAddressFunction.Arn
 
   AddInstagramUserPermission:
     Type: AWS::Lambda::Permission
@@ -57,6 +83,16 @@ Resources:
       FunctionName: !Ref AddInstagramUserFunction
       Action: lambda:InvokeFunction
       Principal: apigateway.amazonaws.com
+
+  #################
+  #  API Gateway  #
+  #################
+  HttpApi:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Description: Endpoint for Square webhooks.
+      Name: SquareIngress
+      ProtocolType: HTTP
 
   AddInstagramUserIntegration:
     Type: 'AWS::ApiGatewayV2::Integration'
@@ -80,13 +116,7 @@ Resources:
       RouteKey: $default
       Target: !Join ['/', ['integrations', !Ref AddInstagramUserIntegration]]
 
-  AddInstagramUserLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: AddInstagramUser
-      RetentionInDays: 7
-
-  IngestStage:
+  AddInstagramUserStage:
     Type: AWS::ApiGatewayV2::Stage
     DependsOn:
     - AddInstagramUserLogGroup
@@ -97,8 +127,14 @@ Resources:
       AutoDeploy: true
       ApiId: !Ref HttpApi
       AccessLogSettings:
-        DestinationArn: !GetAtt IngestLogGroup.Arn
+        DestinationArn: !GetAtt AddInstagramUserLogGroup.Arn
         Format: $context.identity.sourceIp - - [$context.requestTime] "$context.httpMethod $context.routeKey $context.protocol" $context.status $context.responseLength $context.requestId $context.integrationErrorMessage
+
+  AddInstagramUserLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: AddInstagramUser
+      RetentionInDays: 7
 
   LambdaInvocationsAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -108,9 +144,9 @@ Resources:
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: FunctionName
-        Value: IngestFunction
+        Value: AddInstagramUserFunction
       - Name: Resource
-        Value: IngestFunction
+        Value: AddInstagramUserFunction
       EvaluationPeriods: 1
       Namespace: AWS/Lambda
       MetricName: Errors
@@ -118,15 +154,15 @@ Resources:
       Statistic: Maximum
       Threshold: 0
 
-  APIIngestAlarm:
+  APIAddInstagramUserAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
       AlarmDescription: Errors from API on AddInstagramUser
-      AlarmName: APIIngestAlarm
+      AlarmName: APIAddInstagramUserAlarm
       ComparisonOperator: GreaterThanThreshold
       Dimensions:
       - Name: Stage
-        Value: !Ref IngestStage
+        Value: !Ref AddInstagramUserStage
       - Name: ApiId
         Value: !Ref HttpApi
       EvaluationPeriods: 1
@@ -139,4 +175,4 @@ Resources:
 Outputs:
   WebhookAddress:
     Description: The address to configure Square webook
-    Value: !Join ['/', [!GetAtt HttpApi.ApiEndpoint, !Ref IngestStage]]
+    Value: !Join ['/', [!GetAtt HttpApi.ApiEndpoint, !Ref AddInstagramUserStage]]
