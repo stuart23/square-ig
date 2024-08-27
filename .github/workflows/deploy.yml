@@ -10,8 +10,23 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
+
+  check-secret:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ secrets.cloudformation_role_arn }}
+        aws-region: ${{ secrets.aws_region }}
+    - name: Get Instagram User Access Token
+      uses: aws-actions/aws-secretsmanager-get-secrets@v2
+      with:
+        secret-ids: instagram_token
+
   deploy-instagram-user:
     runs-on: ubuntu-latest
+    needs: check-secret
     steps:
     - name: Checkout Repo
       uses: actions/checkout@v3
