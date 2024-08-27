@@ -34,7 +34,7 @@ Resources:
       Runtime: python3.11
       Role: !GetAtt LambdaRole.Arn
       Description: Adds new user to instagram
-      Handler: index.handler
+      Handler: add_update_user.handler
       Timeout: 30
       TracingConfig:
         Mode: Active
