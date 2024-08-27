@@ -33,10 +33,10 @@ jobs:
         template: cloudformation/S3Bucket.yml
         no-fail-on-empty-changeset: "1"
         capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
-    - name: S3 Bucket ARN
-      run: echo ${{ steps.deploy-s3.outputs['BucketARN'] }}
-    # - name: Deploy code to S3
-    #   run: aws s3 sync ./scripts/ s3://${{ vars.S3_TEMPLATES_BUCKET_NAME }} --delete
+    - name: S3 Bucket Name
+      run: echo ${{ steps.deploy-s3.outputs['BucketName'] }}
+    - name: Deploy code to S3
+      run: aws s3 sync ./scripts/ s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
 
     # - name: Deploy template to AWS CloudFormation
     #   uses: aws-actions/aws-cloudformation-github-deploy@v1

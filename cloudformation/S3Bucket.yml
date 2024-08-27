@@ -16,6 +16,6 @@ Resources:
         RestrictPublicBuckets: true
 
 Outputs:
-  BucketARN:
-    Description: The ARN of the created bucket
-    Value: !GetAtt APIFunctionsBucket.Arn
+  BucketName:
+    Description: The name of the created bucket
+    Value: !Ref APIFunctionsBucket
