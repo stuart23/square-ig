@@ -44,10 +44,12 @@ jobs:
     # Cloudformation will not replace scripts unless the filenames change, so we hash them instead.
     - name: Zip python directory
       shell: bash
-      run: zip -r pkg.zip python
+      run: |
+        mkdir deploy
+        zip -r deploy/pkg.zip python
 
     - name: Deploy code to S3
-      run: aws s3 sync ./pkg.zip s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
+      run: aws s3 sync ./deploy s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
 
     - name: Get package version
       id: package-version
