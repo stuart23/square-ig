@@ -30,7 +30,14 @@ Now that there is a Role in AWS that can deploy the rest of the tooling, we need
 - In the secret value, enter the output RoleARN from the CloudFormation stack output in step 1.
 - Create a second secret following the same process. In this secret, the name shouls be 'aws_region', and the value is the StackRegion from the CloudFormation stack output.
 
-### Step 3 - Create Instagram User Access Token Secret
+### Step 3 - Create and upload Square Credentials
+
+An application needs to be created in Square and the credentials for the API need to be added to AWS Secrets Manager.
+
+- Go to https://developer.squareup.com/apps/ and add a new application.
+- Open AWS Secrets Manager
+- Copy the Square Application ID to a new Plaintext AWS Secret called `square_application_id`
+- Copy the Square Access token to a new Plaintext AWS Secret called `square_access_token`
 
 After following the Instagram documentation on how to 
 

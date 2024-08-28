@@ -27,7 +27,7 @@ jobs:
     - name: Check Secrets Exist in AWS
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
-        secret-ids: instagram_token
+        secret-ids: instagram_token, square_application_id, square_application_token
 
     - name: Deploy S3 Bucket for lambda functions
       id: deploy-s3
@@ -41,12 +41,12 @@ jobs:
     - name: S3 Bucket Name
       run: echo ${{ steps.deploy-s3.outputs['BucketName'] }}
 
-    # Cloudformation will not replace scripts unless the filenames change, so we hash them instead.
-    - name: Zip python directory
+    - name: Package lambda functions with dependencies
       shell: bash
       run: |
         mkdir deploy
         cd python
+        pip install squareup --target .
         zip -r ../deploy/pkg.zip *
 
     - name: Deploy code to S3
