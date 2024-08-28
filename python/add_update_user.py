@@ -55,8 +55,8 @@ def getSquareCredentials():
     Gets the credentials `square_application_id` and `square_application_token` from AWS secrets manager.
     '''
     secretsmanager_client = Boto3Client('secretsmanager')
-    square_application_id = secretsmanager_client.get_secret_value(SecretId='square_application_id')
-    square_access_token = secretsmanager_client.get_secret_value(SecretId=SQUARE_ACCESS_TOKEN_KEY)
+    square_application_id = secretsmanager_client.get_secret_value(SecretId='square_application_id')['SecretString']
+    square_access_token = secretsmanager_client.get_secret_value(SecretId=SQUARE_ACCESS_TOKEN_KEY)['SecretString']
     return {
         'square_application_id': square_application_id, # is this needed?
         SQUARE_ACCESS_TOKEN_KEY: square_access_token
