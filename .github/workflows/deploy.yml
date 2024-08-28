@@ -44,7 +44,6 @@ jobs:
     # Cloudformation will not replace scripts unless the filenames change, so we hash them instead.
     - name: Zip python directory
       shell: bash
-      working-directory: scripts
       run: zip -r pkg.zip python
 
     - name: Deploy code to S3
