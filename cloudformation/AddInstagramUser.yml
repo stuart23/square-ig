@@ -8,6 +8,9 @@ Parameters:
   LambdaFunctionsBucketName:
     Type: String
     Description: Bucket that the Lambda functions are deployed to
+  PackageVersion:
+    Type: String
+    Description: Version of Python package to deploy
 
 Resources:
   LambdaRole:
@@ -40,7 +43,8 @@ Resources:
         Mode: Active
       Code:
         S3Bucket: !Ref LambdaFunctionsBucketName
-        S3Key: add_update_user.py.zip
+        S3Key: pkg.zip
+        S3ObjectVersion: !Ref PackageVersion
 
   ###############################
   #  API Gateway Authorization  #

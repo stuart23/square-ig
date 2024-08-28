@@ -42,19 +42,20 @@ jobs:
       run: echo ${{ steps.deploy-s3.outputs['BucketName'] }}
 
     # Cloudformation will not replace scripts unless the filenames change, so we hash them instead.
-    - name: Zip each script
+    - name: Zip python directory
       shell: bash
       working-directory: scripts
-      run: |
-        for file in *
-        do
-            # newfilename=`shasum "$file" | awk '{print $1 "-" $2}'`
-            # mv "$file" "$newfilename"
-            zip $file.zip $file
-        done
+      run: zip -r pkg.zip python
 
     - name: Deploy code to S3
-      run: aws s3 sync ./scripts/ s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
+      run: aws s3 sync ./pkg.zip s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
+
+    - name: Get package version
+      id: package-version
+      run: |
+        version=`aws s3api list-object-versions --bucket ${{ steps.deploy-s3.outputs['BucketName'] }} --prefix pkg.zip --query 'Versions[?IsLatest].[VersionId]' --output text`
+        echo $version
+        echo "version=$version" >> $GITHUB_OUTPUT
 
     - name: Deploy template to AWS CloudFormation
       uses: aws-actions/aws-cloudformation-github-deploy@v1
@@ -63,6 +64,6 @@ jobs:
         template: cloudformation/AddInstagramUser.yml
         no-fail-on-empty-changeset: "1"
         capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
-        parameter-overrides: LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }}
-
-    # - name: Reload 
+        parameter-overrides: >-
+          LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }},
+          PackageVersion=${{ steps.package-version.outputs.version }}
