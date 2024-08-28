@@ -19,7 +19,6 @@ def handler(event, context):
     print(f'Retrieving user {id}')
 
     square_credentials = getSquareCredentials()
-    print(f'Access token {square_credentials}')
     instagram_handle = getInstagramHandle(
         access_token=square_credentials[SQUARE_ACCESS_TOKEN_KEY],
         customer_id=id
@@ -46,7 +45,7 @@ def getInstagramHandle(access_token, customer_id):
         key=instagram_handle_key
     )
     if response.errors:
-        raise ValueError(f'Could not find Instagram Handle for Customer {customer_id}')
+        raise ValueError(f'Could not find Instagram Handle for Customer {customer_id}. Error is {response.errors}')
     
     return response.body['custom_attribute']['value']
 
