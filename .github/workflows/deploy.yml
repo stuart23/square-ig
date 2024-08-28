@@ -47,7 +47,7 @@ jobs:
       run: |
         mkdir deploy
         cd python
-        zip -r ../pkg/pkg.zip *
+        zip -r ../deploy/pkg.zip *
 
     - name: Deploy code to S3
       run: aws s3 sync ./deploy s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
