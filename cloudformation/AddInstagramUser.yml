@@ -27,6 +27,21 @@ Resources:
           - 'sts:AssumeRole'
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/AWSLambdaExecute
+      Policies:
+      - PolicyName: ReadSecrets
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - secretsmanager:GetRandomPassword
+            - secretsmanager:GetResourcePolicy
+            - secretsmanager:GetSecretValue
+            - secretsmanager:DescribeSecret
+            - secretsmanager:ListSecretVersionIds
+            - secretsmanager:ListSecrets
+            - secretsmanager:BatchGetSecretValue
+            Resource: '*'
 
   AddInstagramUserFunction:
     Type: AWS::Lambda::Function
