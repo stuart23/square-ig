@@ -2,6 +2,10 @@ from boto3 import client as Boto3Client
 from json import loads
 from square.client import Client as SquareClient
 
+
+SQUARE_APPLICATION_TOKEN_KEY = 'square_application_token'
+
+
 def handler(event, context):
     body = loads(event['body'])
     try:
@@ -16,7 +20,7 @@ def handler(event, context):
 
     square_credentials = getSquareCredentials()
     instagram_handle = getInstagramHandle(
-        access_token=square_credentials['square_application_token'],
+        access_token=square_credentials[SQUARE_APPLICATION_TOKEN_KEY],
         customer_id=id
     )
     print(f'Instagram Handle is {instagram_handle}')
@@ -51,9 +55,9 @@ def getSquareCredentials():
     '''
     secretsmanager_client = Boto3Client('secretsmanager')
     square_application_id = secretsmanager_client.get_secret_value(SecretId='square_application_id')
-    square_application_token = secretsmanager_client.get_secret_value(SecretId='square_application_token')
+    square_application_token = secretsmanager_client.get_secret_value(SecretId=SQUARE_APPLICATION_TOKEN_KEY)
     return {
-        'square_application_id': square_application_id,
-        'square_application_token': square_application_token
+        'square_application_id': square_application_id, # is this needed?
+        SQUARE_APPLICATION_TOKEN_KEY: square_application_token
     }
     

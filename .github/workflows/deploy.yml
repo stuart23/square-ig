@@ -27,7 +27,10 @@ jobs:
     - name: Check Secrets Exist in AWS
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
-        secret-ids: instagram_token, square_application_id, square_application_token
+        secret-ids: |
+          instagram_token
+          square_application_id
+          square_application_token
 
     - name: Deploy S3 Bucket for lambda functions
       id: deploy-s3
@@ -67,5 +70,4 @@ jobs:
         no-fail-on-empty-changeset: "1"
         capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
         parameter-overrides: >-
-          LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }},
-          PackageVersion=${{ steps.package-version.outputs.version }}
+          LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }}, PackageVersion=${{ steps.package-version.outputs.version }}
