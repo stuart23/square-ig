@@ -28,7 +28,8 @@ jobs:
       uses: aws-actions/aws-secretsmanager-get-secrets@v2
       with:
         secret-ids: |
-          instagram_token
+          instagram_password
+          instagram_username
           square_application_id
           square_access_token
 
@@ -49,7 +50,7 @@ jobs:
       run: |
         mkdir deploy
         cd python
-        pip install squareup --target .
+        pip install squareup ensta --target .
         zip -r ../deploy/pkg.zip *
 
     - name: Deploy code to S3
