@@ -58,16 +58,12 @@ Resources:
       Runtime: python3.11
       Role: !GetAtt LambdaRole.Arn
       Description: Check that the request is coming from square IP addresses.
-      Handler: index.handler
+      Handler: check_ip.handler
       Timeout: 5
       Code:
-        ZipFile: |
-          def handler(event, context):
-              permitted_ips = ('54.245.1.154', '34.202.99.168', '54.212.177.79', '107.20.218.8')
-              if event['requestContext']['http']['sourceIp'] in permitted_ips:
-                  print('permitted')
-              else:
-                  raise Exception('Unauthorized')
+        S3Bucket: !Ref LambdaFunctionsBucketName
+        S3Key: pkg.zip
+        S3ObjectVersion: !Ref PackageVersion
 
   Authorizer:
     Type: AWS::ApiGatewayV2::Authorizer
