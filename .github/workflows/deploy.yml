@@ -30,7 +30,7 @@ jobs:
         secret-ids: |
           instagram_token
           square_application_id
-          square_application_token
+          square_access_token
 
     - name: Deploy S3 Bucket for lambda functions
       id: deploy-s3
