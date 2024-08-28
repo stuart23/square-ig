@@ -50,7 +50,7 @@ jobs:
       run: |
         mkdir deploy
         cd python
-        pip install squareup ensta --target .
+        pip install squareup https://github.com/diezo/Ensta.git --target .
         zip -r ../deploy/pkg.zip *
 
     - name: Deploy code to S3
