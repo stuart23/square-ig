@@ -19,6 +19,7 @@ def handler(event, context):
     print(f'Retrieving user {id}')
 
     square_credentials = getSquareCredentials()
+    print(f'Access token {square_credentials}')
     instagram_handle = getInstagramHandle(
         access_token=square_credentials[SQUARE_ACCESS_TOKEN_KEY],
         customer_id=id
