@@ -11,23 +11,20 @@ This repo contains tooling for integrating the Square API with Instagram. The in
 Deployment is done through Terraform Cloud. The easiest way I have found to bootstrap Terraform cloud with Github and AWS is:
 
 1. If you haven't already done so, sign up for a Terraform Cloud account and create an organization.
-2. Clone the Hashicorp repo for setting up OIDC roles:
-   ```
-   git clone git@github.com:hashicorp/terraform-dynamic-credentials-setup-examples.git
-   ```
-3. Configure the AWS CLI credentials `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY` in the terminal.
-4. Get a Terraform user token from [here](https://app.terraform.io/app/settings/tokens), it will just be used to create these resources, so you can have a 1 hour expiry. Set the env var `TFE_TOKEN` to this token.
-5. Run the following to deploy the AWS role. A new Terraform workspace will be created, so you can give it whatever name you want
+2. Create a new workspace through the web UI that is connected to the GitHub Repo.
+3. Go into the bootstrap directory here.
+4. Configure the AWS CLI credentials `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY` in the terminal.
+5. Get a Terraform user token from [here](https://app.terraform.io/app/settings/tokens), it will just be used to create these resources, so you can have a 1 hour expiry. Set the env var `TFE_TOKEN` to this token.
+6. Run the following to deploy the AWS role. A new Terraform workspace will be created, so you can give it whatever name you want
    ```
    tf init && tf apply --var tfc_organization_name=<<YOUR TERRAFORM ORG NAME>> --var tfc_workspace_name=<<A NAME FOR THE WORKSPACE>>
    ```
    e.g.
    ```
-   tf init && tf apply --var tfc_organization_name=tiny_plant_store --var tfc_workspace_name=ig-square
+   tf init && tf apply --var tfc_organization_name=tiny_plant_store --var tfc_workspace_name=square-ig
    ```
 
-After creating the Terraform Cloud Workspace you can then install the Github application into the Terraform Cloud workspace.
-
+This is a one-time setup, so there is no need to store the tf state file after it is created.
 
 ### Step 3 - Create and upload Square Credentials
 
