@@ -33,7 +33,7 @@ jobs:
     - name: Terraform Apply
       id: apply
       working-directory: ecr
-      run: terraform apply -input=false -no-color
+      run: terraform apply -auto-approve
 
     # - name: Deploy ECR
     #   uses: aws-actions/configure-aws-credentials@v1
