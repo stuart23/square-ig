@@ -24,7 +24,3 @@ resource "docker_registry_image" "square_ig_webhook_ecr" {
   name     = docker_image.square_ig_webhook_local.name
   triggers = { image_digest = docker_image.square_ig_webhook_local.repo_digest }
 }
-
-output "sha" {
-  value = filesha1("image/*")
-}
