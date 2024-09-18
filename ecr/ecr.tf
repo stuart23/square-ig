@@ -38,6 +38,10 @@ resource "aws_ecr_repository" "lambda_ecr" {
   }
 }
 
+output "ecr_repo_url" {
+  value = aws_ecr_repository.lambda_ecr.repository_url
+}
+
 # # IAM policy for retrieving Secrets from SecretsManager
 # resource "aws_iam_policy" "read_secret" {
 #   name        = "read_secret"
