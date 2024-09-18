@@ -19,8 +19,8 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ secrets.cicd_role_arn }}
-        aws-region: ${{ secrets.aws_region }}
+        role-to-assume: ${{ vars.cicd_role_arn }}
+        aws-region: ${{ vars.aws_region }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
