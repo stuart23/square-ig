@@ -4,13 +4,13 @@ resource "aws_s3_bucket" "website_bucket" {
 
 
 resource "aws_s3_bucket_acl" "website_bucket_acl" {
-  bucket     = aws_s3_bucket.website_bucket
-  acl        = "public-read"
+  bucket = aws_s3_bucket.website_bucket.name
+  acl    = "public-read"
 }
 
 
 resource "aws_s3_bucket_versioning" "website_bucket_versioning" {
-  bucket = aws_s3_bucket.website_bucket
+  bucket = aws_s3_bucket.website_bucket.name
   versioning_configuration {
     status = "Enabled"
   }
@@ -18,7 +18,7 @@ resource "aws_s3_bucket_versioning" "website_bucket_versioning" {
 
 
 resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
-  bucket = aws_s3_bucket.website_bucket
+  bucket = aws_s3_bucket.website_bucket.name
 
   block_public_acls       = false
   block_public_policy     = false
@@ -28,7 +28,7 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 
 
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
-  bucket = aws_s3_bucket.website_bucket
+  bucket = aws_s3_bucket.website_bucket.name
   policy = jsonencode({
     statement = {
       sid    = "AllowPublicRead"
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_policy" "website_bucket_policy" {
 
 
 resource "aws_s3_bucket_website_configuration" "website_bucket_config" {
-  bucket = aws_s3_bucket.website_bucket
+  bucket = aws_s3_bucket.website_bucket.name
   index_document {
     suffix = "index.html"
   }
