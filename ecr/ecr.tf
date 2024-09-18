@@ -10,7 +10,7 @@ terraform {
     bucket         	   = "square-ig-tfstate"
     key              	   = "state/terraform.tfstate"
     encrypt        	   = true
-    dynamodb_table = "tf_lockid"
+    dynamodb_table = "square-ig-tfstate"
   }
 }
 
