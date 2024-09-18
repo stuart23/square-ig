@@ -1,4 +1,4 @@
-name: Deploy CloudFormation Stacks
+name: Deploy Square Instagram Integration
 
 on:
   release:
@@ -19,7 +19,7 @@ jobs:
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
-        role-to-assume: ${{ secrets.cloudformation_role_arn }}
+        role-to-assume: ${{ secrets.cicd_role_arn }}
         aws-region: ${{ secrets.aws_region }}
 
     - name: Setup Terraform
