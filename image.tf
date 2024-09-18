@@ -15,7 +15,7 @@ resource "docker_image" "square_ig_webhook_local" {
   }
   platform = "linux/arm64"
   triggers = {
-    dir_sha1 = sha1(join("", [filesha1("image/Dockerfile"), filesha1("image/lambda_function.py"), filesha1("image/requirements.py")]))
+    dir_sha1 = sha1(join("", [filesha1("image/Dockerfile"), filesha1("image/lambda_function.py"), filesha1("image/requirements.txt")]))
   }
 }
 
@@ -23,4 +23,8 @@ resource "docker_image" "square_ig_webhook_local" {
 resource "docker_registry_image" "square_ig_webhook_ecr" {
   name     = docker_image.square_ig_webhook_local.name
   triggers = { image_digest = docker_image.square_ig_webhook_local.repo_digest }
+}
+
+output "sha" {
+  value = filesha1("image")
 }
