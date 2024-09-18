@@ -1,26 +1,13 @@
-# AWS base image for lambda functions
-# https://docs.aws.amazon.com/lambda/latest/dg/images-create.html#runtimes-images-provided
-FROM public.ecr.aws/lambda/provided:al2023
+FROM public.ecr.aws/lambda/python:3.12
 
-RUN dnf install -y tar gzip unzip
+# Copy requirements.txt
+COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
-# Get the Astro CLI
-RUN curl -sSL install.astronomer.io | bash -s
+# Install the specified packages
+RUN pip install -r requirements.txt
 
-# # Get the AWS CLI
-RUN curl "https://awscli.amazonaws.com/awscli-exe-linux-aarch64.zip" -o "awscliv2.zip" \
-    && unzip awscliv2.zip \
-    && ./aws/install \
-    && rm -fr aws*
+# Copy function code
+COPY lambda_function.py ${LAMBDA_TASK_ROOT}
 
-# Copy our lambda function across
-COPY lambda_function.sh /var/task/lambda_function.sh
-RUN chmod 755 /var/task/lambda_function.sh
-
-# Copy the custom bootstrap - see this tutorial about custom lambda runtimes:
-# https://docs.aws.amazon.com/lambda/latest/dg/runtimes-walkthrough.html
-COPY ./bootstrap /var/runtime/bootstrap
-RUN chmod 755 /var/runtime/bootstrap
-
-
-CMD ["lambda_function.sh"]
+# Set the CMD to your handler (could also be done as a parameter override outside of the Dockerfile)
+CMD [ "lambda_function.handler" ]
