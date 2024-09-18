@@ -49,12 +49,19 @@ jobs:
       uses: aws-actions/amazon-ecr-login@v2
 
     - name: Build and push
+      id: image-build
       uses: docker/build-push-action@v6
       with:
         platforms: linux/arm64
         context: "image"
         push: true
         tags: ${{ env.ECR_REPO_URL }}:latest
+
+    - name: Echo SHA
+      run: echo ${{steps.image-build.outputs.imageid }}
+
+    - name: Echo SHA2
+      run: echo ${{steps.image-build.outputs.digest }}
 
     # - name: Deploy ECR
     #   uses: aws-actions/configure-aws-credentials@v1
