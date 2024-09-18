@@ -28,17 +28,6 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 }
 
 
-resource "aws_s3_bucket_website_configuration" "website_bucket_config" {
-  bucket = aws_s3_bucket.website_bucket
-  index_document {
-    suffix = "index.html"
-  }
-  error_document {
-    key = "error.html"
-  }
-}
-
-
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
   bucket = aws_s3_bucket.website_bucket
   policy = jsonencode({
