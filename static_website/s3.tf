@@ -38,21 +38,38 @@ resource "aws_s3_bucket_website_configuration" "website_bucket_config" {
   }
 }
 
-# resource "aws_s3_bucket_policy" "website_bucket_policy" {
-#   bucket = aws_s3_bucket.website_bucket
-#   policy = jsonencode({
-#     statement = {
-#       sid    = "AllowPublicRead"
-#       effect = "Allow"
-#       resources = [
-#         aws_s3_bucket.website_bucket.arn,
-#         "${aws_s3_bucket.website_bucket.arn}/*",
-#       ]
-#       actions = ["S3:GetObject"]
-#       principals = {
-#         type        = "*"
-#         identifiers = ["*"]
-#       }
-#     }
-#   })
-# }
+
+resource "aws_s3_bucket_policy" "website_bucket_policy" {
+  bucket = aws_s3_bucket.website_bucket
+  policy = jsonencode({
+    statement = {
+      sid    = "AllowPublicRead"
+      effect = "Allow"
+      resources = [
+        aws_s3_bucket.website_bucket.arn,
+        "${aws_s3_bucket.website_bucket.arn}/*",
+      ]
+      actions = ["S3:GetObject"]
+      principals = {
+        type        = "*"
+        identifiers = ["*"]
+      }
+    }
+  })
+}
+
+
+resource "aws_s3_bucket_website_configuration" "website_bucket_config" {
+  bucket = aws_s3_bucket.website_bucket
+  index_document {
+    suffix = "index.html"
+  }
+  error_document {
+    key = "error.html"
+  }
+}
+
+
+output "s3_bucket_id" {
+  value = aws_s3_bucket_website_configuration.website_bucket_config.website_endpoint
+}
