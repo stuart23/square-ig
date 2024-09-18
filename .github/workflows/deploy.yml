@@ -26,12 +26,10 @@ jobs:
       uses: hashicorp/setup-terraform@v3
 
     - name: Terraform Init ECR
-      id: init
       working-directory: ecr
       run: terraform init
 
     - name: Terraform Apply ECR
-      id: apply
       working-directory: ecr
       run: terraform apply -auto-approve
 
@@ -61,12 +59,10 @@ jobs:
       run: echo ${{ env.ECR_REPO_URL }}:latest@${{ steps.image-build.outputs.digest }}
 
     - name: Terraform Init Full Stack
-      id: init
       working-directory: full-stack
       run: terraform init
 
     - name: Terraform Apply Full Stack
-      id: apply
       working-directory: full-stack
       run: terraform apply -auto-approve -var lambda_image=${{ env.ECR_REPO_URL }}:latest@${{ steps.image-build.outputs.digest }}
 
