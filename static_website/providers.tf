@@ -6,6 +6,12 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "s3" {
+    bucket         = "square-ig-tfstate"
+    key            = "${var.stack_name}/terraform.tfstate"
+    encrypt        = true
+    dynamodb_table = "square-ig-tfstate"
+  }
 }
 
 # Configure the AWS Provider
