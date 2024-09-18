@@ -26,5 +26,5 @@ resource "docker_registry_image" "square_ig_webhook_ecr" {
 }
 
 output "sha" {
-  value = filesha1("image")
+  value = filesha1("image/*")
 }
