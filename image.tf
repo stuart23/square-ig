@@ -1,13 +1,3 @@
-terraform {
-  required_version = "~> 1.9.5"
-  required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "3.0.2"
-    }
-  }
-}
-
 # Configure docker provider
 provider "docker" {
   registry_auth {
