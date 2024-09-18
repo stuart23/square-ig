@@ -15,7 +15,7 @@ resource "docker_image" "square_ig_webhook_local" {
   }
   platform = "linux/arm64"
   triggers = {
-    dir_sha1 = sha1(join("", [filesha1("Dockerfile"), filesha1("lambda_function.sh")]))
+    dir_sha1 = sha1(join("", [filesha1("image/Dockerfile"), filesha1("image/lambda_function.sh")]))
   }
 }
 
