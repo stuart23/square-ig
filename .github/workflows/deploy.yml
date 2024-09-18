@@ -64,7 +64,7 @@ jobs:
 
     - name: Terraform Apply Full Stack
       working-directory: full-stack
-      run: terraform apply -auto-approve -var lambda_image=${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
+      run: terraform apply -auto-approve -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}"
 
     # # The following will fail with the error `Error: ResourceNotFoundException: Secrets Manager can't find the specified secret..` if it does not exist.
     # - name: Check Secrets Exist in AWS
