@@ -25,12 +25,12 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
-    - name: Terraform Init
+    - name: Terraform Init ECR
       id: init
       working-directory: ecr
       run: terraform init
 
-    - name: Terraform Apply
+    - name: Terraform Apply ECR
       id: apply
       working-directory: ecr
       run: terraform apply -auto-approve
@@ -57,17 +57,18 @@ jobs:
         push: true
         tags: ${{ env.ECR_REPO_URL }}:latest
 
-    - name: Echo SHA
-      run: echo ${{steps.image-build.outputs.imageid }}
+    - name: Echo Image ID
+      run: echo ${{ env.ECR_REPO_URL }}:latest@${{ steps.image-build.outputs.digest }}
 
-    - name: Echo SHA2
-      run: echo ${{steps.image-build.outputs.digest }}
+    - name: Terraform Init Full Stack
+      id: init
+      working-directory: full-stack
+      run: terraform init
 
-    # - name: Deploy ECR
-    #   uses: aws-actions/configure-aws-credentials@v1
-    #   with:
-    #     role-to-assume: ${{ secrets.cloudformation_role_arn }}
-    #     aws-region: ${{ secrets.aws_region }}
+    - name: Terraform Apply Full Stack
+      id: apply
+      working-directory: full-stack
+      run: terraform apply -auto-approve -var lambda_image=${{ env.ECR_REPO_URL }}:latest@${{ steps.image-build.outputs.digest }}
 
     # # The following will fail with the error `Error: ResourceNotFoundException: Secrets Manager can't find the specified secret..` if it does not exist.
     # - name: Check Secrets Exist in AWS
@@ -78,43 +79,3 @@ jobs:
     #       instagram_username
     #       square_application_id
     #       square_access_token
-
-    # - name: Deploy S3 Bucket for lambda functions
-    #   id: deploy-s3
-    #   uses: aws-actions/aws-cloudformation-github-deploy@v1
-    #   with:
-    #     name: LambdaFunctionsBucket
-    #     template: cloudformation/S3Bucket.yml
-    #     no-fail-on-empty-changeset: "1"
-    #     capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
-
-    # - name: S3 Bucket Name
-    #   run: echo ${{ steps.deploy-s3.outputs['BucketName'] }}
-
-    # - name: Package lambda functions with dependencies
-    #   shell: bash
-    #   run: |
-    #     mkdir deploy
-    #     cd python
-    #     pip install squareup ensta --target .
-    #     zip -r ../deploy/pkg.zip *
-
-    # - name: Deploy code to S3
-    #   run: aws s3 sync ./deploy s3://${{ steps.deploy-s3.outputs['BucketName'] }} --delete
-
-    # - name: Get package version
-    #   id: package-version
-    #   run: |
-    #     version=`aws s3api list-object-versions --bucket ${{ steps.deploy-s3.outputs['BucketName'] }} --prefix pkg.zip --query 'Versions[?IsLatest].[VersionId]' --output text`
-    #     echo $version
-    #     echo "version=$version" >> $GITHUB_OUTPUT
-
-    # - name: Deploy template to AWS CloudFormation
-    #   uses: aws-actions/aws-cloudformation-github-deploy@v1
-    #   with:
-    #     name: AddInstagramUser
-    #     template: cloudformation/AddInstagramUser.yml
-    #     no-fail-on-empty-changeset: "1"
-    #     capabilities: CAPABILITY_IAM,CAPABILITY_NAMED_IAM
-    #     parameter-overrides: >-
-    #       LambdaFunctionsBucketName=${{ steps.deploy-s3.outputs['BucketName'] }}, PackageVersion=${{ steps.package-version.outputs.version }}
