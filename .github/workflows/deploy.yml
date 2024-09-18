@@ -98,4 +98,4 @@ jobs:
 
     - name: Terraform Apply ECR
       working-directory: static_website
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var domain_name="theplantsocietyatx.com"
