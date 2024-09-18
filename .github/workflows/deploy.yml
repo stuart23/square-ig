@@ -35,6 +35,17 @@ jobs:
       working-directory: ecr
       run: terraform apply -auto-approve
 
+    - name: Get ECR URL
+      working-directory: ecr
+      run: echo "ECR_REPO_URL=$(terraform output -raw ecr_repo_url)" >> $GITHUB_ENV
+
+    - name: Build and push
+      uses: docker/build-push-action@v6
+      with:
+        context: "image"
+        push: true
+        tags: ${{ env.ECR_REPO_URL }}:latest
+
     # - name: Deploy ECR
     #   uses: aws-actions/configure-aws-credentials@v1
     #   with:
