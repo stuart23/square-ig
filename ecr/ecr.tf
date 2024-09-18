@@ -6,11 +6,16 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "s3" {
+    bucket         	   = "square-ig-tfstate"
+    key              	   = "state/terraform.tfstate"
+    encrypt        	   = true
+    dynamodb_table = "tf_lockid"
+  }
 }
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-west-1"
 }
 
 # Get authorization credentials to push to ECR

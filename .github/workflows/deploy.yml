@@ -31,10 +31,9 @@ jobs:
       run: terraform init
 
     - name: Terraform Apply
-      id: plan
+      id: apply
       working-directory: ecr
-      run: terraform plan -no-color
-      continue-on-error: true
+      run: terraform apply -no-color
 
     # - name: Deploy ECR
     #   uses: aws-actions/configure-aws-credentials@v1
