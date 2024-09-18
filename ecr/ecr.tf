@@ -1,23 +1,3 @@
-terraform {
-  required_version = "~> 1.9.5"
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
-  backend "s3" {
-    bucket         = "square-ig-tfstate"
-    key            = "state/terraform.tfstate"
-    encrypt        = true
-    dynamodb_table = "square-ig-tfstate"
-  }
-}
-
-# Configure the AWS Provider
-provider "aws" {
-}
-
 # Get authorization credentials to push to ECR
 data "aws_ecr_authorization_token" "token" {}
 

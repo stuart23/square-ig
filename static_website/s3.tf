@@ -29,6 +29,7 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
   bucket = aws_s3_bucket.website_bucket.id
+  depends_on = [ aws_s3_bucket_public_access_block.website_bucket_acl ]
   policy = jsonencode({
     statement = {
       sid    = "AllowPublicRead"
