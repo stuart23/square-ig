@@ -6,7 +6,7 @@ terraform {
       version = "~> 5.0"
     }
     porkbun = {
-      source = "cullenmcdermott/porkbun"
+      source  = "cullenmcdermott/porkbun"
       version = "~> 0.2.5"
     }
   }
@@ -18,6 +18,6 @@ provider "aws" {
 }
 
 provider "porkbun" {
-  api_key = var.porkbun_api_key
+  api_key    = var.porkbun_api_key
   secret_key = var.porkbun_secret_key
 }
