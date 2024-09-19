@@ -24,3 +24,7 @@ resource "aws_acm_certificate" "certificate" {
 output "fqdns" {
   value = [for record in porkbun_dns_record.main : record.domain]
 }
+
+output "certificate_arn" {
+  value = aws_acm_certificate.certificate.arn
+}
