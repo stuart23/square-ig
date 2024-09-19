@@ -11,3 +11,7 @@ resource "aws_acm_certificate_validation" "certificate_validation" {
   certificate_arn = aws_acm_certificate.certificate.arn
   validation_record_fqdns = [for record in porkbun_dns_record.main : record.domain]
 }
+
+output "fqdns" {
+  value = [for record in porkbun_dns_record.main : record.domain]
+}
