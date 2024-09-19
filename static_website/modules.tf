@@ -1,0 +1,3 @@
+module "acm" {
+  source = "./acm"
+}
