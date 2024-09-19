@@ -30,12 +30,12 @@ resource "aws_s3_bucket_ownership_controls" "website_bucket_ownership" {
 
 
 resource "aws_s3_bucket_acl" "website_bucket_acl" {
-  bucket     = aws_s3_bucket.website_bucket.id
+  bucket = aws_s3_bucket.website_bucket.id
   depends_on = [
     aws_s3_bucket_ownership_controls.website_bucket_ownership,
     aws_s3_bucket_public_access_block.website_bucket_acl
   ]
-  acl        = "public-read"
+  acl = "public-read"
 }
 
 
@@ -43,19 +43,19 @@ resource "aws_s3_bucket_policy" "website_bucket_policy" {
   bucket     = aws_s3_bucket.website_bucket.id
   depends_on = [aws_s3_bucket_ownership_controls.website_bucket_ownership]
   policy = jsonencode({
-    statement = {
-      sid    = "AllowPublicRead"
-      effect = "Allow"
-      resources = [
-        aws_s3_bucket.website_bucket.arn,
-        "${aws_s3_bucket.website_bucket.arn}/*",
-      ]
-      actions = ["S3:GetObject"]
-      principals = {
-        type        = "*"
-        identifiers = ["*"]
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "AllowPublicRead"
+        Effect = "Allow"
+        Resource = [
+          aws_s3_bucket.website_bucket.arn,
+          "${aws_s3_bucket.website_bucket.arn}/*",
+        ]
+        Action    = ["S3:GetObject"]
+        Principal = "*"
       }
-    }
+    ]
   })
 }
 
