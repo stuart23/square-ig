@@ -9,15 +9,15 @@ resource "aws_acm_certificate" "certificate" {
 
 # Sleep for a minute to wait for dns records
 resource "time_sleep" "wait_30_seconds" {
-  depends_on = [porkbun_dns_record.main]
-
+  depends_on      = [porkbun_dns_record.main]
+  triggers        = { dns_record_id = porkbun_dns_record.main.id }
   create_duration = "1m"
 }
 
 
 resource "aws_acm_certificate_validation" "certificate_validation" {
-  depends_on = [time_sleep.wait_30_seconds]
-  certificate_arn = aws_acm_certificate.certificate.arn
+  depends_on              = [time_sleep.wait_30_seconds]
+  certificate_arn         = aws_acm_certificate.certificate.arn
   validation_record_fqdns = [for record in porkbun_dns_record.main : record.domain]
 }
 
