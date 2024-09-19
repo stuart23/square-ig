@@ -22,7 +22,7 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 
 
 resource "aws_s3_bucket_ownership_controls" "website_bucket_ownership" {
-  bucket = aws_s3_bucket.example.id
+  bucket = aws_s3_bucket.website_bucket.id
   rule {
     object_ownership = "BucketOwnerPreferred"
   }
