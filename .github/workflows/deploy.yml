@@ -101,5 +101,5 @@ jobs:
       run: |
         terraform apply -auto-approve \
           -var domain_name="theplantsocietyatx.com" \
-          -var porkbun_api_key="${{ vars.porkbun_api_key }}" \
-          -var porkbun_secret_key="${{ vars.porkbun_secret_key }}" 
+          -var porkbun_api_key="${{ secrets.porkbun_api_key }}" \
+          -var porkbun_secret_key="${{ secrets.porkbun_secret_key }}" 
