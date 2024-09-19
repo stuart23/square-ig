@@ -9,6 +9,10 @@ terraform {
       source  = "cullenmcdermott/porkbun"
       version = "~> 0.2.5"
     }
+    time = {
+      source = "hashicorp/time"
+      version = "0.12.1"
+    }
   }
 }
 
@@ -20,4 +24,7 @@ provider "aws" {
 provider "porkbun" {
   api_key    = var.porkbun_api_key
   secret_key = var.porkbun_secret_key
+}
+
+provider "time" {
 }
