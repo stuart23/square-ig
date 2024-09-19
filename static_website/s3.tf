@@ -21,11 +21,11 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 }
 
 
-resource "aws_s3_bucket_acl" "website_bucket_acl" {
-  bucket     = aws_s3_bucket.website_bucket.id
-  depends_on = [aws_s3_bucket_public_access_block.website_bucket_acl]
-  acl        = "public-read"
-}
+# resource "aws_s3_bucket_acl" "website_bucket_acl" {
+#   bucket     = aws_s3_bucket.website_bucket.id
+#   depends_on = [aws_s3_bucket_public_access_block.website_bucket_acl]
+#   acl        = "public-read"
+# }
 
 
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
