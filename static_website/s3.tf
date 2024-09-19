@@ -3,12 +3,6 @@ resource "aws_s3_bucket" "website_bucket" {
 }
 
 
-resource "aws_s3_bucket_acl" "website_bucket_acl" {
-  bucket = aws_s3_bucket.website_bucket.id
-  acl    = "public-read"
-}
-
-
 resource "aws_s3_bucket_versioning" "website_bucket_versioning" {
   bucket = aws_s3_bucket.website_bucket.id
   versioning_configuration {
@@ -27,9 +21,16 @@ resource "aws_s3_bucket_public_access_block" "website_bucket_acl" {
 }
 
 
+resource "aws_s3_bucket_acl" "website_bucket_acl" {
+  bucket     = aws_s3_bucket.website_bucket.id
+  depends_on = [aws_s3_bucket_public_access_block.website_bucket_acl]
+  acl        = "public-read"
+}
+
+
 resource "aws_s3_bucket_policy" "website_bucket_policy" {
-  bucket = aws_s3_bucket.website_bucket.id
-  depends_on = [ aws_s3_bucket_public_access_block.website_bucket_acl ]
+  bucket     = aws_s3_bucket.website_bucket.id
+  depends_on = [aws_s3_bucket_public_access_block.website_bucket_acl]
   policy = jsonencode({
     statement = {
       sid    = "AllowPublicRead"
