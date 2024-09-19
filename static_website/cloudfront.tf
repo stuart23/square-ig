@@ -1,7 +1,7 @@
 resource "aws_cloudfront_distribution" "s3_distribution" {
   origin {
-    domain_name              = aws_s3_bucket.website_bucket.bucket_regional_domain_name
-    origin_id                = var.domain_name
+    domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
+    origin_id   = var.domain_name
   }
 
   enabled             = true
@@ -29,7 +29,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
       }
     }
 
-    viewer_protocol_policy = "allow-all"
+    viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
@@ -45,6 +45,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 
   viewer_certificate {
-    cloudfront_default_certificate = true
+    acm_certificate_arn = aws_acm_certificate.certificate.arn
   }
 }
+
+# output "cloudfront_distribution_url" {
+#   value = aws_cloudfront_distribution.s3_distribution.
+# }
