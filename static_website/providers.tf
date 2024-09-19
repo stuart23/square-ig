@@ -5,10 +5,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    porkbun = {
-      source = "cullenmcdermott/porkbun"
-      version = "0.2.5"
-    }
   }
   backend "s3" {
     bucket         = "square-ig-tfstate"
