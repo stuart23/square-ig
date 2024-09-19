@@ -3,7 +3,7 @@ provider "aws" {
   region = "us-east-1"
 }
 
-provider "porkbun" {
+provider "cullenmcdermott/porkbun" {
   api_key = var.porkbun_api_key
   secret_key = var.porkbun_secret_key
 }
