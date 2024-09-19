@@ -98,4 +98,8 @@ jobs:
 
     - name: Terraform Apply ECR
       working-directory: static_website
-      run: terraform apply -auto-approve -var domain_name="theplantsocietyatx.com"
+      run: |
+        terraform apply -auto-approve \
+          -var domain_name="theplantsocietyatx.com" \
+          -var porkbun_api_key="${{ vars.porkbun_api_key }}" \
+          -var porkbun_secret_key="${{ vars.porkbun_secret_key }}" 

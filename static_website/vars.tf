@@ -4,11 +4,11 @@ variable "domain_name" {
 }
 
 variable "porkbun_api_key" {
-  type = string
+  type      = string
   sensitive = true
 }
 
 variable "porkbun_secret_key" {
-  type = string
+  type      = string
   sensitive = true
 }
