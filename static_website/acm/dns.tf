@@ -1,6 +1,6 @@
 resource "porkbun_dns_record" "main" {
-  name    = vars.domain_name
-  domain  = vars.domain_name
+  name    = var.domain_name
+  domain  = var.domain_name
   content = "abcdefg"
   type    = "CNAME"
 }
