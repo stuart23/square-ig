@@ -8,7 +8,7 @@ resource "porkbun_dns_record" "main" {
   }
 
   domain  = each.key
-  name    = each.value.name
-  content = replace(each.value.record, var.domain_name, "")
+  name    = replace(each.value.name, var.domain_name, "")
+  content = each.value.record
   type    = each.value.type
 }
