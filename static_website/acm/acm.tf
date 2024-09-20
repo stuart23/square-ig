@@ -22,7 +22,7 @@ resource "aws_acm_certificate" "certificate" {
 # }
 
 output "fqdns" {
-  value = [for record in porkbun_dns_record.main : record.domain]
+  value = [for record in porkbun_dns_record.certificate_validation : record.domain]
 }
 
 output "certificate_arn" {
