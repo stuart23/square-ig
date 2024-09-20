@@ -50,6 +50,10 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   }
 }
 
-# output "cloudfront_distribution_url" {
-#   value = aws_cloudfront_distribution.s3_distribution.
-# }
+
+resource "porkbun_dns_record" "main" {
+  domain  = var.domain_name
+  name    = ""
+  content = aws_cloudfront_distribution.s3_distribution.domain_name
+  type    = "A"
+}
