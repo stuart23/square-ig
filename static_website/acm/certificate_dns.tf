@@ -1,4 +1,4 @@
-resource "porkbun_dns_record" "main" {
+resource "porkbun_dns_record" "certificate_validation" {
   for_each = {
     for dvo in aws_acm_certificate.certificate.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name

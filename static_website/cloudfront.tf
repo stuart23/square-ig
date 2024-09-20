@@ -51,9 +51,8 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
 }
 
 
-resource "porkbun_dns_record" "main" {
+resource "porkbun_dns_record" "cloudfront_alias" {
   domain  = var.domain_name
-  name    = ""
   content = aws_cloudfront_distribution.s3_distribution.domain_name
   type    = "ALIAS"
 }
