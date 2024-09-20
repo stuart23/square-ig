@@ -55,5 +55,5 @@ resource "porkbun_dns_record" "main" {
   domain  = var.domain_name
   name    = ""
   content = aws_cloudfront_distribution.s3_distribution.domain_name
-  type    = "A"
+  type    = "ALIAS"
 }
