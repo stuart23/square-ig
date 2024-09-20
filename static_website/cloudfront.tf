@@ -14,8 +14,7 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
   #   prefix          = "myprefix"
   # }
 
-  #   aliases = aws_acm_certificate_validation.certificate_validation
-  aliases = [module.acm.aws_acm_certificate.certificate.domain_name]
+  aliases = [ var.domain_name ]
 
   default_cache_behavior {
     allowed_methods  = ["GET", "HEAD"]
