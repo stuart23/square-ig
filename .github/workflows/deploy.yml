@@ -32,7 +32,7 @@ jobs:
 
     - name: Terraform Apply ECR
       working-directory: ecr
-      run: terraform apply -auto-approve
+      run: terraform apply -auto-approve -var aws_region=${{ vars.aws_region }}
 
     - name: Get ECR URL
       working-directory: ecr
