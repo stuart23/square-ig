@@ -12,3 +12,8 @@ variable "porkbun_secret_key" {
   type      = string
   sensitive = true
 }
+
+variable "aws_region" {
+  type        = string
+  description = "The region to deploy into"
+}
