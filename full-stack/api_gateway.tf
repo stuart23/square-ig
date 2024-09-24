@@ -31,7 +31,15 @@ resource "aws_apigatewayv2_stage" "add_instagram_user" {
   auto_deploy = true
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.add_user_gateway_logs.arn
-    format          = "json"
+    format = jsonencode({
+      requestId        = "$context.requestId"
+      requestTime      = "$context.requestTime"
+      requestTimeEpoch = "$context.requestTimeEpoch"
+      path             = "$context.path"
+      method           = "$context.httpMethod"
+      status           = "$context.status"
+      responseLength   = "$context.responseLength"
+    })
   }
 }
 
