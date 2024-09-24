@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "add_user_lambda_logs" {
-  name              = "add_user"
+  name              = "add_user_lambda"
   retention_in_days = 14
 }
 
@@ -13,7 +13,7 @@ resource "aws_lambda_function" "add_user" {
   timeout       = 30
   memory_size   = 256
   logging_config {
-    log_group  = aws_cloudwatch_log_group.add_user_logs.name
+    log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
     log_format = "Text"
   }
   # environment {
