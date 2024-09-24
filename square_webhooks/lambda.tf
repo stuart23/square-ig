@@ -12,6 +12,7 @@ resource "aws_lambda_function" "add_user" {
   role          = aws_iam_role.lambda_role.arn
   timeout       = 30
   memory_size   = 256
+  handler       = "add_user.handler"
   logging_config {
     log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
     log_format = "Text"
