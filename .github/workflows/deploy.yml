@@ -64,6 +64,9 @@ jobs:
         platforms: linux/arm64
         context: "image"
         push: true
+        tags: |
+          ${{ env.ECR_REPO_URL }}:latest
+          ${{ steps.meta.outputs.tags }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
         provenance: false
