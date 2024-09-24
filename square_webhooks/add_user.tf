@@ -1,10 +1,3 @@
-resource "aws_apigatewayv2_api" "square_gateway" {
-  name          = "square-http-api"
-  description   = "Endpoint for Square webhooks."
-  protocol_type = "HTTP"
-}
-
-
 resource "aws_apigatewayv2_integration" "add_instagram_user" {
   api_id           = aws_apigatewayv2_api.square_gateway.id
   integration_type = "AWS_PROXY"
