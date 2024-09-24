@@ -68,6 +68,9 @@ jobs:
         context: "image"
         push: true
         tags: ${{ env.ECR_REPO_URL }}:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        provenance: false
 
     - name: Echo Image ID
       run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
