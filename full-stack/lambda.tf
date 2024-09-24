@@ -1,4 +1,4 @@
-resource "aws_cloudwatch_log_group" "add_user_logs" {
+resource "aws_cloudwatch_log_group" "add_user_lambda_logs" {
   name              = "add_user"
   retention_in_days = 14
 }
