@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "website_bucket" {
-  bucket = "www.${var.domain_name}"
+  bucket = var.domain_name
 }
 
 
