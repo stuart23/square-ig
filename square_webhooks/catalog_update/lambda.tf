@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
-  name              = "catalog_updat_lambda"
+  name              = "catalog_update_lambda"
   retention_in_days = 14
 }
 
