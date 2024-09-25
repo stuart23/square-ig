@@ -12,3 +12,8 @@ variable "lambda_role_arn" {
   type        = string
   description = "The arn of the iam role used to execute the lambda function"
 }
+
+variable "lambda_logging_format" {
+  type        = string
+  description = "Logging format"
+}

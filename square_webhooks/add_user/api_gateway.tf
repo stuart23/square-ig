@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_integration" "add_instagram_user" {
-  api_id           = aws_apigatewayv2_api.square_gateway.id
+  api_id           = var.square_gateway_id
   integration_type = "AWS_PROXY"
 
   description            = "Webhook for adding user in Square"
@@ -10,7 +10,7 @@ resource "aws_apigatewayv2_integration" "add_instagram_user" {
 
 
 resource "aws_apigatewayv2_route" "add_instagram_user" {
-  api_id    = aws_apigatewayv2_api.square_gateway.id
+  api_id    = var.square_gateway_id
   route_key = "$default"
 
   target = "integrations/${aws_apigatewayv2_integration.add_instagram_user.id}"
@@ -18,21 +18,13 @@ resource "aws_apigatewayv2_route" "add_instagram_user" {
 
 
 resource "aws_apigatewayv2_stage" "add_instagram_user" {
-  api_id      = aws_apigatewayv2_api.square_gateway.id
+  api_id      = var.square_gateway_id
   name        = "add_instagram_user"
   description = "Stage for AddInstagramUser Webhook with logging."
   auto_deploy = true
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.add_user_gateway_logs.arn
-    format = jsonencode({
-      requestId        = "$context.requestId"
-      requestTime      = "$context.requestTime"
-      requestTimeEpoch = "$context.requestTimeEpoch"
-      path             = "$context.path"
-      method           = "$context.httpMethod"
-      status           = "$context.status"
-      responseLength   = "$context.responseLength"
-    })
+    format          = var.lambda_logging_format
   }
 }
 
