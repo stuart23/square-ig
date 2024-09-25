@@ -12,7 +12,8 @@ resource "aws_apigatewayv2_integration" "add_instagram_user" {
 resource "aws_apigatewayv2_route" "add_instagram_user" {
   api_id    = var.square_gateway_id
   route_key = "$default"
-
+  authorization_type = "CUSTOM"
+  authorizer_id = var.square_authorizer_arn
   target = "integrations/${aws_apigatewayv2_integration.add_instagram_user.id}"
 }
 
