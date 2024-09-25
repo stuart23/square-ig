@@ -7,18 +7,3 @@ variable "aws_region" {
   type        = string
   description = "The region to deploy into"
 }
-
-# Should this be in locals?
-variable "lambda_logging_format" {
-  type        = string
-  description = "Logging format"
-  default = jsonencode({
-    requestId        = "$context.requestId"
-    requestTime      = "$context.requestTime"
-    requestTimeEpoch = "$context.requestTimeEpoch"
-    path             = "$context.path"
-    method           = "$context.httpMethod"
-    status           = "$context.status"
-    responseLength   = "$context.responseLength"
-  })
-}
