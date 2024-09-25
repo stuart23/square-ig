@@ -8,6 +8,7 @@ variable "aws_region" {
   description = "The region to deploy into"
 }
 
+# Should this be in locals?
 variable "lambda_logging_format" {
   type        = string
   description = "Logging format"
