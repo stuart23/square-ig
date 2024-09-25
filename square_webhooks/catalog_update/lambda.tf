@@ -16,7 +16,7 @@ resource "aws_lambda_function" "catalog_update" {
     command = ["catalog_update.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.catalog_update_logs.name
+    log_group  = aws_cloudwatch_log_group.catalog_update_lambda_logs.name
     log_format = "Text"
   }
   # environment {

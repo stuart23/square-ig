@@ -24,7 +24,7 @@ resource "aws_apigatewayv2_stage" "catalog_update" {
   description = "Stage for Catalog Update Webhook with logging."
   auto_deploy = true
   access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.catalog_update_logs.arn
+    destination_arn = aws_cloudwatch_log_group.catalog_update_gateway_logs.arn
     format          = var.lambda_logging_format
   }
 }
