@@ -18,7 +18,7 @@ variable "lambda_logging_format" {
   description = "Logging format"
 }
 
-variable "square_authorizer_arn" {
+variable "square_authorizer_id" {
   type        = string
-  description = "ARN of the authorizer to only allow square IP addresses"
+  description = "ID of the authorizer to only allow square IP addresses"
 }
