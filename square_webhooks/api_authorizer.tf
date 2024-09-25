@@ -4,7 +4,7 @@ resource "aws_lambda_function" "api_authorizer" {
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = aws_iam_role.api_authorizer_role
+  role          = aws_iam_role.api_authorizer_role.arn
   timeout       = 5
   image_config {
     command = ["check_ip.handler"]
