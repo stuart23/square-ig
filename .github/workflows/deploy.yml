@@ -73,12 +73,12 @@ jobs:
     - name: Echo Image ID
       run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
 
-    - name: Terraform Init Full Stack
-      working-directory: full-stack
+    - name: Terraform Init Square Webhooks
+      working-directory: square_webhooks
       run: terraform init
 
-    - name: Terraform Apply Full Stack
-      working-directory: full-stack
+    - name: Terraform Apply Square Webhooks
+      working-directory: square_webhooks
       run: |
         terraform apply -auto-approve \
           -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}" \
