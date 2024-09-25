@@ -30,6 +30,6 @@ resource "aws_apigatewayv2_stage" "add_instagram_user" {
 }
 
 resource "aws_cloudwatch_log_group" "add_user_gateway_logs" {
-  name              = "square_gateway_add_user"
+  name              = "add_user_gateway_logs"
   retention_in_days = 14
 }
