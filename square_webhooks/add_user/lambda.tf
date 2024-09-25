@@ -9,11 +9,11 @@ resource "aws_lambda_function" "add_user" {
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = aws_iam_role.lambda_role.arn
+  role          = var.lambda_role_arn
   timeout       = 30
   memory_size   = 256
   image_config {
-    command       = ["add_user.handler"]
+    command = ["add_user.handler"]
   }
   logging_config {
     log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
