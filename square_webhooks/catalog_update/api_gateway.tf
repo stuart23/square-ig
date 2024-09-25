@@ -12,8 +12,8 @@ resource "aws_apigatewayv2_integration" "catalog_update" {
 resource "aws_apigatewayv2_route" "catalog_update" {
   api_id             = var.square_gateway_id
   route_key          = "POST /catalog_update"
-  authorization_type = "CUSTOM"
-  authorizer_id      = var.square_authorizer_id
+  # authorization_type = "CUSTOM"
+  # authorizer_id      = var.square_authorizer_id
   target             = "integrations/${aws_apigatewayv2_integration.catalog_update.id}"
 }
 
