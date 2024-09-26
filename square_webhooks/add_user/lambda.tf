@@ -38,5 +38,5 @@ resource "aws_lambda_permission" "add_user_permission" {
 
   # The /* part allows invocation from any stage, method and resource path
   # within API Gateway.
-  source_arn = "${var.square_gateway_execution_arnn}/*"
+  source_arn = "${var.square_gateway_execution_arn}/*"
 }
