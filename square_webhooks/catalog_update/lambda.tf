@@ -28,3 +28,15 @@ resource "aws_lambda_function" "catalog_update" {
     size = 1024 # Min 512 MB and the Max 10240 MB
   }
 }
+
+
+resource "aws_lambda_permission" "catalog_update_permission" {
+  statement_id  = "AllowAPIInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "catalog_update"
+  principal     = "apigateway.amazonaws.com"
+
+  # The /* part allows invocation from any stage, method and resource path
+  # within API Gateway.
+  source_arn = "${var.square_gateway_execution_arn}/*"
+}

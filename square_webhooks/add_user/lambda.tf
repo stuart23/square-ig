@@ -28,3 +28,15 @@ resource "aws_lambda_function" "add_user" {
     size = 1024 # Min 512 MB and the Max 10240 MB
   }
 }
+
+
+resource "aws_lambda_permission" "add_user_permission" {
+  statement_id  = "AllowAPIInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = "add_user"
+  principal     = "apigateway.amazonaws.com"
+
+  # The /* part allows invocation from any stage, method and resource path
+  # within API Gateway.
+  source_arn = "${var.square_gateway_execution_arnn}/*"
+}
