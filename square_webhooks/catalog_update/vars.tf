@@ -5,8 +5,15 @@ variable "lambda_image" {
 
 variable "square_gateway_id" {
   type        = string
-  description = "The id of the square_gateway aws_apigatewayv2_api resporce"
+  description = "The id of the square_gateway aws_apigatewayv2_api resource"
 }
+
+
+variable "square_gateway_execution_arn" {
+  type        = string
+  description = "The execution arn of the square_gateway aws_apigatewayv2_api resource"
+}
+
 
 variable "lambda_role_arn" {
   type        = string

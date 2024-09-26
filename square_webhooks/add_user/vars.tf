@@ -8,6 +8,13 @@ variable "square_gateway_id" {
   description = "The id of the square_gateway aws_apigatewayv2_api resporce"
 }
 
+
+variable "square_gateway_execution_arn" {
+  type        = string
+  description = "The execution arn of the square_gateway aws_apigatewayv2_api resource"
+}
+
+
 variable "lambda_role_arn" {
   type        = string
   description = "The arn of the iam role used to execute the lambda function"
