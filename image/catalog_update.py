@@ -3,6 +3,5 @@ from json import loads
 
 
 def handler(event, context):
-    body = loads(event['body'])
     print('Hello from the catalog Update')
-    print(body)
+    print(event)
