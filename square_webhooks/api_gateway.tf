@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_api" "square_webhooks_gateway" {
 
 
 resource "aws_apigatewayv2_stage" "square_webhooks_stage" {
-  api_id      = aws_apigatewayv2_api.square_gateway.id
+  api_id      = aws_apigatewayv2_api.square_webhooks_gateway.id
   name        = "$default"
   description = "Stage for Square Webhooks with logging."
   auto_deploy = true
@@ -16,10 +16,12 @@ resource "aws_apigatewayv2_stage" "square_webhooks_stage" {
   }
 }
 
+
 resource "aws_cloudwatch_log_group" "square_webhooks_logs" {
   name              = "square_webhooks_logs"
   retention_in_days = 14
 }
+
 
 output "gateway_endpoint" {
   value       = aws_apigatewayv2_api.square_gateway.api_endpoint
