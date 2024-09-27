@@ -24,6 +24,6 @@ resource "aws_cloudwatch_log_group" "square_webhooks_logs" {
 
 
 output "gateway_endpoint" {
-  value       = aws_apigatewayv2_api.square_gateway.api_endpoint
+  value       = aws_apigatewayv2_api.square_webhooks_gateway.api_endpoint
   description = "Endpoint of the square gateway API. Individual endpoints (e.g. /add_user) are appended to this."
 }
