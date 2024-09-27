@@ -16,20 +16,3 @@ resource "aws_apigatewayv2_route" "add_instagram_user" {
   authorizer_id      = var.square_authorizer_id
   target             = "integrations/${aws_apigatewayv2_integration.add_instagram_user.id}"
 }
-
-
-resource "aws_apigatewayv2_stage" "add_instagram_user" {
-  api_id      = var.square_gateway_id
-  name        = "add_instagram_user"
-  description = "Stage for AddInstagramUser Webhook with logging."
-  auto_deploy = true
-  access_log_settings {
-    destination_arn = aws_cloudwatch_log_group.add_user_gateway_logs.arn
-    format          = var.lambda_logging_format
-  }
-}
-
-resource "aws_cloudwatch_log_group" "add_user_gateway_logs" {
-  name              = "add_user_gateway_logs"
-  retention_in_days = 14
-}
