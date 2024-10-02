@@ -21,6 +21,47 @@ resource "aws_iam_policy" "read_secret" {
 }
 
 
+# IAM policy for interacting with Dynamo table
+resource "aws_iam_policy" "dynamo_access" {
+  name        = "dynamo_access"
+  description = "Access DynamoDB table with catalog data"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid = "ListAndDescribe"
+        Action = [
+                "dynamodb:List*",
+                "dynamodb:DescribeReservedCapacity*",
+                "dynamodb:DescribeLimits",
+                "dynamodb:DescribeTimeToLive"
+        ]
+        Effect   = "Allow"
+        Resource = "*"
+      },
+      {
+        Sid = "ListAndDescribe"
+        Action = [
+                "dynamodb:BatchGet*",
+                "dynamodb:DescribeStream",
+                "dynamodb:DescribeTable",
+                "dynamodb:Get*",
+                "dynamodb:Query",
+                "dynamodb:Scan",
+                "dynamodb:BatchWrite*",
+                "dynamodb:CreateTable",
+                "dynamodb:Delete*",
+                "dynamodb:Update*",
+                "dynamodb:PutItem"
+        ]
+        Effect   = "Allow"
+        Resource = aws_dynamodb_table.catalog.arn
+      },
+    ]
+  })
+}
+
+
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_role"
   assume_role_policy = jsonencode({
@@ -35,6 +76,12 @@ resource "aws_iam_role" "lambda_role" {
       },
     ]
   })
+}
+
+
+resource "aws_iam_role_policy_attachment" "lambda_role_dynamo_access_policy_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.dynamo_access.arn
 }
 
 
