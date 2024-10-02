@@ -16,3 +16,10 @@ module "catalog_update" {
   square_authorizer_id         = aws_apigatewayv2_authorizer.square_webhooks_gateway_authorizer.id
   lambda_role_arn              = aws_iam_role.lambda_role.arn
 }
+
+
+module "generate_barcode" {
+  source                       = "./generate_barcode"
+  lambda_image                 = var.lambda_image
+  lambda_role_arn              = aws_iam_role.lambda_role.arn
+}
