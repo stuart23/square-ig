@@ -7,5 +7,4 @@ COPY requirements.txt ${LAMBDA_TASK_ROOT}
 RUN pip install -r requirements.txt
 
 # Copy function code
-COPY add_user.py ${LAMBDA_TASK_ROOT}
-COPY catalog_update.py ${LAMBDA_TASK_ROOT}
+COPY . ${LAMBDA_TASK_ROOT}
