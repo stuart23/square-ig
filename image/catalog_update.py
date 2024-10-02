@@ -12,8 +12,20 @@ def handler(event, context):
         if any([upsert_sku(variation) for variation in item['item_data']['variations']]):
             print("One or more variation SKUs were updated. Upserting item to square.")
             upsert_catalog_object(item)
+        item_str = item['item_data']['name']
         for variation in item['item_data']['variations']:
-            upsert_by_sku(variation)
+            item_variation_data = variation['item_variation_data']
+            sku = item_variation_data['sku']
+            try:
+                price = item_variation_data['price_money']['amount']
+            except:
+                price = 0
+            upsert_by_sku(
+                sku=sku,
+                price=price,
+                item_str=item_str,
+                variation_str=item_variation_data['name']
+            )
 
 
 def upsert_sku(variation):
