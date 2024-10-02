@@ -62,6 +62,26 @@ resource "aws_iam_policy" "dynamo_access" {
 }
 
 
+# IAM policy for publishing to SNS
+resource "aws_iam_policy" "sns_publish" {
+  name        = "sns_publish"
+  description = "Publish to SNS topic"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid = "AccessCatalog"
+        Action = [
+          "SNS:Publish"
+        ]
+        Effect   = "Allow"
+        Resource = module.generate_barcode.generate_barcode_sns_topic_arn
+      },
+    ]
+  })
+}
+
+
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_role"
   assume_role_policy = jsonencode({
@@ -88,6 +108,12 @@ resource "aws_iam_role_policy_attachment" "lambda_role_dynamo_access_policy_atta
 resource "aws_iam_role_policy_attachment" "lambda_role_secrets_policy_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.read_secret.arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "lambda_role_sns_publish_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.sns_publish.arn
 }
 
 
