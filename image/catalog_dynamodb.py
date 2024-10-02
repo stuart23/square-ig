@@ -10,6 +10,8 @@ def upsert_by_sku(sku, price, item_str, variation_str):
 
     Right now this loops over all the items, but we should be able to do a query
     to find out all the items that don't exist in dynamo.
+
+    We should also check that all the fields for each object are the same.
     """
     response = table.query(
         KeyConditionExpression=(
@@ -18,10 +20,6 @@ def upsert_by_sku(sku, price, item_str, variation_str):
     )
     if response['Count'] == 0:
         # No item with this sku exists.
-        try:
-            price = variation['item_variation_data']['price_money']['amount'] / 100
-        except KeyError:
-            price = 0
         print(f'Adding item to DynamoDB: {variation}')
         table.put_item(
                 Item={
