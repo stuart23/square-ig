@@ -5,29 +5,27 @@ from boto3 import client as Boto3Client
 SECRET_NAME = "square_token"
 
 boto3_client = Boto3Client('secretsmanager')
-square_token = boto3_client.get_secret_value(SecretId=SECRET_NAME)
+response = boto3_client.get_secret_value(SecretId=SECRET_NAME)
+square_token = response['SecretString']
 
 client = SquareClient(
     bearer_auth_credentials=BearerAuthCredentials(
         access_token=square_token
     ),
-    environment='Production'
+    environment='production'
 )
 
 
 def get_all_catalog_objects():
     """Retrieves all catalog objects using pagination."""
 
-    catalog_api = client.catalog_api
+    catalog = client.catalog
     cursor = None
     objects = []
 
     while True:
-        response = catalog_api.search_catalog_objects(
-            body={
-                "cursor": cursor,
-                "limit": 100  # Adjust limit as needed
-            }
+        response = catalog.list_catalog(
+            cursor=cursor
         )
 
         if response.is_success():
