@@ -1,7 +1,7 @@
 from boto3 import client as Boto3Client
 from json import loads
 from square_client import get_all_catalog_items, upsert_catalog_object
-from catalog_dynamodb import get_by_sku
+from catalog_dynamodb import upsert_by_sku
 
 URL_PREFIX = "plantsoc.io"
 
@@ -13,13 +13,7 @@ def handler(event, context):
             print("One or more variation SKUs were updated. Upserting item to square.")
             upsert_catalog_object(item)
         for variation in item['item_data']['variations']:
-            print(variation)
-            try:
-                response = get_by_sku(variation['item_variation_data']['sku'])
-                print('sku')
-                print('response')
-            except Exception:
-                pass
+            upsert_by_sku(variation)
 
 
 def upsert_sku(variation):
@@ -34,3 +28,7 @@ def upsert_sku(variation):
         print(f"SKU {sku} does not start with {URL_PREFIX}. Updating to {new_sku}")
         variation['item_variation_data']['sku'] = new_sku
         return True
+
+
+if __name__ == "__main__":
+    handler(None, None)

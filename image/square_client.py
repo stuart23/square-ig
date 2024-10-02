@@ -1,5 +1,7 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from square.client import Client as SquareClient
+from json import dumps
+from hashlib import sha256
 from boto3 import client as Boto3Client
 
 SECRET_NAME = "square_token"
@@ -42,8 +44,19 @@ def get_all_catalog_items():
     return objects
 
 def upsert_catalog_object(item):
-    response = catalog.upsert_catalog_object(item)
+
+    response = catalog.upsert_catalog_object({
+        "idempotency_key": generate_idempotency_key(item),
+        "object": item
+    })
     if response.is_success():
         return
     else:
+        import pdb; pdb.set_trace()
         raise Exception(f'Could not upsert item {item}')
+
+def generate_idempotency_key(item):
+    """
+    Creates an idempotency key by hashing the dict.
+    """
+    return sha256(dumps(item, sort_keys=True).encode('utf-8')).hexdigest()
