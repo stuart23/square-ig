@@ -20,7 +20,7 @@ def upsert_by_sku(sku, price, item_str, variation_str):
     )
     if response['Count'] == 0:
         # No item with this sku exists.
-        print(f'Adding item to DynamoDB: {variation}')
+        print(f'Adding item to DynamoDB: {item_str} - {variation_str}')
         table.put_item(
                 Item={
                     "SKU": sku,
