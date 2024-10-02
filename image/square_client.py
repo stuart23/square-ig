@@ -14,18 +14,19 @@ client = SquareClient(
     ),
     environment='production'
 )
+catalog = client.catalog
 
 
-def get_all_catalog_objects():
-    """Retrieves all catalog objects using pagination."""
+def get_all_catalog_items():
+    """Retrieves all catalog items using pagination."""
 
-    catalog = client.catalog
     cursor = None
     objects = []
 
     while True:
         response = catalog.list_catalog(
-            cursor=cursor
+            cursor=cursor,
+            type="ITEM"
         )
 
         if response.is_success():
@@ -39,3 +40,10 @@ def get_all_catalog_objects():
             break  # Stop on error
 
     return objects
+
+def upsert_catalog_object(item):
+    catalog.upsert_catalog_object(item)
+    if response.is_success():
+        return
+    else:
+        raise Exception(f'Could not upsert item {item}')
