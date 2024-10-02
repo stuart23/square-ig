@@ -22,7 +22,7 @@ def handler(event, context):
                 price = item_variation_data['price_money']['amount']/100
             except:
                 price = 0
-            details = {"sku": sku, "price": price, "item_str": item_str, "variation_str": variation_str}
+            details = {"sku": sku, "price": price, "item_str": item_str, "variation_str": item_variation_data['name']}
             if upsert_by_sku(**details):
                 publish(details)
 
