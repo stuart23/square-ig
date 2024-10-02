@@ -1,7 +1,7 @@
 from boto3 import client as Boto3Client
 from json import loads
 from square_client import get_all_catalog_items, upsert_catalog_object
-
+from catalog_dynamodb import get_by_sku
 
 URL_PREFIX = "plantsoc.io"
 
@@ -13,10 +13,10 @@ def handler(event, context):
             print("One or more variation SKUs were updated. Upserting item to square.")
             upsert_catalog_object(item)
         for variation in item['item_data']['variations']:
+            response = get_by_sku(variation['sku'])
+            print('sku')
+            print('response')
 
-
-            
-    print(objects)
 
 def upsert_sku(variation):
     """
