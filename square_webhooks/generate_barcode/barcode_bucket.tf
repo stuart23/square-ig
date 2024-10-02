@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "barcode_bucket" {
-  bucket = "barcodebucket"
+  bucket = "barcode-bucket"
 }
 
 
