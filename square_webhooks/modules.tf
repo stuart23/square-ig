@@ -19,7 +19,7 @@ module "catalog_update" {
 
 
 module "generate_barcode" {
-  source                       = "./generate_barcode"
-  lambda_image                 = var.lambda_image
-  lambda_role_arn              = aws_iam_role.lambda_role.arn
+  source          = "./generate_barcode"
+  lambda_image    = var.lambda_image
+  lambda_role_arn = aws_iam_role.lambda_role.arn
 }
