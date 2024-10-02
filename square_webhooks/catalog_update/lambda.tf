@@ -19,11 +19,6 @@ resource "aws_lambda_function" "catalog_update" {
     log_group  = aws_cloudwatch_log_group.catalog_update_lambda_logs.name
     log_format = "Text"
   }
-  # environment {
-  #   variables = {
-  #     token = token
-  #   }
-  # }
   ephemeral_storage {
     size = 1024 # Min 512 MB and the Max 10240 MB
   }
