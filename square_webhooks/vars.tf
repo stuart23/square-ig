@@ -7,3 +7,9 @@ variable "aws_region" {
   type        = string
   description = "The region to deploy into"
 }
+
+variable "square_token" {
+  description = "Token for accessing Square"
+  type        = string
+  sensitive   = true
+}
