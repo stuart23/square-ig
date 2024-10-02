@@ -26,7 +26,7 @@ def get_all_catalog_items():
     while True:
         response = catalog.list_catalog(
             cursor=cursor,
-            type="ITEM"
+            types="ITEM"
         )
 
         if response.is_success():
