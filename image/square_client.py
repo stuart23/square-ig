@@ -16,7 +16,7 @@ client = SquareClient(
 
 
 def get_all_catalog_objects():
-"""Retrieves all catalog objects using pagination."""
+    """Retrieves all catalog objects using pagination."""
 
     catalog_api = client.catalog_api
     cursor = None
