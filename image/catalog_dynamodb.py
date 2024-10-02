@@ -12,6 +12,8 @@ def upsert_by_sku(sku, price, item_str, variation_str):
     to find out all the items that don't exist in dynamo.
 
     We should also check that all the fields for each object are the same.
+
+    Returns True if the item was updated, otherwise False
     """
     response = table.query(
         KeyConditionExpression=(
@@ -29,5 +31,8 @@ def upsert_by_sku(sku, price, item_str, variation_str):
                     "variation_str": variation_str
                 }
             )
+        return True
     elif response['Count'] > 1:
         raise Exception(f'There are multiple entries in Dynamo with the same SKU: {sku}')
+    else:
+        return False

@@ -2,8 +2,10 @@ from boto3 import client as Boto3Client
 from json import loads
 from square_client import get_all_catalog_items, upsert_catalog_object
 from catalog_dynamodb import upsert_by_sku
+from catalog_queue import publish
 
 URL_PREFIX = "plantsoc.io"
+
 
 def handler(event, context):
     items = get_all_catalog_items()
@@ -20,13 +22,9 @@ def handler(event, context):
                 price = item_variation_data['price_money']['amount']/100
             except:
                 price = 0
-            upsert_by_sku(
-                sku=sku,
-                price=price,
-                item_str=item_str,
-                variation_str=item_variation_data['name']
-            )
-
+            details = {"sku": sku, "price": price, "item_str": item_str, "variation_str": variation_str}
+            if upsert_by_sku(**details):
+                publish(details)
 
 def upsert_sku(variation):
     """
