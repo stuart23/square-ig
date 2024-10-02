@@ -52,7 +52,6 @@ def upsert_catalog_object(item):
     if response.is_success():
         return
     else:
-        import pdb; pdb.set_trace()
         raise Exception(f'Could not upsert item {item}')
 
 def generate_idempotency_key(item):

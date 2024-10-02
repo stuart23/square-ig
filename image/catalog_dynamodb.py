@@ -7,8 +7,6 @@ table = resource("dynamodb").Table("catalog")
 def upsert_by_sku(variation):
     sku = variation['item_variation_data']['sku']
     response = table.query(
-        # ProjectionExpression="#yr, title, info.genres, info.actors[0]",
-        # ExpressionAttributeNames={"#yr": "year"},
         KeyConditionExpression=(
             Key("SKU").eq(sku)
         ),
@@ -18,7 +16,6 @@ def upsert_by_sku(variation):
             price = variation['item_variation_data']['price_money']['amount'] / 100
         except KeyError:
             price = 0
-        import pdb; pdb.set_trace()
         table.put_item(
                 Item={
                     "SKU": sku,
