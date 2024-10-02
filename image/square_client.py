@@ -42,7 +42,7 @@ def get_all_catalog_items():
     return objects
 
 def upsert_catalog_object(item):
-    catalog.upsert_catalog_object(item)
+    response = catalog.upsert_catalog_object(item)
     if response.is_success():
         return
     else:
