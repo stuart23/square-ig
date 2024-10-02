@@ -5,7 +5,7 @@ from boto3 import client as Boto3Client
 SECRET_NAME = "square_token"
 
 boto3_client = Boto3Client('secretsmanager')
-square_token = boto3_client.get_secret_valueSecretId=SECRET_NAME)
+square_token = boto3_client.get_secret_value(SecretId=SECRET_NAME)
 
 client = SquareClient(
     bearer_auth_credentials=BearerAuthCredentials(
