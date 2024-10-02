@@ -17,7 +17,7 @@ def handler(event, context):
             item_variation_data = variation['item_variation_data']
             sku = item_variation_data['sku']
             try:
-                price = item_variation_data['price_money']['amount']
+                price = item_variation_data['price_money']['amount']/100
             except:
                 price = 0
             upsert_by_sku(
