@@ -13,6 +13,7 @@ def handler(event, context):
             print("One or more variation SKUs were updated. Upserting item to square.")
             upsert_catalog_object(item)
         for variation in item['item_data']['variations']:
+            print(variation)
             response = get_by_sku(variation['sku'])
             print('sku')
             print('response')
