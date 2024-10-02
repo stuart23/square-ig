@@ -26,3 +26,8 @@ variable "square_authorizer_id" {
   type        = string
   description = "ID of the authorizer to only allow square IP addresses"
 }
+
+variable "generate_barcode_sns_topic_arn" {
+  type        = string
+  description = "ARN of the SNS topic to publish events to."
+}
