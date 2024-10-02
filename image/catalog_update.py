@@ -14,9 +14,12 @@ def handler(event, context):
             upsert_catalog_object(item)
         for variation in item['item_data']['variations']:
             print(variation)
-            response = get_by_sku(variation['sku'])
-            print('sku')
-            print('response')
+            try:
+                response = get_by_sku(variation['item_variation_data']['sku'])
+                print('sku')
+                print('response')
+            except Exception:
+                pass
 
 
 def upsert_sku(variation):
