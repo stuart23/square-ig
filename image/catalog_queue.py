@@ -3,11 +3,11 @@ from json import dumps
 from os import getenv
 
 sns_client = Boto3Client('sns')
-queue_arn = getenv('sns_arn')
+topic_arn = getenv('sns_topic_arn')
 
 def publish(message):
     response = sns_client.publish(
-        TargetArn=queue_arn,
+        TopicArn=topic_arn,
         Message=dumps({'default': dumps(message)}),
         MessageStructure='json'
     )

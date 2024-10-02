@@ -21,7 +21,7 @@ resource "aws_lambda_function" "generate_barcode" {
   }
   environment {
     variables = {
-      sns_arn = aws_sns_topic.generate_barcode.arn
+      sns_topic_arn = aws_sns_topic.generate_barcode.arn
     }
   }
   ephemeral_storage {
