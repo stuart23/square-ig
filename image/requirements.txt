@@ -2,3 +2,4 @@ boto3
 squareup
 Pillow
 qrcode
+ensta
