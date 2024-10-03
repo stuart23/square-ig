@@ -30,3 +30,9 @@ variable "instagram_credentials_arn" {
   type        = string
   description = "ARN of the secrets manager secret containing the Instagram Credentials."
 }
+
+
+variable "square_token_arn" {
+  type        = string
+  description = "ARN of the secret containing the square token."
+}

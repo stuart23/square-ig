@@ -22,6 +22,7 @@ resource "aws_lambda_function" "add_user" {
   environment {
     variables = {
       instagram_credentials_arn = var.instagram_credentials_arn
+      square_token_arn          = var.square_token_arn
     }
   }
   ephemeral_storage {
