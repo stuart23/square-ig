@@ -57,7 +57,6 @@ def upsert_catalog_object(item):
 
 
 def create_catalog_image(item, image):
-    print(item)
     catalog.create_catalog_image(
         request={
             "idempotency_key": generate_idempotency_key(item),
