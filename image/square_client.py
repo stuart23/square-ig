@@ -72,7 +72,7 @@ def create_catalog_image(item, image):
                 "is_deleted": false,
             }
         },
-        image_file=None){
+        image_file=image
     )
 
 
