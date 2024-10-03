@@ -16,7 +16,7 @@ def write_image(image, key):
     in_mem_file.seek(0)
 
     # Upload image to s3
-    client_s3.upload_fileobj(
+    s3client.upload_fileobj(
         in_mem_file,
         BUCKET_NAME,
         key
