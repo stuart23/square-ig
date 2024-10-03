@@ -17,7 +17,7 @@ client = SquareClient(
     environment='production'
 )
 catalog = client.catalog
-
+customer_custom_attributes = client.customer_custom_attributes
 
 def get_all_catalog_items():
     """Retrieves all catalog items using pagination."""
@@ -58,7 +58,7 @@ def upsert_catalog_object(item):
 
 def create_catalog_image(item, image):
     print(item)
-    create_catalog_image(
+    catalog.create_catalog_image(
         request={
             "idempotency_key": generate_idempotency_key(item),
             "object_id": item['item_id'],
@@ -81,3 +81,28 @@ def generate_idempotency_key(item):
     Creates an idempotency key by hashing the dict.
     """
     return sha256(dumps(item, sort_keys=True).encode('utf-8')).hexdigest()
+
+
+def getInstagramHandle(customer_id):
+    '''
+    Takes the Square customer ID and returns the instagram handle if it is recorded, otherwise 
+    it raises a ValueError.
+    '''
+    response = customer_custom_attributes.list_customer_custom_attribute_definitions()
+    if response.errors:
+        raise ValueError(f'Could not find Instagram Handle Attribute due to: {response.errors}')
+    custom_attribute_definitions = response.body['custom_attribute_definitions']
+
+    instagram_handle_attributes = [attribute for attribute in custom_attribute_definitions if attribute['name'] == 'Instagram Handle']
+    if len(instagram_handle_attributes) != 1:
+        raise ValueError(f'Could not find Instagram Handle in the Customer Custom Attributes list: {custom_attribute_definitions}')
+    instagram_handle_key = instagram_handle_attributes[0]['key']
+
+    response = customer_custom_attributes.retrieve_customer_custom_attribute(
+        customer_id=customer_id,
+        key=instagram_handle_key
+    )
+    if response.errors:
+        raise ValueError(f'Could not find Instagram Handle for Customer {customer_id}. Error is {response.errors}')
+    
+    return response.body['custom_attribute']['value']
