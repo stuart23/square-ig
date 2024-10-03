@@ -1,6 +1,7 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from square.client import Client as SquareClient
 from square.utilities.file_wrapper import FileWrapper
+from os import getenv
 
 from json import dumps
 from hashlib import sha256
