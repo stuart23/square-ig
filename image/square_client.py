@@ -43,6 +43,7 @@ def get_all_catalog_items():
 
     return objects
 
+
 def upsert_catalog_object(item):
 
     response = catalog.upsert_catalog_object({
@@ -53,6 +54,27 @@ def upsert_catalog_object(item):
         return
     else:
         raise Exception(f'Could not upsert item {item}')
+
+
+def create_catalog_image(item, image):
+    print(item)
+    create_catalog_image(
+        request={
+            "idempotency_key": generate_idempotency_key(item),
+            "object_id": item['item_id'],
+            "image": {
+                "type": "ITEM",
+                "id": "#TEMP_ID",
+                "image_data": {
+                    "caption": "QR Code"
+                },
+                "type": "IMAGE",
+                "is_deleted": false,
+            }
+        },
+        image_file=None){
+    )
+
 
 def generate_idempotency_key(item):
     """

@@ -2,6 +2,8 @@ from qr_leaf import QRLeaf
 from s3 import write_image
 from json import loads
 
+from square_client import create_catalog_image
+
 def handler(event, context):
     # Should be only one record, but lets loop just in case.
     for record in event['Records']:
@@ -17,3 +19,5 @@ def handler(event, context):
         bw_qr = qr_code.bw_qr
         write_image(colour_qr, f"{message['sku']}__colour.png")
         write_image(bw_qr, f"{message['sku']}__bw.png")
+
+        create_catalog_image(item, colour_qr)
