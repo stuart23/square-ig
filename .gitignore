@@ -219,3 +219,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+
+# Webpage
+static_website/www/
