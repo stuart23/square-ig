@@ -69,7 +69,7 @@ def create_catalog_image(item, image):
                     "caption": "QR Code"
                 },
                 "type": "IMAGE",
-                "is_deleted": false,
+                "is_deleted": False,
             }
         },
         image_file=image
