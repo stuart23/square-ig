@@ -1,5 +1,6 @@
 import io
 from boto3 import client as Boto3Client
+from os import getenv
 
 
 s3client = Boto3Client('s3')
