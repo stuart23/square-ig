@@ -1,3 +1,9 @@
+resource "aws_cloudwatch_log_group" "api_authorizer_logs" {
+  name              = "api_authorizer"
+  retention_in_days = 2
+}
+
+
 resource "aws_lambda_function" "api_authorizer" {
   function_name = "api_authorizer"
   description   = "Checks the IP address comes from square"
@@ -9,7 +15,12 @@ resource "aws_lambda_function" "api_authorizer" {
   image_config {
     command = ["check_ip.handler"]
   }
+  logging_config {
+    log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
+    log_format = "Text"
+  }
 }
+
 
 resource "aws_apigatewayv2_authorizer" "square_webhooks_gateway_authorizer" {
   api_id                            = aws_apigatewayv2_api.square_webhooks_gateway.id
