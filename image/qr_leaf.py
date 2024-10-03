@@ -196,6 +196,7 @@ class QRLeaf(object):
         )._img
 
         masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
+        in_mem_file.name = "qr_code_colour.png"
         return self._image_to_bytes(masked_image)
 
     @property
@@ -208,6 +209,7 @@ class QRLeaf(object):
         )._img
 
         masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
+        in_mem_file.name = "qr_code_bw.png"
         return self._image_to_bytes(masked_image)
 
     @staticmethod
