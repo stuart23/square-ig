@@ -4,7 +4,7 @@ from decimal import Decimal
 
 table = resource("dynamodb").Table("catalog")
 
-def upsert_by_sku(sku, price, item_str, variation_str):
+def upsert_by_sku(sku, price, item_str, variation_str, item_id):
     """
     If an object does not exist in the database, it will be added.
 
@@ -28,7 +28,8 @@ def upsert_by_sku(sku, price, item_str, variation_str):
                     "SKU": sku,
                     "price": Decimal(str(price)),
                     "item_str": item_str,
-                    "variation_str": variation_str
+                    "variation_str": variation_str,
+                    "item_id": item_id
                 }
             )
         return True
