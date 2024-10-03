@@ -13,7 +13,6 @@ def handler(event, context):
         except KeyError:
             print(f'Could not find a message in {record}')
         message = loads(message)
-        print(message)
         qr_code = QRLeaf(message['sku'])
         colour_qr = qr_code.colour_qr
         bw_qr = qr_code.bw_qr
