@@ -8,7 +8,7 @@ BUCKET_NAME = getenv('catalog_bucket_name')
 
 
 def write_image(image, key):
-    print(f"Writing object, {key} to bucket {BUCKET_NAME}")
+    print(f"Writing object, {key} to bucket {BUCKET_NAME} in format {image.format}")
     # Save the image to an in-memory file
     in_mem_file = io.BytesIO()
     image.save(in_mem_file, format=image.format)
