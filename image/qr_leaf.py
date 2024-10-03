@@ -1,4 +1,5 @@
 from typing import TYPE_CHECKING, List
+from io import BytesIO
 from os import listdir, path
 from PIL import ImageOps, ImageFilter, Image, ImageDraw
 from random import random
@@ -7,6 +8,10 @@ import qrcode
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import ANTIALIASING_FACTOR, RoundedModuleDrawer
 from qrcode.image.styles.colormasks import SolidFillColorMask
+
+
+FORMAT = 'png'
+
 
 def comparitor(is_active, active_list=[], inactive_list=[]):
     '''
@@ -191,7 +196,7 @@ class QRLeaf(object):
         )._img
 
         masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
-        return masked_image
+        return self._image_to_bytes(masked_image)
 
     @property
     def bw_qr(self):
@@ -203,7 +208,17 @@ class QRLeaf(object):
         )._img
 
         masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
-        return masked_image
+        return self._image_to_bytes(masked_image)
+
+    @staticmethod
+    def _image_to_bytes(image):
+        """
+        Save the image to an in-memory file and return the bytes.
+        """
+        in_mem_file = BytesIO()
+        image.save(in_mem_file, format=FORMAT)
+        in_mem_file.seek(0)
+        return in_mem_file
 
     @staticmethod
     def _random_pad(qr):
