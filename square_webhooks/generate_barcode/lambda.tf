@@ -22,6 +22,7 @@ resource "aws_lambda_function" "generate_barcode" {
   environment {
     variables = {
       catalog_bucket_name = aws_s3_bucket.barcode_bucket.id
+      square_token_arn    = var.square_token_arn
     }
   }
   ephemeral_storage {

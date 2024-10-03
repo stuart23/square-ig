@@ -1,29 +1,36 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from square.client import Client as SquareClient
+from square.utilities.file_wrapper import FileWrapper
+
 from json import dumps
 from hashlib import sha256
 from boto3 import client as Boto3Client
 
-SECRET_NAME = "square_token"
 
-boto3_client = Boto3Client('secretsmanager')
-response = boto3_client.get_secret_value(SecretId=SECRET_NAME)
-square_token = response['SecretString']
+SQUARE_TOKEN_ARN_ENV = "square_token_arn"
 
-client = SquareClient(
-    bearer_auth_credentials=BearerAuthCredentials(
-        access_token=square_token
-    ),
-    environment='production'
-)
-catalog = client.catalog
-customer_custom_attributes = client.customer_custom_attributes
+
+def get_square_client():
+    '''
+    Gets the the square API key from AWS secrets manager and return a client with that.
+    '''
+    credentials_arn = getenv(SQUARE_TOKEN_ARN_ENV)
+    secretsmanager_client = Boto3Client('secretsmanager')
+    square_token = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
+    return SquareClient(
+        bearer_auth_credentials=BearerAuthCredentials(
+            access_token=square_token
+        ),
+        environment='production'
+    )
+
 
 def get_all_catalog_items():
     """Retrieves all catalog items using pagination."""
 
     cursor = None
     objects = []
+    catalog = get_square_client().catalog
 
     while True:
         response = catalog.list_catalog(
@@ -45,6 +52,7 @@ def get_all_catalog_items():
 
 
 def upsert_catalog_object(item):
+    catalog = get_square_client().catalog
 
     response = catalog.upsert_catalog_object({
         "idempotency_key": generate_idempotency_key(item),
@@ -57,6 +65,7 @@ def upsert_catalog_object(item):
 
 
 def create_catalog_image(item, image):
+    catalog = get_square_client().catalog
     return catalog.create_catalog_image(
         request={
             "idempotency_key": generate_idempotency_key(item),
@@ -87,6 +96,7 @@ def getInstagramHandle(customer_id):
     Takes the Square customer ID and returns the instagram handle if it is recorded, otherwise 
     it raises a ValueError.
     '''
+    customer_custom_attributes = get_square_client().customer_custom_attributes
     response = customer_custom_attributes.list_customer_custom_attribute_definitions()
     if response.errors:
         raise ValueError(f'Could not find Instagram Handle Attribute due to: {response.errors}')

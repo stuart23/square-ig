@@ -3,12 +3,12 @@ from json import dumps
 from os import getenv
 
 sns_client = Boto3Client('sns')
-topic_arn = getenv('sns_topic_arn')
+TOPIC_ARN = getenv('sns_topic_arn')
 
 def publish(message):
-    print(f"Publishing the following to topic {topic_arn}: {message}")
+    print(f"Publishing the following to topic {TOPIC_ARN}: {message}")
     response = sns_client.publish(
-        TopicArn=topic_arn,
+        TopicArn=TOPIC_ARN,
         Message=dumps({'default': dumps(message)}),
         MessageStructure='json'
     )

@@ -8,3 +8,9 @@ variable "lambda_role_arn" {
   type        = string
   description = "The arn of the iam role used to execute the lambda function"
 }
+
+
+variable "square_token_arn" {
+  type        = string
+  description = "ARN of the secret containing the square token."
+}

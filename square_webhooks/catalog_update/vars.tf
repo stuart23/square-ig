@@ -32,3 +32,9 @@ variable "generate_barcode_sns_topic_arn" {
   type        = string
   description = "ARN of the SNS topic to publish events to."
 }
+
+
+variable "square_token_arn" {
+  type        = string
+  description = "ARN of the secret containing the square token."
+}

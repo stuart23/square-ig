@@ -15,9 +15,9 @@ resource "aws_secretsmanager_secret" "instagram_credentials" {
 
 
 resource "aws_secretsmanager_secret_version" "instagram_credentials_version" {
-  secret_id     = aws_secretsmanager_secret.instagram_credentials.id
+  secret_id = aws_secretsmanager_secret.instagram_credentials.id
   secret_string = jsonencode({
     username = var.instagram_username
     password = var.instagram_password
-})
+  })
 }

@@ -5,6 +5,7 @@ from copy import deepcopy
 
 from square_client import create_catalog_image
 
+
 def handler(event, context):
     # Should be only one record, but lets loop just in case.
     for record in event['Records']:

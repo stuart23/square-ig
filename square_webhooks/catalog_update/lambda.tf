@@ -21,7 +21,8 @@ resource "aws_lambda_function" "catalog_update" {
   }
   environment {
     variables = {
-      sns_topic_arn = var.generate_barcode_sns_topic_arn
+      sns_topic_arn    = var.generate_barcode_sns_topic_arn
+      square_token_arn = var.square_token_arn
     }
   }
   ephemeral_storage {

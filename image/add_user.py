@@ -5,7 +5,7 @@ from square_client import getInstagramHandle
 from ensta import Web
 
 
-SQUARE_ACCESS_TOKEN_KEY = 'square_access_token'
+INSTAGRAM_CREDENTIALS_ARN_ENV = 'instagram_credentials_arn'
 
 
 def handler(event, context):
@@ -32,11 +32,11 @@ def handler(event, context):
 
 def getInstagramCredentials():
     '''
-    Gets the credentials `square_application_id` and `square_application_token` from AWS secrets manager.
+    Gets the instagram username and password from AWS secrets manager.
     '''
-    credentials_arn = getenv('instagram_credentials_arn')
+    credentials_arn = getenv(INSTAGRAM_CREDENTIALS_ARN_ENV)
     secretsmanager_client = Boto3Client('secretsmanager')
-    instagram_credentials = secretsmanager_client.get_secret_value(SecretId='credentials_arn')['SecretString']
+    instagram_credentials = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
     username = instagram_credentials['username']
     print(f'Retrieved credentials for user {username}')
     return instagram_credentials
