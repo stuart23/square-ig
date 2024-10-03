@@ -6,7 +6,7 @@ def handler(event, context):
     for record in event['Records']:
         print(f'Processing {record}')
         try:
-            message = record['Message']
+            message = record['Sns']['Message']
         except KeyError:
             print(f'Could not find a message in {record}')
         qr_code = QRLeaf(message['sku'])
