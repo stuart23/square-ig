@@ -25,3 +25,8 @@ variable "square_authorizer_id" {
   type        = string
   description = "ID of the authorizer to only allow square IP addresses"
 }
+
+variable "instagram_credentials_arn" {
+  type        = string
+  description = "ARN of the secrets manager secret containing the Instagram Credentials."
+}

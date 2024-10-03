@@ -19,6 +19,11 @@ resource "aws_lambda_function" "add_user" {
     log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
     log_format = "Text"
   }
+  environment {
+    variables = {
+      instagram_credentials_arn = var.instagram_credentials_arn
+    }
+  }
   ephemeral_storage {
     size = 1024 # Min 512 MB and the Max 10240 MB
   }
