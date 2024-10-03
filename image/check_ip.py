@@ -4,6 +4,7 @@ def handler(event, context):
     ip_address = event['requestContext']['http']['sourceIp']
     if ip_address in permitted_ips:
         print(f'Authorized IP {ip_address}')
-        return True
+        return { "isAuthorized": True }
     else:
-        raise Exception('Unauthorized')
+        print(f'Unauthorized IP {ip_address}')
+        return { "isAuthorized": False }
