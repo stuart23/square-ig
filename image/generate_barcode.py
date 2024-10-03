@@ -1,14 +1,17 @@
 from qr_leaf import QRLeaf
 from s3 import write_image
+from json import loads
 
 def handler(event, context):
     # Should be only one record, but lets loop just in case.
     for record in event['Records']:
-        print(f'Processing {record}')
+        print(f'Processing record: {record}')
         try:
             message = record['Sns']['Message']
         except KeyError:
             print(f'Could not find a message in {record}')
+        message = loads(message)
+        print(message)
         qr_code = QRLeaf(message['sku'])
         colour_qr = qr_code.colour_qr
         bw_qr = qr_code.bw_qr
