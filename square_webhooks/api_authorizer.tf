@@ -1,6 +1,6 @@
 resource "aws_cloudwatch_log_group" "api_authorizer_logs" {
   name              = "api_authorizer"
-  retention_in_days = 2
+  retention_in_days = 3
 }
 
 
@@ -16,7 +16,7 @@ resource "aws_lambda_function" "api_authorizer" {
     command = ["check_ip.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
+    log_group  = aws_cloudwatch_log_group.api_authorizer_logs.name
     log_format = "Text"
   }
 }
