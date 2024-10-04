@@ -34,8 +34,13 @@ resource "pagerduty_service" "square_integration_alerts" {
 }
 
 
+data "pagerduty_vendor" "cloudwatch" {
+  name = "Cloudwatch"
+}
+
+
 resource "pagerduty_service_integration" "square_integration_alerts_cloudwatch" {
   name    = "square_integration_alerts_cloudwatch"
   service = pagerduty_service.square_integration_alerts.id
-  type    = "aws_cloudwatch_inbound_integration"
+  vendor  = data.pagerduty_vendor.cloudwatch.id
 }
