@@ -41,10 +41,13 @@ resource "aws_lambda_permission" "generate_barcode_permission" {
 
 
 resource "aws_cloudwatch_metric_alarm" "generate_barcode_failure_alarm" {
-  alarm_name          = "generate_barcode_failure_alarm"
-  alarm_description   = "Errors in Lambda Function on barcode generation"
-  namespace           = "AWS/Lambda"
-  metric_name         = "Errors"
+  alarm_name        = "generate_barcode_failure_alarm"
+  alarm_description = "Errors in Lambda Function on barcode generation"
+  namespace         = "AWS/Lambda"
+  metric_name       = "Errors"
+  dimensions = {
+    Resource = aws_lambda_function.generate_barcode.arn
+  }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
   threshold           = 0
