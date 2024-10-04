@@ -44,3 +44,8 @@ resource "pagerduty_service_integration" "square_integration_alerts_cloudwatch" 
   service = pagerduty_service.square_integration_alerts.id
   vendor  = data.pagerduty_vendor.cloudwatch.id
 }
+
+output "pagerduty_integration_url" {
+  description = "URL to send alerts to"
+  value       = "https://events.pagerduty.com/integration/${pagerduty_service_integration.square_integration_alerts_cloudwatch.integration_key}/enqueue"
+}
