@@ -45,3 +45,10 @@ After following the Instagram documentation on how to
 
 
 Square API version 2024-08-21
+
+### Alerting
+
+To enable alerting you will have to add your number to the sandbox as well
+as to the GitHub Actions Secrets called `ALERT_PHONE_NUMBER`. To add the phone number
+to the AWS sandbox, go to the Sandbox destination phone numbers section in the
+[SNS UI](https://us-east-1.console.aws.amazon.com/sns/v3/home?region=us-east-1#/mobile/text-messaging)

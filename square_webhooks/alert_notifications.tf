@@ -54,6 +54,8 @@ resource "aws_iam_role_policy_attachment" "sns_cloudwatch_attachment" {
 
 
 resource "aws_sns_sms_preferences" "sms_preferences" {
-  monthly_spend_limit          = 10
+  # Increase to 10 with quota request. See request here:
+  # https://us-east-1.console.aws.amazon.com/servicequotas/home/requests
+  monthly_spend_limit          = 1
   delivery_status_iam_role_arn = aws_iam_role.sns_cloudwatch_role.arn
 }
