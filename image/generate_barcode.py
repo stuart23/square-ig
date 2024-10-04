@@ -22,6 +22,6 @@ def handler(event, context):
         # write_image(deepcopy(bw_qr), f"{message['sku']}__bw.png")
         write_image(colour_qr, f"{message['sku']}__colour.png")
         write_image(bw_qr, f"{message['sku']}__bw.png")
-        
+        colour_qr.seek(0)
         # create_catalog_image(message, deepcopy(colour_qr))
         create_catalog_image(message, colour_qr)
