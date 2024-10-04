@@ -86,7 +86,8 @@ jobs:
           -var square_token="${{ secrets.square_token }}" \
           -var instagram_username=${{ vars.instagram_username }} \
           -var instagram_password=${{ secrets.instagram_password }} \
-          -var alert_phone_number=${{ secrets.alert_phone_number }}
+          -var pagerduty_api_key=${{ secrets.pagerduty_api_key }} \
+          -var pagerduty_email=${{ secrets.pagerduty_email }}
 
 
   deploy-static-website:

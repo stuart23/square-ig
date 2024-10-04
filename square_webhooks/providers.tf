@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    pagerduty = {
+      source  = "pagerduty/pagerduty"
+      version = ">= 2.2.1"
+    }
   }
   backend "s3" {
     bucket         = "square-ig-tfstate"
@@ -17,4 +21,8 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region = var.aws_region
+}
+
+provider "pagerduty" {
+  token = var.pagerduty_api_key
 }

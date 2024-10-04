@@ -48,7 +48,9 @@ Square API version 2024-08-21
 
 ### Alerting
 
-To enable alerting you will have to add your number to the sandbox as well
-as to the GitHub Actions Secrets called `ALERT_PHONE_NUMBER`. To add the phone number
-to the AWS sandbox, go to the Sandbox destination phone numbers section in the
-[SNS UI](https://us-east-1.console.aws.amazon.com/sns/v3/home?region=us-east-1#/mobile/text-messaging)
+Alerting is done via PagerDuty. You can sign up for a free account to use it with this application.
+
+Once signed up, create an API key by following [these instructions](https://support.pagerduty.com/main/docs/api-access-keys#generate-a-general-access-rest-api-key)
+Copy the API key to a new GitHub Actions secret called `PAGERDUTY_API_KEY`.
+
+Also create another secret called `PAGERDUTY_EMAIL` with the email of account that should receive the alerts.

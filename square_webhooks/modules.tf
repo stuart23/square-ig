@@ -29,3 +29,9 @@ module "generate_barcode" {
   square_token_arn     = aws_secretsmanager_secret.square_token.arn
   alerts_sns_topic_arn = aws_sns_topic.alerts.arn
 }
+
+
+module "alerts" {
+  source          = "./alerts"
+  pagerduty_email = var.pagerduty_email
+}

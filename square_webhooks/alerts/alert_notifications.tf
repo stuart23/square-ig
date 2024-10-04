@@ -4,8 +4,8 @@ resource "aws_sns_topic" "alerts" {
 
 resource "aws_sns_topic_subscription" "alerts_sms" {
   topic_arn = aws_sns_topic.alerts.arn
-  protocol  = "sms"
-  endpoint  = var.alert_phone_number
+  protocol  = "https"
+  endpoint  = "https://google.com"
 }
 
 
@@ -52,24 +52,4 @@ resource "aws_iam_policy" "sns_cloudwatch_policy" {
 resource "aws_iam_role_policy_attachment" "sns_cloudwatch_attachment" {
   role       = aws_iam_role.sns_cloudwatch_role.name
   policy_arn = aws_iam_policy.sns_cloudwatch_policy.arn
-}
-
-
-resource "aws_pinpointsmsvoicev2_phone_number" "alerts_sms" {
-  iso_country_code = "US"
-  message_type     = "TRANSACTIONAL"
-  number_type      = "SIMULATOR"
-
-  number_capabilities = [
-    "SMS"
-  ]
-}
-
-
-resource "aws_sns_sms_preferences" "sms_preferences" {
-  # Increase to 10 with quota request. See request here:
-  # https://us-east-1.console.aws.amazon.com/servicequotas/home/requests
-  monthly_spend_limit                   = 1
-  delivery_status_iam_role_arn          = aws_iam_role.sns_cloudwatch_role.arn
-  delivery_status_success_sampling_rate = 100
 }
