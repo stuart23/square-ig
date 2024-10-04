@@ -74,7 +74,7 @@ def create_catalog_image(item, image):
                 "type": "ITEM",
                 "id": "#TEMP_ID",
                 "image_data": {
-                    "name": "{0} - {1}".format(item['item_str'], item['variation_str'])
+                    "name": "{0} - {1}".format(item['item_str'], item['variation_str']),
                     "caption": "QR Code"
                 },
                 "type": "IMAGE",
