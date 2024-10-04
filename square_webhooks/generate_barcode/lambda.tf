@@ -38,3 +38,16 @@ resource "aws_lambda_permission" "generate_barcode_permission" {
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.generate_barcode.arn
 }
+
+resource "aws_cloudwatch_metric_alarm" "generate_barcode_failure_alarm" {
+  alarm_name          = "generate_barcode_failure_alarm"
+  alarm_description   = "Errors in Lambda Function on barcode generation"
+  namespace           = "AWS/Lambda"
+  metric_name         = "Errors"
+  comparison_operator = "GreaterThanThreshold"
+  statistic           = "Maximum"
+  threshold           = 0
+  evaluation_periods  = 1
+  period              = 300
+  alarm_actions       = [var.alerts_sns_topic_arn]
+}

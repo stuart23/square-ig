@@ -25,3 +25,9 @@ variable "instagram_password" {
   type        = string
   sensitive   = true
 }
+
+variable "alert_phone_number" {
+  description = "Phone number to send alerts to"
+  type        = string
+  sensitive   = true
+}

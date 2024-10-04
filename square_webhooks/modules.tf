@@ -23,8 +23,9 @@ module "catalog_update" {
 
 
 module "generate_barcode" {
-  source           = "./generate_barcode"
-  lambda_image     = var.lambda_image
-  lambda_role_arn  = aws_iam_role.lambda_role.arn
-  square_token_arn = aws_secretsmanager_secret.square_token.arn
+  source               = "./generate_barcode"
+  lambda_image         = var.lambda_image
+  lambda_role_arn      = aws_iam_role.lambda_role.arn
+  square_token_arn     = aws_secretsmanager_secret.square_token.arn
+  alerts_sns_topic_arn = aws_sns_topic.alerts.arn
 }
