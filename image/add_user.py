@@ -19,8 +19,3 @@ def handler(event, context):
 
     instagram_handle = getInstagramHandle(customer_id=id)
     print(f'Instagram Handle is {instagram_handle}')
-
-    enstaClient = WebS3()
-    profile = enstaClient.profile("leomessi")
-    print(profile.full_name)
-    print(profile.biography)
