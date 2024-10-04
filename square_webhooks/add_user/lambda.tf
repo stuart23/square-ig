@@ -41,3 +41,21 @@ resource "aws_lambda_permission" "add_user_permission" {
   # within API Gateway.
   source_arn = "${var.square_gateway_execution_arn}/*"
 }
+
+
+resource "aws_cloudwatch_metric_alarm" "add_user_failure_alarm" {
+  alarm_name        = "add_user_failure_alarm"
+  alarm_description = "Errors in Lambda Function on add user"
+  namespace         = "AWS/Lambda"
+  metric_name       = "Errors"
+  dimensions = {
+    FunctionName = aws_lambda_function.add_user.function_name
+  }
+  comparison_operator = "GreaterThanThreshold"
+  statistic           = "Maximum"
+  threshold           = 0
+  evaluation_periods  = 1
+  period              = 300
+  alarm_actions       = [var.alerts_sns_topic_arn]
+  ok_actions          = [var.alerts_sns_topic_arn]
+}

@@ -7,6 +7,7 @@ module "add_user" {
   lambda_role_arn              = aws_iam_role.lambda_role.arn
   instagram_credentials_arn    = aws_secretsmanager_secret.instagram_credentials.arn
   square_token_arn             = aws_secretsmanager_secret.square_token.arn
+  alerts_sns_topic_arn         = module.alerts.alerts_sns_topic_arn
 }
 
 
@@ -19,6 +20,7 @@ module "catalog_update" {
   lambda_role_arn                = aws_iam_role.lambda_role.arn
   generate_barcode_sns_topic_arn = module.generate_barcode.generate_barcode_sns_topic_arn
   square_token_arn               = aws_secretsmanager_secret.square_token.arn
+  alerts_sns_topic_arn           = module.alerts.alerts_sns_topic_arn
 }
 
 

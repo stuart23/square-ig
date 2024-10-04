@@ -36,3 +36,10 @@ variable "square_token_arn" {
   type        = string
   description = "ARN of the secret containing the square token."
 }
+
+
+variable "pagerduty_email" {
+  description = "Email of existing user in PagerDuty who will receive alerts"
+  type        = string
+  sensitive   = true
+}

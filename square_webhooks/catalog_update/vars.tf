@@ -38,3 +38,9 @@ variable "square_token_arn" {
   type        = string
   description = "ARN of the secret containing the square token."
 }
+
+
+variable "alerts_sns_topic_arn" {
+  description = "ARN of SNS Topic to send alerts to"
+  type        = string
+}

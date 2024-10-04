@@ -41,3 +41,21 @@ resource "aws_lambda_permission" "catalog_update_permission" {
   # within API Gateway.
   source_arn = "${var.square_gateway_execution_arn}/*"
 }
+
+
+resource "aws_cloudwatch_metric_alarm" "catalog_update_failure_alarm" {
+  alarm_name        = "catalog_update_failure_alarm"
+  alarm_description = "Errors in Lambda Function on catalog updates"
+  namespace         = "AWS/Lambda"
+  metric_name       = "Errors"
+  dimensions = {
+    FunctionName = aws_lambda_function.catalog_update.function_name
+  }
+  comparison_operator = "GreaterThanThreshold"
+  statistic           = "Maximum"
+  threshold           = 0
+  evaluation_periods  = 1
+  period              = 300
+  alarm_actions       = [var.alerts_sns_topic_arn]
+  ok_actions          = [var.alerts_sns_topic_arn]
+}
