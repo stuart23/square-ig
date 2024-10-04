@@ -46,7 +46,7 @@ resource "aws_cloudwatch_metric_alarm" "generate_barcode_failure_alarm" {
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
   dimensions = {
-    Resource = aws_lambda_function.generate_barcode.name
+    FunctionName = aws_lambda_function.generate_barcode.function_name
   }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
