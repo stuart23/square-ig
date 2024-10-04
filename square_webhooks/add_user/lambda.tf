@@ -23,6 +23,8 @@ resource "aws_lambda_function" "add_user" {
     variables = {
       instagram_credentials_arn   = var.instagram_credentials_arn
       square_token_arn            = var.square_token_arn
+      instagram_session_bucket_id = aws_s3_bucket.instagram_session.id
+      instagram_session_key       = "session.json"
     }
   }
   ephemeral_storage {
