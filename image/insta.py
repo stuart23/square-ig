@@ -10,7 +10,7 @@ INSTAGRAM_SESSION_BUCKET_ID_ENV = 'instagram_session_bucket_id'
 INSTAGRAM_SESSION_KEY_ENV = 'instagram_session_key'
 
 
-class S3(Web):
+class WebS3(Web):
     def __init__(self):
         self.bucket_id = getenv(INSTAGRAM_SESSION_BUCKET_ID_ENV)
         self.session_key = getenv(INSTAGRAM_SESSION_KEY_ENV)
