@@ -24,7 +24,7 @@ def handler(event, context):
     print(f'Instagram Handle is {instagram_handle}')
 
     instagram_credentials = getInstagramCredentials()
-    enstaClient = Web(**instagram_credentials)
+    enstaClient = Web(instagram_credentials['username'], instagram_credentials['password'])
     profile = enstaClient.profile("leomessi")
     print(profile.full_name)
     print(profile.biography)
