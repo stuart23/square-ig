@@ -5,6 +5,7 @@ from os import getenv
 from json import dumps
 from hashlib import sha256
 from boto3 import client as Boto3Client
+from time import time
 
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
@@ -96,7 +97,7 @@ def generate_idempotency_key(item):
     """
     Creates an idempotency key by hashing the dict.
     """
-    return sha256(dumps(item, sort_keys=True).encode('utf-8')).hexdigest()
+    return sha256(dumps({"item": item, "timestamp": time()}, sort_keys=True).encode('utf-8')).hexdigest()
 
 
 def getInstagramHandle(customer_id):
