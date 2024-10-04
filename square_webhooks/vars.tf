@@ -7,3 +7,35 @@ variable "aws_region" {
   type        = string
   description = "The region to deploy into"
 }
+
+variable "square_token" {
+  description = "Token for accessing Square"
+  type        = string
+  sensitive   = true
+}
+
+variable "instagram_username" {
+  description = "Instagram Username"
+  type        = string
+  sensitive   = true
+}
+
+variable "instagram_password" {
+  description = "Instagram Password"
+  type        = string
+  sensitive   = true
+}
+
+
+variable "pagerduty_api_key" {
+  description = "API key needed for sending alerts to PagerDuty"
+  type        = string
+  sensitive   = true
+}
+
+
+variable "pagerduty_email" {
+  description = "Email of existing user in PagerDuty who will receive alerts"
+  type        = string
+  sensitive   = true
+}

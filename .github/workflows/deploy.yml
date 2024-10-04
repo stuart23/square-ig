@@ -82,17 +82,13 @@ jobs:
       run: |
         terraform apply -auto-approve \
           -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}" \
-          -var aws_region=${{ vars.aws_region }}
+          -var aws_region=${{ vars.aws_region }} \
+          -var square_token="${{ secrets.square_token }}" \
+          -var instagram_username=${{ vars.instagram_username }} \
+          -var instagram_password=${{ secrets.instagram_password }} \
+          -var pagerduty_api_key=${{ secrets.pagerduty_api_key }} \
+          -var pagerduty_email=${{ secrets.pagerduty_email }}
 
-    # # The following will fail with the error `Error: ResourceNotFoundException: Secrets Manager can't find the specified secret..` if it does not exist.
-    # - name: Check Secrets Exist in AWS
-    #   uses: aws-actions/aws-secretsmanager-get-secrets@v2
-    #   with:
-    #     secret-ids: |
-    #       instagram_password
-    #       instagram_username
-    #       square_application_id
-    #       square_access_token
 
   deploy-static-website:
     runs-on: ubuntu-latest

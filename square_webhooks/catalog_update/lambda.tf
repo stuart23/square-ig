@@ -1,11 +1,11 @@
-resource "aws_cloudwatch_log_group" "add_user_lambda_logs" {
-  name              = "add_user_lambda"
+resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
+  name              = "catalog_update_lambda"
   retention_in_days = 14
 }
 
-resource "aws_lambda_function" "add_user" {
-  function_name = "add_user"
-  description   = "Deploys DAGs in S3 bucket to Astro"
+resource "aws_lambda_function" "catalog_update" {
+  function_name = "catalog_update"
+  description   = "Triggered when the catalog updates. Updates the Dynamo table with the items."
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
@@ -13,16 +13,16 @@ resource "aws_lambda_function" "add_user" {
   timeout       = 30
   memory_size   = 256
   image_config {
-    command = ["add_user.handler"]
+    command = ["catalog_update.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.add_user_lambda_logs.name
+    log_group  = aws_cloudwatch_log_group.catalog_update_lambda_logs.name
     log_format = "Text"
   }
   environment {
     variables = {
-      instagram_credentials_arn   = var.instagram_credentials_arn
-      square_token_arn            = var.square_token_arn
+      sns_topic_arn    = var.generate_barcode_sns_topic_arn
+      square_token_arn = var.square_token_arn
     }
   }
   ephemeral_storage {
@@ -31,10 +31,10 @@ resource "aws_lambda_function" "add_user" {
 }
 
 
-resource "aws_lambda_permission" "add_user_permission" {
+resource "aws_lambda_permission" "catalog_update_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "add_user"
+  function_name = "catalog_update"
   principal     = "apigateway.amazonaws.com"
 
   # The /* part allows invocation from any stage, method and resource path
@@ -43,13 +43,13 @@ resource "aws_lambda_permission" "add_user_permission" {
 }
 
 
-resource "aws_cloudwatch_metric_alarm" "add_user_failure_alarm" {
-  alarm_name        = "add_user_failure_alarm"
-  alarm_description = "Errors in Lambda Function on add user"
+resource "aws_cloudwatch_metric_alarm" "catalog_update_failure_alarm" {
+  alarm_name        = "catalog_update_failure_alarm"
+  alarm_description = "Errors in Lambda Function on catalog updates"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
   dimensions = {
-    FunctionName = aws_lambda_function.add_user.function_name
+    FunctionName = aws_lambda_function.catalog_update.function_name
   }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"

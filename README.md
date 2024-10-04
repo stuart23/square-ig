@@ -3,28 +3,34 @@
 This repo contains tooling for integrating the Square API with Instagram. The integration supports the following:
 
 - Adding users in instagram when the user is added or updated in square.
+- Creating QR codes when an item is updated in square.
 
 ## Setup
 
-### Terraform Cloud
+This repo uses GitHub Actions to deploy infrastructure to AWS. To setup this workflow, GitHub Actions first needs
+to be able to authenticate to AWS. Infrastructure is then managed by Terraform using the AWS account as the state
+store.
 
-Deployment is done through Terraform Cloud. The easiest way I have found to bootstrap Terraform cloud with Github and AWS is:
+### Bootstrap
 
-1. If you haven't already done so, sign up for a Terraform Cloud account and create an organization.
-2. Create a new workspace through the web UI that is connected to the GitHub Repo.
-3. Go into the bootstrap directory here.
-4. Configure the AWS CLI credentials `AWS_ACCESS_KEY_ID` & `AWS_SECRET_ACCESS_KEY` in the terminal.
-5. Get a Terraform user token from [here](https://app.terraform.io/app/settings/tokens), it will just be used to create these resources, so you can have a 1 hour expiry. Set the env var `TFE_TOKEN` to this token.
-6. Run the following to deploy the AWS role. A new Terraform workspace will be created, so you can give it whatever name you want
-   ```
-   tf init && tf apply --var tfc_organization_name=<<YOUR TERRAFORM ORG NAME>> --var tfc_workspace_name=<<A NAME FOR THE WORKSPACE>>
-   ```
-   e.g.
-   ```
-   tf init && tf apply --var tfc_organization_name=tiny_plant_store --var tfc_workspace_name=square-ig
-   ```
+Before deploying any application, the AWS account must first be bootstrapped so that it has the role to allow
+GitHub Actions to deploy resources, and a store for the Terraform state. To bootstrap, in a shell with AWS 
+credentials, execute the following from the `bootstrap` directory:
+
+```
+tf init && tf apply --var github_org_name=my_org_name --var github_repo_name=my_repo_name
+```
+
+This command will produce an output called `cicd_role_arn`. Take this ARN and
+[create a GitHub Actions variable](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#creating-configuration-variables-for-a-repository)
+called `CICD_ROLE_ARN` with the ARN as the value. Now create another variable called `AWS_REGION` with the
+preferred AWS region (e.g. `us-east-1`) as the value.
 
 This is a one-time setup, so there is no need to store the tf state file after it is created.
+
+
+### Deployment
+
 
 ### Step 3 - Create and upload Square Credentials
 
@@ -39,3 +45,12 @@ After following the Instagram documentation on how to
 
 
 Square API version 2024-08-21
+
+### Alerting
+
+Alerting is done via PagerDuty. You can sign up for a free account to use it with this application.
+
+Once signed up, create an API key by following [these instructions](https://support.pagerduty.com/main/docs/api-access-keys#generate-a-general-access-rest-api-key)
+Copy the API key to a new GitHub Actions secret called `PAGERDUTY_API_KEY`.
+
+Also create another secret called `PAGERDUTY_EMAIL` with the email of account that should receive the alerts.

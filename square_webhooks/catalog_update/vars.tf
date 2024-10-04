@@ -6,7 +6,7 @@ variable "lambda_image" {
 
 variable "square_gateway_id" {
   type        = string
-  description = "The id of the square_gateway aws_apigatewayv2_api resporce"
+  description = "The id of the square_gateway aws_apigatewayv2_api resource"
 }
 
 
@@ -21,14 +21,16 @@ variable "lambda_role_arn" {
   description = "The arn of the iam role used to execute the lambda function"
 }
 
+
 variable "square_authorizer_id" {
   type        = string
   description = "ID of the authorizer to only allow square IP addresses"
 }
 
-variable "instagram_credentials_arn" {
+
+variable "generate_barcode_sns_topic_arn" {
   type        = string
-  description = "ARN of the secrets manager secret containing the Instagram Credentials."
+  description = "ARN of the SNS topic to publish events to."
 }
 
 
