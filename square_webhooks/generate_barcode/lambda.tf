@@ -49,5 +49,5 @@ resource "aws_cloudwatch_metric_alarm" "generate_barcode_failure_alarm" {
   threshold           = 0
   evaluation_periods  = 1
   period              = 300
-  alarm_actions       = [module.alerts.alerts_sns_topic_arn]
+  alarm_actions       = [var.alerts_sns_topic_arn]
 }

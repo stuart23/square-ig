@@ -1,4 +1,5 @@
-data "pagerduty_user" "me" {
+resource "pagerduty_user" "alerts_email" {
+  name  = "Alert Receiver"
   email = var.pagerduty_email
 }
 
@@ -13,7 +14,7 @@ resource "pagerduty_escalation_policy" "square_integration_alerts" {
 
     target {
       type = "user_reference"
-      id   = pagerduty_user.me.id
+      id   = pagerduty_user.alerts_email.id
     }
   }
 }
