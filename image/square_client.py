@@ -61,12 +61,15 @@ def upsert_catalog_object(item):
     if response.is_success():
         return
     else:
-        raise Exception(f'Could not upsert item {item}')
+        raise Exception(f'Could not upsert item {item} due to: {response.errors}')
 
 
 def create_catalog_image(item, image):
     catalog = get_square_client().catalog
-    return catalog.create_catalog_image(
+    item_name = "{0} - {1}".format(item['item_str'], item['variation_str'])
+    item_id = item['item_id']
+    print(f'Saving image to item: {item_id}: {item_name}')
+    response = catalog.create_catalog_image(
         request={
             "idempotency_key": generate_idempotency_key(item),
             "object_id": item['item_id'],
@@ -74,7 +77,7 @@ def create_catalog_image(item, image):
                 "type": "ITEM",
                 "id": "#TEMP_ID",
                 "image_data": {
-                    "name": "{0} - {1}".format(item['item_str'], item['variation_str']),
+                    "name": item_name,
                     "caption": "QR Code"
                 },
                 "type": "IMAGE",
@@ -83,6 +86,10 @@ def create_catalog_image(item, image):
         },
         image_file=image
     )
+    if response.is_success():
+        return response
+    else:
+        raise Exception(f'Could not add image to item {item_id} due to: {response.errors}')
 
 
 def generate_idempotency_key(item):
