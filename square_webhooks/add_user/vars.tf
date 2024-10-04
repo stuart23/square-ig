@@ -38,8 +38,7 @@ variable "square_token_arn" {
 }
 
 
-variable "pagerduty_email" {
-  description = "Email of existing user in PagerDuty who will receive alerts"
+variable "alerts_sns_topic_arn" {
+  description = "ARN of SNS Topic to send alerts to"
   type        = string
-  sensitive   = true
 }
