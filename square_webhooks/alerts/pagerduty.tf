@@ -34,8 +34,8 @@ resource "pagerduty_service" "square_integration_alerts" {
 }
 
 
-# resource "pagerduty_service_integration" "email" {
-#   name    = "square_integration_alerts_cloudwatch"
-#   service = pagerduty_service.square_integration_alerts.id
-#   type    = "aws_cloudwatch_inbound_integration"
-# }
+resource "pagerduty_service_integration" "square_integration_alerts_cloudwatch" {
+  name    = "square_integration_alerts_cloudwatch"
+  service = pagerduty_service.square_integration_alerts.id
+  type    = "aws_cloudwatch_inbound_integration"
+}
