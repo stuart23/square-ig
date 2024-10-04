@@ -23,4 +23,5 @@ def handler(event, context):
         write_image(colour_qr, f"{message['sku']}__colour.png")
         write_image(bw_qr, f"{message['sku']}__bw.png")
         
-        create_catalog_image(message, deepcopy(colour_qr))
+        # create_catalog_image(message, deepcopy(colour_qr))
+        create_catalog_image(message, colour_qr)
