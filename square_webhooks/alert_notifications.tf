@@ -8,6 +8,7 @@ resource "aws_sns_topic_subscription" "alerts_sms" {
   endpoint  = var.alert_phone_number
 }
 
+
 resource "aws_iam_role" "sns_cloudwatch_role" {
   name = "sns_cloudwatch_role"
   assume_role_policy = jsonencode({
@@ -23,6 +24,7 @@ resource "aws_iam_role" "sns_cloudwatch_role" {
     ]
   })
 }
+
 
 # IAM policy for publishing to SNS
 resource "aws_iam_policy" "sns_cloudwatch_policy" {
@@ -50,6 +52,17 @@ resource "aws_iam_policy" "sns_cloudwatch_policy" {
 resource "aws_iam_role_policy_attachment" "sns_cloudwatch_attachment" {
   role       = aws_iam_role.sns_cloudwatch_role.name
   policy_arn = aws_iam_policy.sns_cloudwatch_policy.arn
+}
+
+
+resource "aws_pinpointsmsvoicev2_phone_number" "alerts_sms" {
+  iso_country_code = "US"
+  message_type     = "TRANSACTIONAL"
+  number_type      = "SIMULATOR"
+
+  number_capabilities = [
+    "SMS"
+  ]
 }
 
 
