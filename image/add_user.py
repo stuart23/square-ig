@@ -36,7 +36,9 @@ def getInstagramCredentials():
     '''
     credentials_arn = getenv(INSTAGRAM_CREDENTIALS_ARN_ENV)
     secretsmanager_client = Boto3Client('secretsmanager')
-    instagram_credentials = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
+    instagram_credentials = loads(
+        secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
+    )
     username = instagram_credentials['username']
     print(f'Retrieved credentials for user {username}')
     return instagram_credentials
