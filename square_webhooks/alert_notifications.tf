@@ -69,6 +69,7 @@ resource "aws_pinpointsmsvoicev2_phone_number" "alerts_sms" {
 resource "aws_sns_sms_preferences" "sms_preferences" {
   # Increase to 10 with quota request. See request here:
   # https://us-east-1.console.aws.amazon.com/servicequotas/home/requests
-  monthly_spend_limit          = 1
-  delivery_status_iam_role_arn = aws_iam_role.sns_cloudwatch_role.arn
+  monthly_spend_limit                   = 1
+  delivery_status_iam_role_arn          = aws_iam_role.sns_cloudwatch_role.arn
+  delivery_status_success_sampling_rate = 100
 }
