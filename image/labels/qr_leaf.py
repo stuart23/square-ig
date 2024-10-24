@@ -1,5 +1,4 @@
 from typing import TYPE_CHECKING, List
-from io import BytesIO
 from os import listdir, path
 from PIL import ImageOps, ImageFilter, Image, ImageDraw
 from random import random
@@ -208,17 +207,6 @@ class QRLeaf(object):
         )._img
 
         return self._mask_image_and_outline(qr_code_image, outline=2)
-
-
-    @staticmethod
-    def _image_to_bytes(image):
-        """
-        Save the image to an in-memory file and return the bytes.
-        """
-        in_mem_file = BytesIO()
-        image.save(in_mem_file, format=FORMAT)
-        in_mem_file.seek(0)
-        return in_mem_file
 
     @staticmethod
     def _random_pad(qr):

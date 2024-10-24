@@ -1,5 +1,6 @@
 from qr_leaf import QRLeaf
 from PIL import Image, ImageOps, ImageFont, ImageDraw
+from io import BytesIO
 
 LABEL_SIZE = (50, 30) # width x height
 LABEL_DPMM = 20 # dots per millimeter
@@ -37,6 +38,16 @@ def generate_label(sku, title, variation, price, pet_safe):
         label.paste(pet_safe, (520, 450))
     return label
 
+def generate_label_bytes(*args, **kwargs):
+    """
+    Save the image to an in-memory file and return the bytes.
+    """
+    label = generate_label(*args, **kwargs)
+    in_mem_file = BytesIO()
+    label.save(in_mem_file, format=FORMAT)
+    in_mem_file.seek(0)
+    return in_mem_file
+
 def generate_qr(label, sku):
     """
     Generates the leaf qr code and inserts it onto the label.
@@ -51,7 +62,6 @@ def generate_qr(label, sku):
     x_location = QR_HORIZONTAL_PAD*LABEL_DPMM
     y_location = round((label.height - resized_qr.height)/2)
     label.paste(resized_qr, (x_location, y_location))
-
 
 def cropped_text(text, size, font):
     '''
