@@ -7,8 +7,3 @@ terraform {
     }
   }
 }
-
-
-provider "pagerduty" {
-  token = var.pagerduty_api_key
-}

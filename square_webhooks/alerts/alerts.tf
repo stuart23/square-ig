@@ -2,12 +2,6 @@ resource "aws_sns_topic" "alerts" {
   name = "alerts"
 }
 
-resource "aws_sns_topic_subscription" "pagerduty_alerts" {
-  topic_arn = aws_sns_topic.alerts.arn
-  protocol  = "https"
-  endpoint  = "https://events.pagerduty.com/integration/${pagerduty_service_integration.square_integration_alerts_cloudwatch.integration_key}/enqueue"
-}
-
 
 resource "aws_iam_role" "sns_cloudwatch_role" {
   name = "sns_cloudwatch_role"

@@ -35,6 +35,4 @@ module "generate_barcode" {
 
 module "alerts" {
   source            = "./alerts"
-  pagerduty_api_key = var.pagerduty_api_key
-  pagerduty_email   = var.pagerduty_email
 }
