@@ -49,7 +49,7 @@ if __name__ == '__main__':
     catalog = get_square_client().catalog
 
     for item in items:
-        images = item['item_data']['image_ids']
+        images = item['item_data'].get('image_ids', [])
         for image_id in images:
             image = catalog.retrieve_catalog_object(
                 object_id=image_id,
