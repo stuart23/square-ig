@@ -10,7 +10,6 @@ from qrcode.image.styles.moduledrawers.pil import ANTIALIASING_FACTOR, RoundedMo
 from qrcode.image.styles.colormasks import SolidFillColorMask
 
 
-FORMAT = 'png'
 MASK = Path(__file__).parent.resolve() / 'assets' / 'anthurium_mask.png'
 
 

@@ -10,6 +10,7 @@ QR_HORIZONTAL_PAD = 1 # millimeters from left for qr code start
 FLATTY_FONT = Path(__file__).parent.resolve() / 'assets' / 'Flatty.otf'
 TROPICA_FONT = Path(__file__).parent.resolve() / 'assets' / 'Tropica Gardens Sans.otf'
 TITLE_FONT_SIZE = 150
+FORMAT = 'png'
 
 def font_size(x):
     """
