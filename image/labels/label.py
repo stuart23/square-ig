@@ -7,8 +7,10 @@ LABEL_SIZE = (50, 30) # width x height
 LABEL_DPMM = 20 # dots per millimeter
 QR_SIZE = 75 # percentage of the height of the label
 QR_HORIZONTAL_PAD = 1 # millimeters from left for qr code start
-FLATTY_FONT = Path(__file__).parent.resolve() / 'assets' / 'Flatty.otf'
-TROPICA_FONT = Path(__file__).parent.resolve() / 'assets' / 'Tropica Gardens Sans.otf'
+pwd = Path(__file__).parent.resolve()
+FLATTY_FONT = pwd / 'assets' / 'Flatty.otf'
+TROPICA_FONT = pwd / 'assets' / 'Tropica Gardens Sans.otf'
+PET_SAFE = pwd / 'assets' / 'pet_safe.png'
 TITLE_FONT_SIZE = 150
 FORMAT = 'png'
 
@@ -40,7 +42,7 @@ def generate_label(sku, title, variation, price, pet_safe):
         label.paste(pet_safe, (520, 450))
     return label
 
-def generate_label_bytes(*args, **kwargs):
+def generate_label_bytes(filename, *args, **kwargs):
     """
     Save the image to an in-memory file and return the bytes.
     """
@@ -48,6 +50,7 @@ def generate_label_bytes(*args, **kwargs):
     in_mem_file = BytesIO()
     label.save(in_mem_file, format=FORMAT)
     in_mem_file.seek(0)
+    in_mem_file.name = filename
     return in_mem_file
 
 def generate_qr(label, sku):
@@ -90,7 +93,7 @@ def generate_pet_safe(label):
     padding = 20 # distance between pet logo and text
     logo_size = 80 # size of the paw square
     # Import and resize the pet safe logo (paw)
-    logo = Image.open("assets/pet_safe.png")
+    logo = Image.open(PET_SAFE)
     resized_logo = logo.resize((logo_size, logo_size))
     # Create a text box
     text_box = cropped_text('PET SAFE', 5, TROPICA_FONT)
@@ -116,12 +119,3 @@ def rotate_and_crop_image(image, angle):
     rotated = padded.rotate(45,fillcolor='white')
     bbox = ImageOps.invert(rotated).getbbox()
     return rotated.crop(bbox)
-
-if __name__ == '__main__':
-    generate_label(
-        sku='plantsoc.io/abcd1234',
-        title='Pilea',
-        variation='4"',
-        price=123.45,
-        pet_safe=True
-    ).show()

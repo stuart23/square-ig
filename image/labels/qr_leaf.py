@@ -260,10 +260,3 @@ class QRLeaf(object):
             return Image.composite(masked_image,blank_black,ImageOps.invert(outline_image))
         else:
             return masked_image
-        
-
-
-if __name__ == "__main__":
-    qr = QRLeaf(code_text='plantsoc.app/asdf1234')
-    qr.colour_qr.save('colour.png')
-    qr.bw_qr.save('bw.png')
