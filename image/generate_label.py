@@ -1,4 +1,4 @@
-from labels import generate_label
+from labels import generate_label_bytes
 from s3 import write_image
 from json import loads
 from copy import deepcopy
