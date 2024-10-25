@@ -17,12 +17,15 @@ def handler(event, context):
         item_str = item['item_data']['name']
         for variation in item['item_data']['variations']:
             item_variation_data = variation['item_variation_data']
+            print(item_variation_data)
             sku = item_variation_data['sku']
+            variation_str = item_variation_data['name']
+            item_id = item_variation_data["item_id"]
             try:
                 price = item_variation_data['price_money']['amount']/100
             except:
                 price = 0
-            details = {"sku": sku, "price": price, "item_str": item_str, "variation_str": item_variation_data['name'], "item_id": item_variation_data["item_id"]}
+            details = {"sku": sku, "price": price, "item_str": item_str, "variation_str": variation_str, "item_id": item_id}
             if upsert_by_sku(**details):
                 publish(details)
 

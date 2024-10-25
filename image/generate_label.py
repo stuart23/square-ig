@@ -18,8 +18,8 @@ def handler(event, context):
         print(message)
         label = generate_label_bytes(
             sku=message['sku'],
-            title=message['title'],
-            variation=message['variation'],
+            title=message['item_str'],
+            variation=message['variation_str'],
             price=message['price'],
             pet_safe=message['pet_safe']
         )
