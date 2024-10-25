@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, List
 from os import listdir, path
 from PIL import ImageOps, ImageFilter, Image, ImageDraw
 from random import random
+from pathlib import Path
 
 from qrcode import QRCode, ERROR_CORRECT_H
 from qrcode.image.styledpil import StyledPilImage
@@ -10,6 +11,7 @@ from qrcode.image.styles.colormasks import SolidFillColorMask
 
 
 FORMAT = 'png'
+MASK = Path(__file__).parent.resolve() / 'assets' / 'anthurium_mask.png'
 
 
 def comparitor(is_active, active_list=[], inactive_list=[]):
@@ -247,7 +249,7 @@ class QRLeaf(object):
             input_image.size, 
             (255,255,255)
         ) 
-        mask = Image.open('assets/anthurium_mask.png').resize(input_image.size)
+        mask = Image.open(MASK).resize(input_image.size)
         masked_image = Image.composite(input_image,blank,mask)
         if outline:
             outline_image = mask.filter(ImageFilter.FIND_EDGES).filter(ImageFilter.MaxFilter(outline_width))

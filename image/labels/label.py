@@ -1,13 +1,14 @@
 from .qr_leaf import QRLeaf
 from PIL import Image, ImageOps, ImageFont, ImageDraw
 from io import BytesIO
+from pathlib import Path
 
 LABEL_SIZE = (50, 30) # width x height
 LABEL_DPMM = 20 # dots per millimeter
 QR_SIZE = 75 # percentage of the height of the label
 QR_HORIZONTAL_PAD = 1 # millimeters from left for qr code start
-FLATTY_FONT = "assets/Flatty.otf"
-TROPICA_FONT = "assets/Tropica Gardens Sans.otf"
+FLATTY_FONT = Path(__file__).parent.resolve() / 'assets' / 'Flatty.otf'
+TROPICA_FONT = Path(__file__).parent.resolve() / 'assets' / 'Tropica Gardens Sans.otf'
 TITLE_FONT_SIZE = 150
 
 def font_size(x):
