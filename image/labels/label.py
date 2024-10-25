@@ -1,4 +1,4 @@
-from qr_leaf import QRLeaf
+from .qr_leaf import QRLeaf
 from PIL import Image, ImageOps, ImageFont, ImageDraw
 from io import BytesIO
 
