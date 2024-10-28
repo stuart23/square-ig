@@ -4,7 +4,7 @@ from square_client import get_all_catalog_items, upsert_catalog_object
 from catalog_dynamodb import upsert_by_sku
 from catalog_queue import publish
 
-URL_PREFIX = "plantsoc.io"
+URL_PREFIX = "plantsoc.com"
 
 
 def handler(event, context):
