@@ -1,16 +1,16 @@
 from typing import TYPE_CHECKING, List
-from io import BytesIO
 from os import listdir, path
 from PIL import ImageOps, ImageFilter, Image, ImageDraw
 from random import random
+from pathlib import Path
 
-import qrcode
+from qrcode import QRCode, ERROR_CORRECT_H
 from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import ANTIALIASING_FACTOR, RoundedModuleDrawer
 from qrcode.image.styles.colormasks import SolidFillColorMask
 
 
-FORMAT = 'png'
+MASK = Path(__file__).parent.resolve() / 'assets' / 'anthurium_mask.png'
 
 
 def comparitor(is_active, active_list=[], inactive_list=[]):
@@ -180,7 +180,7 @@ class QRLeaf(object):
     dark_green = (14, 66, 5)
 
     def __init__(self, code_text):
-        self.qr = qrcode.QRCode(error_correction=qrcode.ERROR_CORRECT_H, box_size=10, border=0)
+        self.qr = QRCode(error_correction=ERROR_CORRECT_H, box_size=10, border=0)
         self.qr.add_data(code_text)
         self.qr.make()
         self._random_pad(self.qr)
@@ -195,10 +195,7 @@ class QRLeaf(object):
             color_mask=SolidFillColorMask(back_color=self.dark_green, front_color=self.light_green)
         )._img
 
-        masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
-        in_mem_file = self._image_to_bytes(masked_image)
-        in_mem_file.name = "qr_code_colour.png"
-        return in_mem_file
+        return self._mask_image_and_outline(qr_code_image, outline=2)
 
 
     @property
@@ -210,21 +207,7 @@ class QRLeaf(object):
             eye_drawer=RoundedModuleDrawer(radius_ratio=0.75)
         )._img
 
-        masked_image = self._mask_image_and_outline(qr_code_image, outline=2)
-        in_mem_file = self._image_to_bytes(masked_image)
-        in_mem_file.name = "qr_code_bw.png"
-        return in_mem_file
-
-
-    @staticmethod
-    def _image_to_bytes(image):
-        """
-        Save the image to an in-memory file and return the bytes.
-        """
-        in_mem_file = BytesIO()
-        image.save(in_mem_file, format=FORMAT)
-        in_mem_file.seek(0)
-        return in_mem_file
+        return self._mask_image_and_outline(qr_code_image, outline=2)
 
     @staticmethod
     def _random_pad(qr):
@@ -265,7 +248,7 @@ class QRLeaf(object):
             input_image.size, 
             (255,255,255)
         ) 
-        mask = Image.open('anthurium_mask.png').resize(input_image.size)
+        mask = Image.open(MASK).resize(input_image.size)
         masked_image = Image.composite(input_image,blank,mask)
         if outline:
             outline_image = mask.filter(ImageFilter.FIND_EDGES).filter(ImageFilter.MaxFilter(outline_width))
@@ -277,10 +260,3 @@ class QRLeaf(object):
             return Image.composite(masked_image,blank_black,ImageOps.invert(outline_image))
         else:
             return masked_image
-        
-
-
-if __name__ == "__main__":
-    qr = QRLeaf(code_text='plantsoc.app/asdf1234')
-    qr.colour_qr.save('colour.png')
-    qr.bw_qr.save('bw.png')

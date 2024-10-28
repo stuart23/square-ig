@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "generate_barcode" {
 
 resource "aws_lambda_function" "generate_barcode" {
   function_name = "generate_barcode"
-  description   = "Generates a barcode, saves it in S3 and updates the dynamo database"
+  description   = "Generates a label and saves it in S3"
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
@@ -13,7 +13,7 @@ resource "aws_lambda_function" "generate_barcode" {
   timeout       = 30
   memory_size   = 256
   image_config {
-    command = ["generate_barcode.handler"]
+    command = ["generate_label.handler"]
   }
   logging_config {
     log_group  = aws_cloudwatch_log_group.generate_barcode.name

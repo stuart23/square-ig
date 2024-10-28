@@ -1,4 +1,4 @@
-from qr_leaf import QRLeaf
+from labels import generate_label_bytes
 from s3 import write_image
 from json import loads
 from copy import deepcopy
@@ -15,12 +15,16 @@ def handler(event, context):
         except KeyError:
             print(f'Could not find a message in {record}')
         message = loads(message)
-        qr_code = QRLeaf(message['sku'])
-        colour_qr = qr_code.colour_qr
-        bw_qr = qr_code.bw_qr
+        print(message)
+        label = generate_label_bytes(
+            sku=message['sku'],
+            title=message['item_str'],
+            variation=message['variation_str'],
+            price=message['price'],
+            pet_safe=message['pet_safe']
+        )
         # BytesIO can only be used once, so we make a copy to upload to square
-        colour_qr2 = deepcopy(colour_qr)
+        label2 = deepcopy(label)
 
-        write_image(colour_qr, f"{message['sku']}__colour.png")
-        write_image(bw_qr, f"{message['sku']}__bw.png")
-        create_catalog_image(message, colour_qr2)
+        write_image(label, f"{message['sku']}.png")
+        create_catalog_image(message, label2)
