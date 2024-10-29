@@ -19,7 +19,6 @@ resource "time_sleep" "wait_5_mins" {
 resource "aws_acm_certificate_validation" "certificate_validation" {
   depends_on              = [time_sleep.wait_5_mins]
   certificate_arn         = aws_acm_certificate.certificate.arn
-  validation_record_fqdns = [for record in porkbun_dns_record.certificate_validation : record.domain]
 }
 
 
