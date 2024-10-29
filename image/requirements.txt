@@ -3,3 +3,4 @@ squareup
 Pillow
 qrcode
 ensta
+GitPython
