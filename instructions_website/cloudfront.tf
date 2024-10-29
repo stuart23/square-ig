@@ -61,7 +61,7 @@ resource "aws_cloudfront_function" "rewrite_url" {
   name    = "rewrite_url"
   runtime = "cloudfront-js-2.0"
   publish = true
-  code    = file("${path.module}/function.js")
+  code    = file("${path.module}/rewrite_url.js")
 }
 
 
