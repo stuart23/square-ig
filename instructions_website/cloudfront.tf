@@ -22,6 +22,11 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = var.domain_name
 
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.rewrite_url.arn
+    }
+
     forwarded_values {
       query_string = false
 
@@ -49,6 +54,14 @@ resource "aws_cloudfront_distribution" "s3_distribution" {
     acm_certificate_arn = module.acm.certificate_arn
     ssl_support_method  = "sni-only"
   }
+}
+
+
+resource "aws_cloudfront_function" "rewrite_url" {
+  name    = "rewrite_url"
+  runtime = "cloudfront-js-2.0"
+  publish = true
+  code    = file("${path.module}/function.js")
 }
 
 
