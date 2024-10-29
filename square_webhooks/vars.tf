@@ -21,7 +21,7 @@ variable "instructions_git_repo" {
 }
 
 
-variable "github_key_arn" {
+variable "gh_key_arn" {
   description = "Secretsmanager ARN for the git ssh private key"
   type        = string
 }

@@ -6,7 +6,7 @@ from boto3 import client as Boto3Client
 from jinja2 import Environment, FileSystemLoader
 
 
-GITHUB_KEY_ARN_ENV = "github_key_arn"
+GITHUB_KEY_ARN_ENV = "gh_key_arn"
 KEY_FILE = Path('/tmp/id_rsa')
 GIT_REPO_ENV = "instructions_git_repo"
 REPO_DIR = '/tmp/repo'

@@ -84,6 +84,8 @@ jobs:
           -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}" \
           -var aws_region=${{ vars.aws_region }} \
           -var square_token="${{ secrets.square_token }}" \
+          -var gh_key_arn="${{ vars.gh_key_arn }}" \
+          -var instructions_git_repo="${{ vars.instructions_git_repo }}"
 
 
   deploy-static-website:
