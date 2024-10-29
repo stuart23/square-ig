@@ -55,7 +55,10 @@ resource "aws_iam_policy" "s3_write_policy" {
       {
         Action   = "s3:PutObject"
         Effect   = "Allow"
-        Resource = aws_s3_bucket.website_bucket.arn
+        Resource = [
+          aws_s3_bucket.website_bucket.arn,
+          "${aws_s3_bucket.website_bucket.arn}/*",
+        ]
       },
     ]
   })
@@ -63,7 +66,7 @@ resource "aws_iam_policy" "s3_write_policy" {
 
 
 resource "aws_iam_role_policy_attachment" "s3_upload_role_policy" {
-  role       = aws_iam_role.cicd_role.name
+  role       = aws_iam_role.s3_upload_role.name
   policy_arn = aws_iam_policy.s3_write_policy.arn
 }
 
