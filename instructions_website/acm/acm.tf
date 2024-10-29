@@ -11,7 +11,7 @@ resource "aws_acm_certificate" "certificate" {
 resource "time_sleep" "wait_60_seconds" {
   depends_on      = [porkbun_dns_record.certificate_validation]
   triggers        = { dns_record_id = porkbun_dns_record.certificate_validation[var.domain_name].id }
-  create_duration = "1m"
+  create_duration = "5m"
 }
 
 
