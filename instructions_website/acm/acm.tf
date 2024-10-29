@@ -1,5 +1,4 @@
 resource "aws_acm_certificate" "certificate" {
-  depends_on        = [porkbun_dns_record.certificate_validation]
   domain_name       = var.domain_name
   validation_method = "DNS"
 
@@ -16,11 +15,10 @@ resource "aws_acm_certificate" "certificate" {
 # }
 
 
-# resource "aws_acm_certificate_validation" "certificate_validation" {
-#   depends_on              = [time_sleep.wait_60_seconds]
-#   certificate_arn         = aws_acm_certificate.certificate.arn
-#   validation_record_fqdns = [for record in porkbun_dns_record.main : record.domain]
-# }
+resource "aws_acm_certificate_validation" "certificate_validation" {
+  certificate_arn         = aws_acm_certificate.certificate.arn
+  validation_record_fqdns = [for record in porkbun_dns_record.main : record.domain]
+}
 
 output "fqdns" {
   value = [for record in porkbun_dns_record.certificate_validation : record.domain]
@@ -28,4 +26,8 @@ output "fqdns" {
 
 output "certificate_arn" {
   value = aws_acm_certificate.certificate.arn
+}
+
+output "certificate_validation" {
+  value = aws_acm_certificate_validation.certificate_validation.id
 }
