@@ -28,6 +28,7 @@ class InstructionsGit(object):
 
         environment = Git().custom_environment(GIT_SSH_COMMAND=f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}')
         self.repo_dir = Path(REPO_DIR)
+        self.repo_dir.mkdir()
 
         with environment:
             self.repo = Repo.clone_from(self.repo_url, self.repo_dir)
