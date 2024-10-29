@@ -73,5 +73,5 @@ resource "aws_iam_role_policy_attachment" "s3_upload_role_policy" {
 
 output "cicd_role_arn" {
   description = "GitHub action role"
-  value       = aws_iam_role.cicd_role.arn
+  value       = aws_iam_role.s3_upload_role.arn
 }
