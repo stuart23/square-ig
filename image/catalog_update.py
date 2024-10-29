@@ -3,12 +3,14 @@ from json import loads
 from square_client import get_all_catalog_items, upsert_catalog_object
 from catalog_dynamodb import upsert_by_sku
 from catalog_queue import publish
+from descriptions.create_descriptions import InstructionsGit
 
 URL_PREFIX = "plantsoc.com"
 
 
 def handler(event, context):
     items = get_all_catalog_items()
+    instructions = InstructionsGit()
 
     for item in items:
         if any([upsert_sku(variation) for variation in item['item_data']['variations']]):
@@ -40,6 +42,8 @@ def handler(event, context):
             }
             if upsert_by_sku(**details):
                 publish(details)
+                instructions.add_item(details)
+    instructions.commit()
 
 def upsert_sku(variation):
     """
