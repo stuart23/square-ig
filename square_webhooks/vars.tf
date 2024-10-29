@@ -13,15 +13,3 @@ variable "square_token" {
   type        = string
   sensitive   = true
 }
-
-variable "instagram_username" {
-  description = "Instagram Username"
-  type        = string
-  sensitive   = true
-}
-
-variable "instagram_password" {
-  description = "Instagram Password"
-  type        = string
-  sensitive   = true
-}

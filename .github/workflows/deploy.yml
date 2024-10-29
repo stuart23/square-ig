@@ -84,8 +84,6 @@ jobs:
           -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}" \
           -var aws_region=${{ vars.aws_region }} \
           -var square_token="${{ secrets.square_token }}" \
-          -var instagram_username=${{ vars.instagram_username }} \
-          -var instagram_password=${{ secrets.instagram_password }}
 
 
   deploy-static-website:
