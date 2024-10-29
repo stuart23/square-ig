@@ -44,3 +44,15 @@ variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
 }
+
+
+variable "instructions_git_repo" {
+  description = "Github repo for instructions"
+  type        = string
+}
+
+
+variable "github_key_arn" {
+  description = "KMS ARN for the git ssh private key"
+  type        = string
+}

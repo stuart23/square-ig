@@ -13,6 +13,8 @@ module "add_user" {
 module "catalog_update" {
   source                         = "./catalog_update"
   lambda_image                   = var.lambda_image
+  instructions_git_repo          = var.instructions_git_repo
+  github_key_arn                 = var.github_key_arn
   square_gateway_id              = aws_apigatewayv2_api.square_webhooks_gateway.id
   square_gateway_execution_arn   = aws_apigatewayv2_api.square_webhooks_gateway.execution_arn
   square_authorizer_id           = aws_apigatewayv2_authorizer.square_webhooks_gateway_authorizer.id
@@ -33,5 +35,5 @@ module "generate_barcode" {
 
 
 module "alerts" {
-  source            = "./alerts"
+  source = "./alerts"
 }

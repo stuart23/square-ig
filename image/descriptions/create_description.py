@@ -69,7 +69,8 @@ class InstructionsGit(object):
         rmtree(self.repo_dir)
 
 
-instructions = InstructionsGit()
-instructions.add_item({"sku": "plantsoc.com/abcd12345", "item_str": "A Plant"})
-instructions.add_item({"sku": "plantsoc.com/efgh56789", "item_str": "Another Plant"})
-instructions.commit()
+if __name__ == "__main__":
+    instructions = InstructionsGit()
+    instructions.add_item({"sku": "plantsoc.com/abcd12345", "item_str": "A Plant"})
+    instructions.add_item({"sku": "plantsoc.com/efgh56789", "item_str": "Another Plant"})
+    instructions.commit()

@@ -13,3 +13,15 @@ variable "square_token" {
   type        = string
   sensitive   = true
 }
+
+
+variable "instructions_git_repo" {
+  description = "Github repo for instructions"
+  type        = string
+}
+
+
+variable "github_key_arn" {
+  description = "Secretsmanager ARN for the git ssh private key"
+  type        = string
+}

@@ -3,7 +3,7 @@ from json import loads
 from square_client import get_all_catalog_items, upsert_catalog_object
 from catalog_dynamodb import upsert_by_sku
 from catalog_queue import publish
-from descriptions.create_descriptions import InstructionsGit
+from descriptions.create_description import InstructionsGit
 
 URL_PREFIX = "plantsoc.com"
 
