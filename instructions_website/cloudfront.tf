@@ -1,5 +1,5 @@
 resource "aws_cloudfront_distribution" "s3_distribution" {
-  depends_on = [ module.acm.certificate_validation ]
+  depends_on = [module.acm.certificate_validation]
   origin {
     domain_name = aws_s3_bucket.website_bucket.bucket_regional_domain_name
     origin_id   = var.domain_name
