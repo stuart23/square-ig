@@ -32,7 +32,10 @@ class InstructionsGit(object):
         with environment:
             self.repo = Repo.clone_from(self.repo_url, self.repo_dir)
 
-        self.jinja_environment = Environment(loader=FileSystemLoader("templates/"))
+        self.jinja_environment = Environment(
+            loader=FileSystemLoader("templates/"),
+            extensions=['jinja2_time.TimeExtension']
+        )
 
 
     def add_item(self, item_details):
@@ -67,6 +70,6 @@ class InstructionsGit(object):
 
 
 instructions = InstructionsGit()
-instructions.add_item({"sku": "plantsoc.com/abcd1234", "item_str": "A Plant"})
-instructions.add_item({"sku": "plantsoc.com/efgh5678", "item_str": "Another Plant"})
+instructions.add_item({"sku": "plantsoc.com/abcd12345", "item_str": "A Plant"})
+instructions.add_item({"sku": "plantsoc.com/efgh56789", "item_str": "Another Plant"})
 instructions.commit()
