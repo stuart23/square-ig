@@ -12,7 +12,7 @@ terraform {
   }
   backend "s3" {
     bucket         = "square-ig-tfstate"
-    key            = "static_website/terraform.tfstate"
+    key            = "instruction_website/terraform.tfstate"
     encrypt        = true
     dynamodb_table = "square-ig-tfstate"
   }
