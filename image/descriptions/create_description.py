@@ -26,7 +26,7 @@ class InstructionsGit(object):
             with open(KEY_FILE, 'w') as key_file:
                 key_file.write(key)
 
-        environment = Git().custom_environment(GIT_SSH_COMMAND=f'ssh -i {KEY_FILE}')
+        environment = Git().custom_environment(GIT_SSH_COMMAND=f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}')
         self.repo_dir = Path(REPO_DIR)
 
         with environment:
