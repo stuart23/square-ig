@@ -10,15 +10,8 @@ variable "github_repo_name" {
   description = "The GitHub repo that will be able to push to the S3 bucket."
 }
 
-resource "aws_iam_openid_connect_provider" "github" {
+data "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
-  client_id_list = [
-    "sts.amazonaws.com",
-  ]
-  thumbprint_list = [
-    "6938fd4d98bab03faadb97b34396831e3780aea1",
-    "1c58a3a8518e8759bf075b76b750d4f2df264fcd"
-  ]
 }
 
 resource "aws_iam_role" "s3_upload_role" {
@@ -30,7 +23,7 @@ resource "aws_iam_role" "s3_upload_role" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Effect = "Allow"
         Principal = {
-          Federated = [aws_iam_openid_connect_provider.github.arn]
+          Federated = [ data.aws_iam_openid_connect_provider.github.arn]
         }
         Condition = {
           StringLike = {
