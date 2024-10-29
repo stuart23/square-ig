@@ -1,4 +1,5 @@
 resource "aws_acm_certificate" "certificate" {
+  depends_on        = [porkbun_dns_record.certificate_validation]
   domain_name       = var.domain_name
   validation_method = "DNS"
 

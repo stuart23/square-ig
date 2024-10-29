@@ -20,7 +20,7 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-region = var.aws_region
+  region = var.aws_region
 }
 
 provider "porkbun" {
