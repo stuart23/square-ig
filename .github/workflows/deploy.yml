@@ -107,11 +107,40 @@ jobs:
       working-directory: static_website
       run: terraform init
 
-    - name: Terraform Apply ECR
+    - name: Terraform Apply
       working-directory: static_website
       run: |
         terraform apply -auto-approve \
           -var domain_name="theplantsocietyatx.com" \
+          -var porkbun_api_key="${{ secrets.porkbun_api_key }}" \
+          -var porkbun_secret_key="${{ secrets.porkbun_secret_key }}" \
+          -var aws_region=${{ vars.aws_region }}
+
+
+  deploy-instructions-website:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ vars.cicd_role_arn }}
+        aws-region: ${{ vars.aws_region }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      working-directory: instructions_website
+      run: terraform init
+
+    - name: Terraform Apply
+      working-directory: instructions_website
+      run: |
+        terraform apply -auto-approve \
+          -var domain_name="plantsoc.com" \
           -var porkbun_api_key="${{ secrets.porkbun_api_key }}" \
           -var porkbun_secret_key="${{ secrets.porkbun_secret_key }}" \
           -var aws_region=${{ vars.aws_region }}
