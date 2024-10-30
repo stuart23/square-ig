@@ -78,7 +78,7 @@ def upsert_by_sku(item):
     are, it returns false.
 
     If the record does not exist, or if it is different, it will update the record
-    but with the barcode and website fields set to False so they regenerate.
+    but with the label and website fields set to False so they regenerate.
     """
     try:
         dynamo_item = get_item(item.sku)
@@ -107,7 +107,7 @@ def upsert_by_sku(item):
         print(f'Item {item} has changed. Updating Dynamo')
         table.update_item(
             Key={'SKU': item.sku},
-            UpdateExpression='SET price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, variation_id = :variation_id, pet_safe = :pet_safe, barcode = :barcode, website = :website',
+            UpdateExpression='SET price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, variation_id = :variation_id, pet_safe = :pet_safe, label = :label, website = :website',
             ExpressionAttributeValues={
                 ':price': item.price,
                 ':item_str': item.item_str,
