@@ -64,3 +64,13 @@ class Item:
             print(f"SKU {self.sku} does not start with {URL_PREFIX}. Updating to {new_sku}")
             self.sku = new_sku
             return True
+
+    @property
+    def sku_path(self):
+        """
+        Returns just the last bit of the sku - the path. E.g. if the sku is `plantsoc.com/abcd1234`, returns just `abcd1234`
+        """
+        if self.sku is not None:
+            return self.sku.replace(f"{URL_PREFIX}/", "")
+        else:
+            return None

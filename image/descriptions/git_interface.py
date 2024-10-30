@@ -39,29 +39,43 @@ class InstructionsGit(object):
         )
 
 
-    def add_item(self, item_details):
+    def add_item(self, item):
         '''
         Creates an item by templating the item.md file.
+
+        If it already exists, then we wont overwrite it, just leave it as is and return False.
         '''
         template = self.jinja_environment.get_template("item.md")
-        url = item_details["sku"].replace("plantsoc.com/", "")
-        item_dir = self.repo_dir / url
+        item_dir = self.repo_dir / "content" / item.sku_path
+        if item_dir.is_dir():
+            return False
         item_dir.mkdir()
+        output_file = item_dir / "index.md"
 
-        content = template.render(**item_details)
-        with open(item_dir / 'index.md', 'w') as fh:
+        content = template.render(**item.__dict__)
+        with open(output_file, 'w') as fh:
             fh.write(content)
 
-        self.repo.index.add(Path(url) / 'index.md')
+        self.repo.index.add(output_file)
+        return output_file
         
+
+    @property
+    def added_files(self):
+        '''
+        Returns all the files that were added to the git index.
+        '''
+        return [x.a_path for x in self.repo.index.diff("HEAD")]
+
 
     def commit(self):
         '''
         Commits the added files and pushes to GitHub.
         '''
-        message = 'Adding ' + ', '.join([x[0] for x in self.repo.index.entries.keys()])
+        message = 'Adding ' + ', '.join(self.added_files)
         self.repo.index.commit(message)
         self.repo.remote('origin').push(env=self.git_environment)
+
 
     def __del__(self):
         '''

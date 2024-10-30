@@ -1,19 +1,18 @@
 from types import GeneratorType
 from uuid import uuid4
+from os import getenv
 
-from square_client import _get_all_catalog_items, get_catalog_items, get_secret_arn, get_square_client, patch_objects_sku
+from square_client import _get_all_catalog_items, get_catalog_items, get_square_client, patch_objects_sku, SQUARE_TOKEN_ARN_ENV
 from catalog import Item
 
 
-def test_get_secret_arn():
-    secret_arn = get_secret_arn()
-    assert secret_arn != None
-    assert secret_arn.startswith('arn')
+def test_gh_repo_env_exists():
+    assert getenv(SQUARE_TOKEN_ARN_ENV)
 
 
-def test_get_secret():
+def test_get_client():
+    # TODO: Can we test that it is successful or just that it doesn't raise any exception?
     client = get_square_client()
-
 
 
 def test__get_all_catalog_items():

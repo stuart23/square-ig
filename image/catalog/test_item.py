@@ -54,3 +54,42 @@ def test_update_sku_missing_sku():
     )
     assert item.update_sku() == True
     assert item.sku
+
+
+def test_sku_path_url_sku():
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    assert item.sku_path == 'abcd1234'
+
+
+def test_sku_path_url_sku_not_formed():
+    item = Item(
+        sku='abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    assert item.sku_path == 'abcd1234'
+
+
+def test_sku_path_url_sku_empty():
+    item = Item(
+        sku=None,
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    assert item.sku_path == None
