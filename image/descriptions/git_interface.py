@@ -32,7 +32,7 @@ class DescriptionsGit(object):
         self.repo_dir.mkdir()
 
         self.repo = Repo.clone_from(self.repo_url, self.repo_dir, env=self.git_environment)
-
+        print(f'Repo {self.repo_url} successfully cloned to {self.repo_dir}')
         self.jinja_environment = Environment(
             loader=FileSystemLoader(TEMPLATE_DIR),
             extensions=['jinja2_time.TimeExtension']
@@ -48,6 +48,7 @@ class DescriptionsGit(object):
         template = self.jinja_environment.get_template("item.md")
         item_dir = self.repo_dir / "content" / item.sku_path
         if item_dir.is_dir():
+            print(f'Skipping {item} as directory {item_dir} already exists')
             return False
         item_dir.mkdir()
         output_file = item_dir / "index.md"
@@ -55,8 +56,10 @@ class DescriptionsGit(object):
         content = template.render(**item.__dict__)
         with open(output_file, 'w') as fh:
             fh.write(content)
+            print(f'Description for {item} written to {output_file}.')
 
         self.repo.index.add(output_file)
+
         return output_file
         
 
@@ -72,8 +75,9 @@ class DescriptionsGit(object):
         '''
         Commits the added files and pushes to GitHub.
         '''
-        message = 'Adding ' + ', '.join(self.added_files)
-        self.repo.index.commit(message)
+        file_list = ', '.join(self.added_files)
+        print(f'Committing the following to git: {file_list}')
+        self.repo.index.commit(f'Adding {file_list}')
         self.repo.remote('origin').push(env=self.git_environment)
 
 

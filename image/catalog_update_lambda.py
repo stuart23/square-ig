@@ -19,7 +19,7 @@ def handler(event, context):
     # needs_label_items = get_needs_label_items()
     website_needs_update_items = get_website_needs_update_items()
     descriptions = DescriptionsGit()
-    for item in items:
+    for item in website_needs_update_items:
         descriptions.add_item(item)
     descriptions.commit()
 
