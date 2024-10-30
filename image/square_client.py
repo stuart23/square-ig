@@ -7,6 +7,8 @@ from hashlib import sha256
 from boto3 import client as Boto3Client
 from time import time
 
+from .catalog import Item
+
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
 
@@ -26,11 +28,40 @@ def get_square_client():
     )
 
 
-def get_all_catalog_items():
-    """Retrieves all catalog items using pagination."""
+def get_catalog_items():
+    '''
+    Returns a generator of all the catalog items.
+    '''
+    items = _get_all_catalog_items()
+
+    for item in items:
+        item_data = item['item_data']
+        item_str = item_data['name']
+        for variation in item_data['variations']:
+            # Try and get the pet_safe status from the variation
+            item_details = {'item_str': item_str, 'pet_safe': False}
+            for custom_attribute in variation.get('custom_attribute_values', {}).values():
+                if custom_attribute.get('name', '') == 'Pet Safe':
+                    item_details['pet_safe'] = custom_attribute['boolean_value']
+                    break
+            item_variation_data = variation['item_variation_data']
+            item_details['sku'] = item_variation_data.get('sku')
+            item_details['variation_str'] = item_variation_data['name']
+            item_details['item_id'] = item_variation_data["item_id"]
+            item_details['variation_id'] = variation['id']
+            try:
+                item_details['price'] = item_variation_data['price_money']['amount']
+            except KeyError:
+                item_details['price'] = 0
+            yield Item(**item_details)
+
+
+def _get_all_catalog_items():
+    """
+    Retrieves all catalog items as a generator.
+    """
 
     cursor = None
-    objects = []
     catalog = get_square_client().catalog
 
     while True:
@@ -40,7 +71,9 @@ def get_all_catalog_items():
         )
 
         if response.is_success():
-            objects.extend(response.body["objects"])
+            objects = response.body["objects"]
+            for object in objects:
+                yield object
             cursor = response.body.get("cursor")
 
             if cursor is None:
@@ -52,12 +85,15 @@ def get_all_catalog_items():
     return objects
 
 
-def upsert_catalog_object(item):
+def patch_objects_sku(item):
     catalog = get_square_client().catalog
-
+    response = catalog.retrieve_catalog_object(object_id=item.variation_id)
+    square_item = response.body['object']
+    item_variation_data = square_item['item_variation_data']
+    item_variation_data['sku'] = item.sku
     response = catalog.upsert_catalog_object({
         "idempotency_key": generate_idempotency_key(item),
-        "object": item
+        "object": {'type': 'ITEM_VARIATION', 'id': item.variation_id, 'item_variation_data': item_variation_data}
     })
     if response.is_success():
         return
@@ -97,7 +133,7 @@ def generate_idempotency_key(item):
     """
     Creates an idempotency key by hashing the dict.
     """
-    return sha256(dumps({"item": item, "timestamp": time()}, sort_keys=True).encode('utf-8')).hexdigest()
+    return sha256(dumps({"item": item.__dict__, "timestamp": time()}, sort_keys=True).encode('utf-8')).hexdigest()
 
 
 def getInstagramHandle(customer_id):
