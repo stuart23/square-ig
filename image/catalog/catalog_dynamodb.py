@@ -50,8 +50,8 @@ def upsert_by_sku(item):
                     "item_id": item.item_id,
                     "variation_id": item.variation_id,
                     "pet_safe": item.pet_safe,
-                    "barcode": False,
-                    "website": False
+                    "barcode": 'N',
+                    "website": 'N'
                 }
             )
         return True
@@ -71,8 +71,8 @@ def upsert_by_sku(item):
                 ':item_id': item.item_id,
                 ":variation_id": item.variation_id,
                 ':pet_safe': item.pet_safe,
-                ':barcode': False,
-                ':website': False
+                ':barcode': 'N',
+                ':website': 'N'
             }
         )
         return True
