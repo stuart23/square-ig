@@ -36,7 +36,7 @@ jobs:
     
     - name: Run pytest
       working-directory: image
-      run: pytest .
+      run: python3 -m pytest
 
   deploy-square-ig:
     runs-on: ubuntu-latest
