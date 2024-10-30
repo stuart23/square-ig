@@ -5,6 +5,7 @@ from shutil import rmtree
 from boto3 import client as Boto3Client
 from jinja2 import Environment, FileSystemLoader
 
+from utils import get_secret
 
 GITHUB_KEY_ARN_ENV = "gh_key_arn"
 KEY_FILE = Path('/tmp/id_rsa')
@@ -21,9 +22,7 @@ class InstructionsGit(object):
         self.repo_url = getenv(GIT_REPO_ENV)
 
         if not KEY_FILE.is_file():
-            credentials_arn = getenv(GITHUB_KEY_ARN_ENV)
-            secretsmanager_client = Boto3Client('secretsmanager')
-            key = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
+            key = get_secret(GITHUB_KEY_ARN_ENV)
             with open(KEY_FILE, 'w') as key_file:
                 key_file.write(key)
             chmod(KEY_FILE, 0o600)
@@ -62,17 +61,15 @@ class InstructionsGit(object):
         '''
         message = 'Adding ' + ', '.join([x[0] for x in self.repo.index.entries.keys()])
         self.repo.index.commit(message)
-        self.repo.remote('origin').push()
+        self.repo.remote('origin').push(env=self.git_environment)
 
     def __del__(self):
         '''
-        Cleans up by removing the repo dir
+        Cleans up by removing the repo dir. If the object failed to init, the repo dir may not exist
         '''
-        rmtree(self.repo_dir)
-
-
-if __name__ == "__main__":
-    instructions = InstructionsGit()
-    instructions.add_item({"sku": "plantsoc.com/abcd12345", "item_str": "A Plant"})
-    instructions.add_item({"sku": "plantsoc.com/efgh56789", "item_str": "Another Plant"})
-    instructions.commit()
+        try:
+            repo_dir = self.repo_dir
+        except AttributeError:
+            print('Repo dir was not created')
+        else:
+            rmtree(self.repo_dir)

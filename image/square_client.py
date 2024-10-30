@@ -1,31 +1,22 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from square.client import Client as SquareClient
-from os import getenv
 
 from json import dumps
 from hashlib import sha256
-from boto3 import client as Boto3Client
 from time import time
 
 from catalog import Item
+from utils import get_secret
 
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
-
-
-def get_secret_arn():
-    '''
-    Returns the secret arn of the secretsmanager secret containing the square token.
-    '''
-    return getenv(SQUARE_TOKEN_ARN_ENV)
 
 
 def get_square_client():
     '''
     Gets the the square API key from AWS secrets manager and return a client with that.
     '''
-    secretsmanager_client = Boto3Client('secretsmanager')
-    square_token = secretsmanager_client.get_secret_value(SecretId=get_secret_arn())['SecretString']
+    square_token = get_secret(SQUARE_TOKEN_ARN_ENV)
     return SquareClient(
         bearer_auth_credentials=BearerAuthCredentials(
             access_token=square_token
