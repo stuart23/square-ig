@@ -79,7 +79,7 @@ def _get_all_catalog_items():
             if cursor is None:
                 break  # No more pages
         else:
-            print(f"Error: {response.errors}")
+            raise Exception(f"Could not retrieve objects due to: {response.errors}")
             break  # Stop on error
 
     return objects
@@ -91,14 +91,19 @@ def patch_objects_sku(item):
     square_item = response.body['object']
     item_variation_data = square_item['item_variation_data']
     item_variation_data['sku'] = item.sku
-    response = catalog.upsert_catalog_object({
+    upsert_response = catalog.upsert_catalog_object({
         "idempotency_key": generate_idempotency_key(item),
-        "object": {'type': 'ITEM_VARIATION', 'id': item.variation_id, 'item_variation_data': item_variation_data}
+        "object": {
+            'type': 'ITEM_VARIATION',
+            'id': item.variation_id,
+            'version': square_item['version'],
+            'item_variation_data': item_variation_data
+        }
     })
-    if response.is_success():
+    if upsert_response.is_success():
         return
     else:
-        raise Exception(f'Could not upsert item {item} due to: {response.errors}')
+        raise Exception(f'Could not upsert item {item} due to: {upsert_response.errors}')
 
 
 def create_catalog_image(item, image):
