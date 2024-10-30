@@ -10,6 +10,7 @@ GITHUB_KEY_ARN_ENV = "gh_key_arn"
 KEY_FILE = Path('/tmp/id_rsa')
 GIT_REPO_ENV = "instructions_git_repo"
 REPO_DIR = '/tmp/repo'
+TEMPLATE_DIR = Path(__file__).parent.resolve() / 'templates'
 
 
 class InstructionsGit(object):
@@ -34,7 +35,7 @@ class InstructionsGit(object):
         self.repo = Repo.clone_from(self.repo_url, self.repo_dir, env=self.git_environment)
 
         self.jinja_environment = Environment(
-            loader=FileSystemLoader("templates/"),
+            loader=FileSystemLoader(TEMPLATE_DIR),
             extensions=['jinja2_time.TimeExtension']
         )
 
