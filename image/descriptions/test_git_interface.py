@@ -50,13 +50,13 @@ def test_git_interface_add_item():
 
     instructions = DescriptionsGit()
     instructions.add_item(item1)
-    item1_instructions_dir = instructions.repo_dir / "content" / "abcd1234"
+    item1_instructions_dir = instructions.repo_dir / "content" / "do_not_use_this_sku"
     assert item1_instructions_dir.is_dir(), 'Directory not created.'
     item1_readme = item1_instructions_dir / "index.md"
     assert item1_readme.is_file(), 'Readme not created.'
 
     instructions.add_item(item2)
-    item2_instructions_dir = instructions.repo_dir / "content" / "efgh5678"
+    item2_instructions_dir = instructions.repo_dir / "content" / "do_not_use_this_sku2"
     assert item2_instructions_dir.is_dir(), 'Directory not created.'
     item2_readme = item2_instructions_dir / "index.md"
     assert item2_readme.is_file(), 'Readme not created.'
