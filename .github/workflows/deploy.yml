@@ -37,7 +37,8 @@ jobs:
     - name: Run pytest
       working-directory: image
       env: 
-        square_token_arn: "${{ secrets.square_token }}"
+        # TODO: This should not be hardcoded as it is an output from terraform
+        square_token_arn: "arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85"
       run: python3 -m pytest
 
   deploy-square-ig:
