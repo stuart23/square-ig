@@ -7,7 +7,7 @@ from hashlib import sha256
 from boto3 import client as Boto3Client
 from time import time
 
-from .catalog import Item
+from catalog import Item
 
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"

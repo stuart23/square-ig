@@ -1,9 +1,8 @@
-from boto3 import client as Boto3Client
-from json import loads
-from square_client import get_all_catalog_items, upsert_catalog_object
+# from boto3 import client as Boto3Client
+# from json import loads
+from square_client import get_catalog_items, patch_objects_sku
 from catalog.catalog_dynamodb import upsert_by_sku
-from catalog.catalog_queue import publish
-from descriptions.create_description import InstructionsGit
+# from catalog.catalog_queue import publish
 
 
 def handler(event, context):
@@ -13,7 +12,7 @@ def handler(event, context):
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
-            upsert_catalog_object(item)
+            patch_objects_sku(item)
         upsert_by_sku(item)
 
 
