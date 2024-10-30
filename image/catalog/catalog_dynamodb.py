@@ -121,14 +121,12 @@ def upsert_by_sku(item):
         )
         return True
 
-if __name__ == '__main__':
-    upsert_by_sku(
-        Item(
-            sku='plantsoc.com/ATL-N-261zzz',
-            price=1234,
-            item_str='test234',
-            variation_str='test description',
-            item_id='abcd',
-            pet_safe=False
-        )
+def set_website_true(item):
+    '''
+    Sets the website field in the database to `Y` for the item.
+    '''
+    table.update_item(
+        Key={'SKU': item.sku},
+        UpdateExpression='SET website = :website',
+        ExpressionAttributeValues={':website': 'Y'}
     )

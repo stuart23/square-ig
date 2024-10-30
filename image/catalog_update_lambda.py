@@ -1,8 +1,5 @@
-# from boto3 import client as Boto3Client
-# from json import loads
-
 from square_client import get_catalog_items, patch_objects_sku
-from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, upsert_by_sku
+from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_sku
 # from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
@@ -21,6 +18,7 @@ def handler(event, context):
     descriptions = DescriptionsGit()
     for item in website_needs_update_items:
         descriptions.add_item(item)
+        set_website_true(item)
     descriptions.commit()
 
 if __name__ == "__main__":
