@@ -9,4 +9,26 @@ resource "aws_dynamodb_table" "catalog" {
     name = "SKU"
     type = "S"
   }
+
+  attribute {
+    name = "website"
+    type = "S"
+  }
+
+  attribute {
+    name = "label"
+    type = "S"
+  }
+
+  global_secondary_index {
+    name               = "websiteIndex"
+    hash_key           = "website"
+    projection_type    = "ALL"
+  }
+
+  global_secondary_index {
+    name               = "labelIndex"
+    hash_key           = "label"
+    projection_type    = "ALL"
+  }
 }
