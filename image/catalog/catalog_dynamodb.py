@@ -28,6 +28,29 @@ def get_website_needs_update_items():
             item_str=item_details.get('item_str'),
         )
 
+
+def get_needs_label_items():
+    '''
+    Returns all the items that do not have a label, or it needs updating.
+    '''
+    response = table.query(
+        IndexName='labelIndex',
+        KeyConditionExpression=Key('label').eq('N')
+    )
+    count = response['Count']
+    print(f'{count} objects need their label updated.')
+    for item_details in response['Items']:
+        yield Item(
+            sku=item_details['SKU'],
+            price=int(item_details.get('price')),
+            item_id=item_details.get('item_id'),
+            variation_id=item_details.get('variation_id'),
+            pet_safe=item_details.get('pet_safe'),
+            variation_str=item_details.get('variation_str'),
+            item_str=item_details.get('item_str'),
+        )
+
+
 def get_item(sku):
     '''
     Tries to get an item from the database with a sku. Raises ValueError if
