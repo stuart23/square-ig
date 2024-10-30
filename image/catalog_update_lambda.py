@@ -7,7 +7,7 @@ from descriptions.create_description import InstructionsGit
 
 
 def handler(event, context):
-    items = get_converted_catalog_items()
+    items = get_catalog_items()
     for item in items:
         item.update_sku():
             upsert_catalog_object(item)
