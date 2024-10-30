@@ -12,7 +12,7 @@ def handler(event, context):
         print(item)
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
-        item.update_sku():
+        if item.update_sku():
             upsert_catalog_object(item)
         upsert_by_sku(item)
 
