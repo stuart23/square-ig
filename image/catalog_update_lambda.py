@@ -8,7 +8,6 @@ from catalog.catalog_dynamodb import upsert_by_sku
 def handler(event, context):
     items = get_catalog_items()
     for item in items:
-        print(item)
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
