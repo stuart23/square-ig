@@ -40,6 +40,7 @@ jobs:
         # TODO: These should not be hardcoded as they are outputs from terraform
         square_token_arn: "arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85"
         gh_key_arn: "arn:aws:secretsmanager:us-east-1:015140017687:secret:github-rM9oxz"
+        instructions_git_repo: "git@github.com:stuart23/plantsoc.com.git"
       run: python3 -m pytest
 
   deploy-square-ig:

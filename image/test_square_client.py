@@ -6,7 +6,7 @@ from square_client import _get_all_catalog_items, get_catalog_items, get_square_
 from catalog import Item
 
 
-def test_gh_repo_env_exists():
+def test_square_env_exists():
     assert getenv(SQUARE_TOKEN_ARN_ENV)
 
 
