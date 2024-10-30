@@ -50,7 +50,11 @@ def upsert_sku(variation):
     Rewrites the sku with the format URL_PREFIX/old_sku
     """
     item_variation_data = variation['item_variation_data']
-    sku = item_variation_data['sku']
+    try:
+        sku = item_variation_data['sku']
+    except KeyError as e:
+        print(f'item_variation_data: {item_variation_data}')
+        raise e
     if sku.startswith(URL_PREFIX):
         return False
     elif item_variation_data['name'].startswith('no_sku'):
