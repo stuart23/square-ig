@@ -1,8 +1,19 @@
 from types import GeneratorType
 from uuid import uuid4
 
-from square_client import _get_all_catalog_items, get_catalog_items, patch_objects_sku
+from square_client import _get_all_catalog_items, get_catalog_items, get_secret_arn, get_square_client, patch_objects_sku
 from catalog import Item
+
+
+def test_get_secret_arn():
+    secret_arn = get_secret_arn()
+    assert secret_arn != None
+    assert secret_arn.startswith('arn')
+
+
+def test_get_secret():
+    client = get_square_client()
+
 
 
 def test__get_all_catalog_items():

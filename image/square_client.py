@@ -13,13 +13,19 @@ from catalog import Item
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
 
 
+def get_secret_arn():
+    '''
+    Returns the secret arn of the secretsmanager secret containing the square token.
+    '''
+    return getenv(SQUARE_TOKEN_ARN_ENV)
+
+
 def get_square_client():
     '''
     Gets the the square API key from AWS secrets manager and return a client with that.
     '''
-    credentials_arn = getenv(SQUARE_TOKEN_ARN_ENV)
     secretsmanager_client = Boto3Client('secretsmanager')
-    square_token = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
+    square_token = secretsmanager_client.get_secret_value(SecretId=get_secret_arn())['SecretString']
     return SquareClient(
         bearer_auth_credentials=BearerAuthCredentials(
             access_token=square_token
