@@ -4,6 +4,7 @@ from square_client import get_all_catalog_items, upsert_catalog_object
 from catalog_dynamodb import upsert_by_sku
 from catalog_queue import publish
 from descriptions.create_description import InstructionsGit
+from uuid import uuid4
 
 URL_PREFIX = "plantsoc.com"
 
@@ -50,11 +51,12 @@ def upsert_sku(variation):
     Rewrites the sku with the format URL_PREFIX/old_sku
     """
     item_variation_data = variation['item_variation_data']
-    try:
-        sku = item_variation_data['sku']
-    except KeyError as e:
-        print(f'item_variation_data: {item_variation_data}')
-        raise e
+    # No sku
+    if 'sku' not in item_variation_data.keys():
+        new_sku = '/'.join([URL_PREFIX, str(uuid4()).replace('-', '')[:8]])
+        variation['item_variation_data']['sku'] = new_sku
+        return True
+    sku = item_variation_data['sku']
     if sku.startswith(URL_PREFIX):
         return False
     elif item_variation_data['name'].startswith('no_sku'):
