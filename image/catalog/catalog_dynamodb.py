@@ -21,6 +21,7 @@ def get_item(sku):
             sku=item_details['SKU'],
             price=int(item_details['price']),
             item_id=item_details['item_id'],
+            variation_id=item_details['variation_id'],
             pet_safe=item_details['pet_safe'],
             variation_str=item_details['variation_str'],
             item_str=item_details['item_str'],
@@ -47,6 +48,7 @@ def upsert_by_sku(item):
                     "item_str": item.item_str,
                     "variation_str": item.variation_str,
                     "item_id": item.item_id,
+                    "variation_id": item.variation_id,
                     "pet_safe": item.pet_safe,
                     "barcode": False,
                     "website": False
@@ -61,12 +63,13 @@ def upsert_by_sku(item):
         print('Item has changed. Updating Dynamo')
         table.update_item(
             Key={'SKU': item.sku},
-            UpdateExpression='SET price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, pet_safe = :pet_safe, barcode = :barcode, website = :website',
+            UpdateExpression='SET price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, :variation_id = variation_id, pet_safe = :pet_safe, barcode = :barcode, website = :website',
             ExpressionAttributeValues={
                 ':price': item.price,
                 ':item_str': item.item_str,
                 ':variation_str': item.variation_str,
                 ':item_id': item.item_id,
+                ":variation_id": item.variation_id,
                 ':pet_safe': item.pet_safe,
                 ':barcode': False,
                 ':website': False
