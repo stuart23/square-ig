@@ -27,7 +27,7 @@ class InstructionsGit(object):
                 key_file.write(key)
             chmod(KEY_FILE, 0o600)
     
-        self.git_environment = {'GIT_SSH_COMMAND': f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}')}
+        self.git_environment = {'GIT_SSH_COMMAND': f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}'}
         self.repo_dir = Path(REPO_DIR)
         self.repo_dir.mkdir()
 
