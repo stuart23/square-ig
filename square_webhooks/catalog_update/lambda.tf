@@ -13,7 +13,7 @@ resource "aws_lambda_function" "catalog_update" {
   timeout       = 30
   memory_size   = 256
   image_config {
-    command = ["catalog_update.handler"]
+    command = ["catalog_update_lambda.handler"]
   }
   logging_config {
     log_group  = aws_cloudwatch_log_group.catalog_update_lambda_logs.name
