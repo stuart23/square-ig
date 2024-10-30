@@ -60,7 +60,7 @@ def upsert_by_sku(item):
         return False
     else:
         # Item is different in Dynamo, updating
-        print('Item has changed. Updating Dynamo')
+        print(f'Item {item} has changed. Updating Dynamo')
         table.update_item(
             Key={'SKU': item.sku},
             UpdateExpression='SET price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, variation_id = :variation_id, pet_safe = :pet_safe, barcode = :barcode, website = :website',
