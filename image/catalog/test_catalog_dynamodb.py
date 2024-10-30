@@ -1,6 +1,7 @@
 from pytest import raises
+from types import GeneratorType
 
-from .catalog_dynamodb import get_item
+from .catalog_dynamodb import get_item, get_website_needs_update_items
 
 
 def test_get_item_doesnt_exist():
@@ -8,3 +9,15 @@ def test_get_item_doesnt_exist():
     with raises(ValueError) as excinfo:
         get_item(sku)
     assert str(excinfo.value) == 'Item not found'
+
+
+def test_get_website_needs_update_items():
+    '''
+    THere may be no items that need a website, so we catch StopIteration.
+    '''
+    items = get_website_needs_update_items()
+    assert isinstance(items, GeneratorType)
+    try:
+        next(items)
+    except StopIteration:
+        pass

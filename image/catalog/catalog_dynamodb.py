@@ -7,6 +7,27 @@ from .item import Item
 table = resource("dynamodb").Table("catalog")
 
 
+def get_website_needs_update_items():
+    '''
+    Returns all the items that do not have a website, or it needs updating.
+    '''
+    response = table.query(
+        IndexName='websiteIndex',
+        KeyConditionExpression=Key('website').eq('N')
+    )
+    count = response['Count']
+    print(f'{count} objects need their website updated.')
+    for item_details in response['Items']:
+        yield Item(
+            sku=item_details['SKU'],
+            price=int(item_details.get('price')),
+            item_id=item_details.get('item_id'),
+            variation_id=item_details.get('variation_id'),
+            pet_safe=item_details.get('pet_safe'),
+            variation_str=item_details.get('variation_str'),
+            item_str=item_details.get('item_str'),
+        )
+
 def get_item(sku):
     '''
     Tries to get an item from the database with a sku. Raises ValueError if
@@ -50,7 +71,7 @@ def upsert_by_sku(item):
                     "item_id": item.item_id,
                     "variation_id": item.variation_id,
                     "pet_safe": item.pet_safe,
-                    "barcode": 'N',
+                    "label": 'N',
                     "website": 'N'
                 }
             )
@@ -71,7 +92,7 @@ def upsert_by_sku(item):
                 ':item_id': item.item_id,
                 ":variation_id": item.variation_id,
                 ':pet_safe': item.pet_safe,
-                ':barcode': 'N',
+                ':label': 'N',
                 ':website': 'N'
             }
         )
