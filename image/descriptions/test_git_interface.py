@@ -1,7 +1,7 @@
 from pathlib import Path
 from os import listdir, getenv
 
-from .git_interface import InstructionsGit, REPO_DIR, GIT_REPO_ENV, GITHUB_KEY_ARN_ENV
+from .git_interface import DescriptionsGit, REPO_DIR, GIT_REPO_ENV, GITHUB_KEY_ARN_ENV
 from catalog import Item
 
 
@@ -20,7 +20,7 @@ def test_git_interface_clone():
     repo_dir = Path(REPO_DIR)
     assert not repo_dir.is_dir(), 'Directory already exists.'
 
-    instructions = InstructionsGit()
+    instructions = DescriptionsGit()
     assert instructions.repo_dir.is_dir(), 'Directory not created.'
     assert len(listdir(instructions.repo_dir)) > 0, 'No files in the directory.'
 
@@ -48,7 +48,7 @@ def test_git_interface_add_item():
         pet_safe=False
     )
 
-    instructions = InstructionsGit()
+    instructions = DescriptionsGit()
     instructions.add_item(item1)
     item1_instructions_dir = instructions.repo_dir / "content" / "abcd1234"
     assert item1_instructions_dir.is_dir(), 'Directory not created.'

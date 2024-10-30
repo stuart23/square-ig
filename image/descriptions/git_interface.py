@@ -14,7 +14,7 @@ REPO_DIR = '/tmp/repo'
 TEMPLATE_DIR = Path(__file__).parent.resolve() / 'templates'
 
 
-class InstructionsGit(object):
+class DescriptionsGit(object):
     def __init__(self, repo_dir=REPO_DIR):
         '''
         Writes the key from secrets manager if it doesn't already exist.
