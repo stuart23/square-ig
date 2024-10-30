@@ -19,12 +19,12 @@ def get_item(sku):
         item_details = response['Item']
         return Item(
             sku=item_details['SKU'],
-            price=int(item_details['price']),
-            item_id=item_details['item_id'],
-            variation_id=item_details['variation_id'],
-            pet_safe=item_details['pet_safe'],
-            variation_str=item_details['variation_str'],
-            item_str=item_details['item_str'],
+            price=int(item_details.get('price')),
+            item_id=item_details.get('item_id'),
+            variation_id=item_details.get('variation_id'),
+            pet_safe=item_details.get('pet_safe'),
+            variation_str=item_details.get('variation_str'),
+            item_str=item_details.get('item_str'),
         )
 
 
