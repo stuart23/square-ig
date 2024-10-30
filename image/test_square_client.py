@@ -1,8 +1,8 @@
 from types import GeneratorType
 from uuid import uuid4
 
-from .square_client import _get_all_catalog_items, get_catalog_items, patch_objects_sku
-from .catalog import Item
+from square_client import _get_all_catalog_items, get_catalog_items, patch_objects_sku
+from catalog import Item
 
 
 def test__get_all_catalog_items():
