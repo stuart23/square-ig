@@ -1,5 +1,5 @@
 from git import Git, Repo
-from os import getenv
+from os import getenv, chmod
 from pathlib import Path
 from shutil import rmtree
 from boto3 import client as Boto3Client
@@ -25,13 +25,13 @@ class InstructionsGit(object):
             key = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
             with open(KEY_FILE, 'w') as key_file:
                 key_file.write(key)
-
-        environment = Git().custom_environment(GIT_SSH_COMMAND=f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}')
+            chmod(KEY_FILE, 0o600)
+    
+        self.git_environment = {'GIT_SSH_COMMAND': f'ssh -o StrictHostKeyChecking=no -i {KEY_FILE}')}
         self.repo_dir = Path(REPO_DIR)
         self.repo_dir.mkdir()
 
-        with environment:
-            self.repo = Repo.clone_from(self.repo_url, self.repo_dir)
+        self.repo = Repo.clone_from(self.repo_url, self.repo_dir, env=self.git_environment)
 
         self.jinja_environment = Environment(
             loader=FileSystemLoader("templates/"),
