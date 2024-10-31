@@ -26,20 +26,20 @@ def font_size(x):
     return TITLE_FONT_SIZE/(1.2**(x-1))
 
 
-def generate_label(sku, title, variation, price, pet_safe):
+def generate_label(item):
     width = LABEL_SIZE[0]*LABEL_DPMM
     height = LABEL_SIZE[1]*LABEL_DPMM
     label = Image.new('RGBA', (width, height), 'white')
-    generate_qr(label, sku)
-    title_text_box = cropped_text(title, 1, TROPICA_FONT)
+    generate_qr(label, item.sku)
+    title_text_box = cropped_text(item.item_str, 1, TROPICA_FONT)
     label.paste(title_text_box, (20, 20))
-    variation_text_box = cropped_text(variation, 2, TROPICA_FONT)
+    variation_text_box = cropped_text(item.variation_str, 2, TROPICA_FONT)
     label.paste(variation_text_box, (520, 200))
-    price_text_box = cropped_text(f"${price}", 2, TROPICA_FONT)
+    price_text_box = cropped_text(f"${item.price/100}", 2, TROPICA_FONT)
     label.paste(price_text_box, (950-price_text_box.width, 320))
-    if pet_safe:
-        pet_safe = generate_pet_safe(label)
-        label.paste(pet_safe, (520, 450))
+    if item.pet_safe:
+        pet_safe_graphic = generate_pet_safe(label)
+        label.paste(pet_safe_graphic, (520, 450))
     return label
 
 def generate_label_bytes(filename, *args, **kwargs):
