@@ -4,6 +4,7 @@ from json import loads
 from copy import deepcopy
 
 from square_client import create_catalog_image
+from catalog import Item
 
 
 def handler(event, context):
