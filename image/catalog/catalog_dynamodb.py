@@ -121,6 +121,7 @@ def upsert_by_sku(item):
         )
         return True
 
+
 def set_website_true(item):
     '''
     Sets the website field in the database to `Y` for the item.
@@ -130,3 +131,15 @@ def set_website_true(item):
         UpdateExpression='SET website = :website',
         ExpressionAttributeValues={':website': 'Y'}
     )
+
+
+def set_label_true(item):
+    '''
+    Sets the label field in the database to `Y` for the item.
+    '''
+    table.update_item(
+        Key={'SKU': item.sku},
+        UpdateExpression='SET label = :label',
+        ExpressionAttributeValues={':label': 'Y'}
+    )
+    print(f'Marked item {item} as having an image.')

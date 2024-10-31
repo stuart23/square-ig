@@ -5,7 +5,7 @@ from copy import deepcopy
 
 from square_client import create_catalog_image
 from catalog import Item
-
+from catalog.catalog_dynamodb import set_label_true
 
 def handler(event, context):
     # Should be only one record, but lets loop just in case.
@@ -24,3 +24,4 @@ def handler(event, context):
 
         write_image(label, filename)
         create_catalog_image(item, label2)
+        set_label_true(item)
