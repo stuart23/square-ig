@@ -26,7 +26,7 @@ def test_git_interface_clone():
 
     # Ensure directory is cleaned up
     del(instructions)
-    assert not repo_dir.is_dir()
+    assert repo_dir.is_dir() == False
 
 
 def test_git_interface_add_item():
@@ -70,7 +70,7 @@ def test_git_interface_add_item():
 
     # Ensure directory is cleaned up
     del(instructions)
-    assert not repo_dir.is_dir()
+    assert repo_dir.is_dir() == False
     
 
 def test_git_interface_existing():
@@ -106,7 +106,7 @@ def test_git_interface_existing():
 
     # Ensure directory is cleaned up
     del(instructions)
-    assert not repo_dir.is_dir()
+    assert repo_dir.is_dir() == False
 
 
 def test_git_interface_replace():
@@ -142,4 +142,4 @@ def test_git_interface_replace():
 
     # Ensure directory is cleaned up
     del(instructions)
-    assert not repo_dir.is_dir()
+    assert repo_dir.is_dir() == False
