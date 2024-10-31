@@ -3,7 +3,7 @@ from square.client import Client as SquareClient
 
 from json import dumps
 from hashlib import sha256
-from time import time
+from time import sleep, time
 
 from catalog import Item
 from utils import get_secret
@@ -107,26 +107,31 @@ def create_catalog_image(item, image):
     catalog = get_square_client().catalog
     item_name = "{0} - {1}".format(item.item_str, item.variation_str)
     print(f'Saving image to item: {item}')
-    response = catalog.create_catalog_image(
-        request={
-            "idempotency_key": generate_idempotency_key(item),
-            "object_id": item.item_id,
-            "image": {
-                "type": "ITEM",
-                "id": "#TEMP_ID",
-                "image_data": {
-                    "name": item_name,
-                    "sku": item.sku,
-                    "caption": "QR Code"
-                },
-                "type": "IMAGE",
-                "is_deleted": False,
-            }
-        },
-        image_file=image
-    )
-    if response.is_success():
-        return response
+    for try_number in range(5):
+        response = catalog.create_catalog_image(
+            request={
+                "idempotency_key": generate_idempotency_key(item),
+                "object_id": item.item_id,
+                "image": {
+                    "type": "ITEM",
+                    "id": "#TEMP_ID",
+                    "image_data": {
+                        "name": item_name,
+                        "sku": item.sku,
+                        "caption": "QR Code"
+                    },
+                    "type": "IMAGE",
+                    "is_deleted": False,
+                }
+            },
+            image_file=image
+        )
+        if response.is_success():
+            return response
+        elif any([x['category'] == 'RATE_LIMIT_ERROR' for x in response.errors]):
+            sleep_time = 10 * try_number
+            print(f'Upload failed due to rate limit. Waiting {sleep_time} seconds to retry')
+            sleep(sleep_time)
     else:
         raise Exception(f'Could not add image to item {item} due to: {response.errors}')
 
