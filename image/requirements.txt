@@ -3,3 +3,6 @@ squareup
 Pillow
 qrcode
 ensta
+GitPython
+Jinja2
+jinja2-time

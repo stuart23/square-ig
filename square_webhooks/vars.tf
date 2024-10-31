@@ -14,14 +14,14 @@ variable "square_token" {
   sensitive   = true
 }
 
-variable "instagram_username" {
-  description = "Instagram Username"
+
+variable "instructions_git_repo" {
+  description = "Github repo for instructions"
   type        = string
-  sensitive   = true
 }
 
-variable "instagram_password" {
-  description = "Instagram Password"
+
+variable "gh_key_arn" {
+  description = "Secretsmanager ARN for the git ssh private key"
   type        = string
-  sensitive   = true
 }

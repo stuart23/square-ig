@@ -11,6 +11,38 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
+  test-image-code:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ vars.cicd_role_arn }}
+        aws-region: ${{ vars.aws_region }}
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.12
+
+    - name: Install dependancies
+      working-directory: image
+      run: |
+        python -m pip install --upgrade pip pytest
+        pip install -r requirements.txt
+    
+    - name: Run pytest
+      working-directory: image
+      env: 
+        # TODO: These should not be hardcoded as they are outputs from terraform
+        square_token_arn: "arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85"
+        gh_key_arn: "arn:aws:secretsmanager:us-east-1:015140017687:secret:github-rM9oxz"
+        instructions_git_repo: "git@github.com:stuart23/plantsoc.com.git"
+      run: python3 -m pytest
+
   deploy-square-ig:
     runs-on: ubuntu-latest
     steps:
@@ -84,8 +116,8 @@ jobs:
           -var lambda_image="${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}" \
           -var aws_region=${{ vars.aws_region }} \
           -var square_token="${{ secrets.square_token }}" \
-          -var instagram_username=${{ vars.instagram_username }} \
-          -var instagram_password=${{ secrets.instagram_password }}
+          -var gh_key_arn="${{ vars.gh_key_arn }}" \
+          -var instructions_git_repo="${{ vars.instructions_git_repo }}"
 
 
   deploy-static-website:
@@ -107,11 +139,40 @@ jobs:
       working-directory: static_website
       run: terraform init
 
-    - name: Terraform Apply ECR
+    - name: Terraform Apply
       working-directory: static_website
       run: |
         terraform apply -auto-approve \
           -var domain_name="theplantsocietyatx.com" \
+          -var porkbun_api_key="${{ secrets.porkbun_api_key }}" \
+          -var porkbun_secret_key="${{ secrets.porkbun_secret_key }}" \
+          -var aws_region=${{ vars.aws_region }}
+
+
+  deploy-instructions-website:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: ${{ vars.cicd_role_arn }}
+        aws-region: ${{ vars.aws_region }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+
+    - name: Terraform Init
+      working-directory: instructions_website
+      run: terraform init
+
+    - name: Terraform Apply
+      working-directory: instructions_website
+      run: |
+        terraform apply -auto-approve \
+          -var domain_name="plantsoc.com" \
           -var porkbun_api_key="${{ secrets.porkbun_api_key }}" \
           -var porkbun_secret_key="${{ secrets.porkbun_secret_key }}" \
           -var aws_region=${{ vars.aws_region }}
