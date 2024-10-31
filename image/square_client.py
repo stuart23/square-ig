@@ -105,18 +105,18 @@ def patch_objects_sku(item):
 
 def create_catalog_image(item, image):
     catalog = get_square_client().catalog
-    item_name = "{0} - {1}".format(item['item_str'], item['variation_str'])
-    item_id = item['item_id']
-    print(f'Saving image to item: {item_id}: {item_name}')
+    item_name = "{0} - {1}".format(item.item_str, item.variation_str)
+    print(f'Saving image to item: {item}')
     response = catalog.create_catalog_image(
         request={
             "idempotency_key": generate_idempotency_key(item),
-            "object_id": item['item_id'],
+            "object_id": item.item_id,
             "image": {
                 "type": "ITEM",
                 "id": "#TEMP_ID",
                 "image_data": {
                     "name": item_name,
+                    "sku": item.sku
                     "caption": "QR Code"
                 },
                 "type": "IMAGE",
@@ -128,7 +128,7 @@ def create_catalog_image(item, image):
     if response.is_success():
         return response
     else:
-        raise Exception(f'Could not add image to item {item_id} due to: {response.errors}')
+        raise Exception(f'Could not add image to item {item} due to: {response.errors}')
 
 
 def generate_idempotency_key(item):
