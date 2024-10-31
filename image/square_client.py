@@ -116,7 +116,7 @@ def create_catalog_image(item, image):
                 "id": "#TEMP_ID",
                 "image_data": {
                     "name": item_name,
-                    "sku": item.sku
+                    "sku": item.sku,
                     "caption": "QR Code"
                 },
                 "type": "IMAGE",
