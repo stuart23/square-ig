@@ -1,5 +1,6 @@
 from pathlib import Path
 from os import listdir, getenv
+from time import sleep
 
 from .git_interface import DescriptionsGit, REPO_DIR, GIT_REPO_ENV, GITHUB_KEY_ARN_ENV
 from catalog import Item
@@ -26,6 +27,7 @@ def test_git_interface_clone():
 
     # Ensure directory is cleaned up
     del(instructions)
+    sleep(2)
     assert not repo_dir.is_dir()
 
 
@@ -70,6 +72,7 @@ def test_git_interface_add_item():
 
     # Ensure directory is cleaned up
     del(instructions)
+    sleep(2)
     assert not repo_dir.is_dir()
     
 
@@ -106,6 +109,7 @@ def test_git_interface_existing():
 
     # Ensure directory is cleaned up
     del(instructions)
+    sleep(2)
     assert not repo_dir.is_dir()
 
 
@@ -142,4 +146,5 @@ def test_git_interface_replace():
 
     # Ensure directory is cleaned up
     del(instructions)
+    sleep(2)
     assert not repo_dir.is_dir()
