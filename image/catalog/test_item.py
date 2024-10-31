@@ -93,3 +93,18 @@ def test_sku_stem_url_sku_empty():
         pet_safe=True
     )
     assert item.sku_stem == None
+
+
+def test_serde():
+    item = Item(
+        sku=None,
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    item_dict = item.__dict__
+    item_serde = Item(**item_dict)
+    assert item == item_serde
