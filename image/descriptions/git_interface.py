@@ -79,12 +79,15 @@ class DescriptionsGit(object):
 
     def commit(self):
         '''
-        Commits the added files and pushes to GitHub.
+        Commits the added files and pushes to GitHub if there are changes.
         '''
-        file_list = ', '.join(self.modified_files)
-        print(f'Committing the following to git: {file_list}')
-        self.repo.index.commit(f'Adding {file_list}')
-        self.repo.remote('origin').push(env=self.git_environment)
+        if len(file_list) > 0:
+            file_list = ', '.join(self.modified_files)
+            print(f'Committing the following to git: {file_list}')
+            self.repo.index.commit(f'Adding {file_list}')
+            self.repo.remote('origin').push(env=self.git_environment)
+        else:
+            print(f'No changes, nothing to commit.')
 
 
     def __del__(self):
