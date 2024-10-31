@@ -5,13 +5,13 @@ from pathlib import Path
 
 LABEL_SIZE = (50, 30) # width x height
 LABEL_DPMM = 20 # dots per millimeter
-QR_SIZE = 75 # percentage of the height of the label
-QR_HORIZONTAL_PAD = 1 # millimeters from left for qr code start
+QR_SIZE = 72 # percentage of the height of the label
+QR_PAD = 1 # millimeters from left and bottom for qr code start
 pwd = Path(__file__).parent.resolve()
 FLATTY_FONT = pwd / 'assets' / 'Flatty.otf'
 TROPICA_FONT = pwd / 'assets' / 'Tropica Gardens Sans.otf'
 PET_SAFE = pwd / 'assets' / 'pet_safe.png'
-TITLE_FONT_SIZE = 150
+TITLE_FONT_SIZE = 120
 FORMAT = 'png'
 
 def font_size(x):
@@ -31,11 +31,11 @@ def generate_label(sku, title, variation, price, pet_safe):
     height = LABEL_SIZE[1]*LABEL_DPMM
     label = Image.new('RGBA', (width, height), 'white')
     generate_qr(label, sku)
-    title_text_box = cropped_text(title, 1, FLATTY_FONT)
-    label.paste(title_text_box, (520, 60))
-    variation_text_box = cropped_text(variation, 2, FLATTY_FONT)
+    title_text_box = cropped_text(title, 1, TROPICA_FONT)
+    label.paste(title_text_box, (20, 20))
+    variation_text_box = cropped_text(variation, 2, TROPICA_FONT)
     label.paste(variation_text_box, (520, 200))
-    price_text_box = cropped_text(f"${price}", 2, FLATTY_FONT)
+    price_text_box = cropped_text(f"${price}", 2, TROPICA_FONT)
     label.paste(price_text_box, (950-price_text_box.width, 320))
     if pet_safe:
         pet_safe = generate_pet_safe(label)
@@ -64,8 +64,9 @@ def generate_qr(label, sku):
         round(label.height*QR_SIZE/100*rotated_qr.width/rotated_qr.height), # multiplied by the aspect ratio because we are only trying to get the heights to match
         round(label.height*QR_SIZE/100)
     ))
-    x_location = QR_HORIZONTAL_PAD*LABEL_DPMM
-    y_location = round((label.height - resized_qr.height)/2)
+    real_padding = QR_PAD*LABEL_DPMM
+    x_location = real_padding
+    y_location = label.height - resized_qr.height - real_padding
     label.paste(resized_qr, (x_location, y_location))
 
 def cropped_text(text, size, font):
@@ -80,7 +81,7 @@ def cropped_text(text, size, font):
     text_box = Image.new('RGBA', (width, height), 'white')
     draw = ImageDraw.Draw(text_box)
     font = ImageFont.truetype(font, actual_size)
-    draw.text((0,0), text, "black", font=font)
+    draw.text((100,100), text, "black", font=font)
     bbox = ImageOps.invert(text_box.convert('RGB')).getbbox()
     cropped_text_box = text_box.crop(bbox)
     return cropped_text_box
