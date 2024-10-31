@@ -48,7 +48,7 @@ class DescriptionsGit(object):
         If replace is true, it will delete the existing folder and re-template.
         '''
         template = self.jinja_environment.get_template("item.md")
-        item_dir = self.repo_dir / "content" / item.sku_path
+        item_dir = self.repo_dir / "content" / item.sku_stem
         if item_dir.is_dir() and not replace:
             print(f'Skipping {item} as directory {item_dir} already exists')
             return False

@@ -66,7 +66,7 @@ class Item:
             return True
 
     @property
-    def sku_path(self):
+    def sku_stem(self):
         """
         Returns just the last bit of the sku - the path. E.g. if the sku is `plantsoc.com/abcd1234`, returns just `abcd1234`
         """

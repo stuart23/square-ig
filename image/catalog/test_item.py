@@ -56,7 +56,7 @@ def test_update_sku_missing_sku():
     assert item.sku
 
 
-def test_sku_path_url_sku():
+def test_sku_stem_url_sku():
     item = Item(
         sku='plantsoc.com/abcd1234',
         price=123,
@@ -66,10 +66,10 @@ def test_sku_path_url_sku():
         variation_id='asdfg',
         pet_safe=True
     )
-    assert item.sku_path == 'abcd1234'
+    assert item.sku_stem == 'abcd1234'
 
 
-def test_sku_path_url_sku_not_formed():
+def test_sku_stem_url_sku_not_formed():
     item = Item(
         sku='abcd1234',
         price=123,
@@ -79,10 +79,10 @@ def test_sku_path_url_sku_not_formed():
         variation_id='asdfg',
         pet_safe=True
     )
-    assert item.sku_path == 'abcd1234'
+    assert item.sku_stem == 'abcd1234'
 
 
-def test_sku_path_url_sku_empty():
+def test_sku_stem_url_sku_empty():
     item = Item(
         sku=None,
         price=123,
@@ -92,4 +92,4 @@ def test_sku_path_url_sku_empty():
         variation_id='asdfg',
         pet_safe=True
     )
-    assert item.sku_path == None
+    assert item.sku_stem == None
