@@ -17,9 +17,10 @@ def handler(event, context):
             print(f'Could not find a message in {record}')
         message = loads(message)
         item = Item(**message)
-        label = generate_label_bytes(item, filename=f'{item.sku_stem}.png')
+        filename = f'{item.sku_stem}.png'
+        label = generate_label_bytes(item, filename=filename)
         # BytesIO can only be used once, so we make a copy to upload to square
         label2 = deepcopy(label)
 
-        write_image(label, f"{message['sku']}.png")
-        create_catalog_image(message, label2)
+        write_image(label, filename)
+        create_catalog_image(item, label2)
