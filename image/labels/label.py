@@ -42,11 +42,11 @@ def generate_label(item):
         label.paste(pet_safe_graphic, (520, 450))
     return label
 
-def generate_label_bytes(filename, *args, **kwargs):
+def generate_label_bytes(item, filename):
     """
     Save the image to an in-memory file and return the bytes.
     """
-    label = generate_label(*args, **kwargs)
+    label = generate_label(item)
     in_mem_file = BytesIO()
     label.save(in_mem_file, format=FORMAT)
     in_mem_file.seek(0)
