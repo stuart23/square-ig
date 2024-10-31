@@ -24,6 +24,10 @@ def test_git_interface_clone():
     assert instructions.repo_dir.is_dir(), 'Directory not created.'
     assert len(listdir(instructions.repo_dir)) > 0, 'No files in the directory.'
 
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert not repo_dir.is_dir()
+
 
 def test_git_interface_add_item():
     '''
@@ -63,6 +67,10 @@ def test_git_interface_add_item():
 
     assert instructions.modified_files == ['content/do_not_use_this_sku/index.md', 'content/do_not_use_this_sku2/index.md']
 
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert not repo_dir.is_dir()
+    
 
 def test_git_interface_existing():
     instructions = DescriptionsGit()
@@ -94,6 +102,10 @@ def test_git_interface_existing():
     
     assert new_index_contents == og_index_contents
 
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert not repo_dir.is_dir()
+
 
 def test_git_interface_replace():
     instructions = DescriptionsGit()
@@ -124,3 +136,7 @@ def test_git_interface_replace():
         new_index_contents = fh.read()
     
     assert new_index_contents != og_index_contents
+
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert not repo_dir.is_dir()
