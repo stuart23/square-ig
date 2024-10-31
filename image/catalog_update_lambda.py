@@ -1,6 +1,6 @@
 from square_client import get_catalog_items, patch_objects_sku
 from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_sku
-# from catalog.catalog_queue import publish
+from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
 
@@ -13,7 +13,11 @@ def handler(event, context):
             patch_objects_sku(item)
         upsert_by_sku(item)
 
-    # needs_label_items = get_needs_label_items()
+    needs_label_items = get_needs_label_items()
+    for item in needs_label_items:
+        publish(item.__dict__)
+
+    # Generate website descriptions for new items
     website_needs_update_items = get_website_needs_update_items()
     descriptions = DescriptionsGit()
     for item in website_needs_update_items:
