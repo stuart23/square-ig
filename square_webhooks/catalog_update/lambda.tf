@@ -12,6 +12,7 @@ resource "aws_lambda_function" "catalog_update" {
   role          = var.lambda_role_arn
   timeout       = 30
   memory_size   = 256
+  publish       = true
   image_config {
     command = ["catalog_update_lambda.handler"]
   }
