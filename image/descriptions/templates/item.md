@@ -1,6 +1,6 @@
 ---
 date: "{% now 'utc' %}"
-draft: true
+draft: false
 title: "{{ item_str|e }}"
 ---
 
