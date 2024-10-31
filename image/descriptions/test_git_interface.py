@@ -27,7 +27,7 @@ def test_git_interface_clone():
 
     # Ensure directory is cleaned up
     del(instructions)
-    sleep(2)
+    sleep(5)
     assert not repo_dir.is_dir()
 
 
@@ -72,7 +72,7 @@ def test_git_interface_add_item():
 
     # Ensure directory is cleaned up
     del(instructions)
-    sleep(2)
+    sleep(5)
     assert not repo_dir.is_dir()
     
 
@@ -109,7 +109,7 @@ def test_git_interface_existing():
 
     # Ensure directory is cleaned up
     del(instructions)
-    sleep(2)
+    sleep(5)
     assert not repo_dir.is_dir()
 
 
@@ -146,5 +146,5 @@ def test_git_interface_replace():
 
     # Ensure directory is cleaned up
     del(instructions)
-    sleep(2)
+    sleep(5)
     assert not repo_dir.is_dir()
