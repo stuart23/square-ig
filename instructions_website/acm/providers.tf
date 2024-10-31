@@ -9,18 +9,16 @@ terraform {
       source  = "cullenmcdermott/porkbun"
       version = "~> 0.2.5"
     }
-  }
-  backend "s3" {
-    bucket         = "square-ig-tfstate"
-    key            = "static_website/terraform.tfstate"
-    encrypt        = true
-    dynamodb_table = "square-ig-tfstate"
+    time = {
+      source  = "hashicorp/time"
+      version = "0.12.1"
+    }
   }
 }
 
 # Configure the AWS Provider
 provider "aws" {
-  region = var.aws_region
+  region = "us-east-1"
 }
 
 provider "porkbun" {

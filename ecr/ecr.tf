@@ -18,6 +18,29 @@ resource "aws_ecr_repository" "lambda_ecr" {
   }
 }
 
+
+resource "aws_ecr_lifecycle_policy" "delete_stale_images" {
+  repository = aws_ecr_repository.lambda_ecr.name
+  policy = jsonencode(
+    {
+      "rules" : [
+        {
+          "rulePriority" : 1,
+          "description" : "Expire untagged images after 7 days",
+          "selection" : {
+            "tagStatus" : "untagged",
+            "countType" : "sinceImagePushed",
+            "countUnit" : "days",
+            "countNumber" : 7
+          },
+          "action" : {
+            "type" : "expire"
+          }
+        }
+  ] })
+}
+
+
 output "ecr_repo_url" {
   value = aws_ecr_repository.lambda_ecr.repository_url
 }
