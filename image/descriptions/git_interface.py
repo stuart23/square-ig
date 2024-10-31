@@ -4,6 +4,7 @@ from pathlib import Path
 from shutil import rmtree
 from boto3 import client as Boto3Client
 from jinja2 import Environment, FileSystemLoader
+from time import sleep
 
 from utils import get_secret
 
@@ -88,11 +89,21 @@ class DescriptionsGit(object):
 
     def __del__(self):
         '''
-        Cleans up by removing the repo dir. If the object failed to init, the repo dir may not exist
+        Cleans up by removing the repo dir. If the object failed to init, the repo dir may not exist.
+        Will try 5 times and 
         '''
         try:
             repo_dir = self.repo_dir
         except AttributeError:
             print('Repo dir was not created')
         else:
-            rmtree(self.repo_dir)
+            for _ in range(5):
+                rmtree(self.repo_dir)
+                if self.repo_dir.is_dir():
+                    print('Cleanup repo dir failed, retrying in 5 seconds.')
+                    sleep(5)
+                else:
+                    print('Repo dir deleted.')
+                    break
+            else:
+                print('Could not delete the repo dir.')
