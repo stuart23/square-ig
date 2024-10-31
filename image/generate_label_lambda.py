@@ -15,14 +15,8 @@ def handler(event, context):
         except KeyError:
             print(f'Could not find a message in {record}')
         message = loads(message)
-        print(message)
-        label = generate_label_bytes(
-            sku=message['sku'],
-            title=message['item_str'],
-            variation=message['variation_str'],
-            price=message['price'],
-            pet_safe=message['pet_safe']
-        )
+        item = Item(**message)
+        label = generate_label_bytes(item)
         # BytesIO can only be used once, so we make a copy to upload to square
         label2 = deepcopy(label)
 
