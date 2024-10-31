@@ -33,6 +33,7 @@ def test_git_interface_add_item():
     '''
     Test templating.
     '''
+    repo_dir = Path(REPO_DIR)
     item1 = Item(
         sku='plantsoc.com/do_not_use_this_sku',
         price=123,
@@ -73,6 +74,7 @@ def test_git_interface_add_item():
     
 
 def test_git_interface_existing():
+    repo_dir = Path(REPO_DIR)
     instructions = DescriptionsGit()
 
     # Get one of the items directories that has an index.md
@@ -108,6 +110,7 @@ def test_git_interface_existing():
 
 
 def test_git_interface_replace():
+    repo_dir = Path(REPO_DIR)
     instructions = DescriptionsGit()
 
     # Get one of the items directories that has an index.md
