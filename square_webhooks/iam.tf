@@ -77,7 +77,7 @@ resource "aws_iam_policy" "sns_publish" {
           "SNS:Publish"
         ]
         Effect   = "Allow"
-        Resource = module.generate_barcode.generate_barcode_sns_topic_arn
+        Resource = module.generate_label.generate_label_sns_topic_arn
       },
     ]
   })

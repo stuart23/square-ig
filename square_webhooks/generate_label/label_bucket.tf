@@ -1,10 +1,10 @@
-resource "aws_s3_bucket" "barcode_bucket" {
-  bucket = "barcode-catalog-bucket"
+resource "aws_s3_bucket" "label_bucket" {
+  bucket = "label-catalog-bucket"
 }
 
 
-resource "aws_s3_bucket_versioning" "barcode_bucket_versioning" {
-  bucket = aws_s3_bucket.barcode_bucket.id
+resource "aws_s3_bucket_versioning" "label_bucket_versioning" {
+  bucket = aws_s3_bucket.label_bucket.id
   versioning_configuration {
     status = "Enabled"
   }

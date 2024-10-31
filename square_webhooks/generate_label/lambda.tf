@@ -1,10 +1,10 @@
-resource "aws_cloudwatch_log_group" "generate_barcode" {
-  name              = "generate_barcode"
+resource "aws_cloudwatch_log_group" "generate_label" {
+  name              = "generate_label"
   retention_in_days = 14
 }
 
-resource "aws_lambda_function" "generate_barcode" {
-  function_name = "generate_barcode"
+resource "aws_lambda_function" "generate_label" {
+  function_name = "generate_label"
   description   = "Generates a label and saves it in S3"
   package_type  = "Image"
   architectures = ["arm64"]
@@ -13,15 +13,15 @@ resource "aws_lambda_function" "generate_barcode" {
   timeout       = 30
   memory_size   = 256
   image_config {
-    command = ["generate_label.handler"]
+    command = ["generate_label_lambda.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.generate_barcode.name
+    log_group  = aws_cloudwatch_log_group.generate_label.name
     log_format = "Text"
   }
   environment {
     variables = {
-      catalog_bucket_name = aws_s3_bucket.barcode_bucket.id
+      catalog_bucket_name = aws_s3_bucket.label_bucket.id
       square_token_arn    = var.square_token_arn
     }
   }
@@ -31,22 +31,22 @@ resource "aws_lambda_function" "generate_barcode" {
 }
 
 
-resource "aws_lambda_permission" "generate_barcode_permission" {
+resource "aws_lambda_permission" "generate_label_permission" {
   statement_id  = "AllowExecutionFromSNS"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.generate_barcode.function_name
+  function_name = aws_lambda_function.generate_label.function_name
   principal     = "sns.amazonaws.com"
-  source_arn    = aws_sns_topic.generate_barcode.arn
+  source_arn    = aws_sns_topic.generate_label.arn
 }
 
 
-resource "aws_cloudwatch_metric_alarm" "generate_barcode_failure_alarm" {
-  alarm_name        = "generate_barcode_failure_alarm"
-  alarm_description = "Errors in Lambda Function on barcode generation"
+resource "aws_cloudwatch_metric_alarm" "generate_label_failure_alarm" {
+  alarm_name        = "generate_label_failure_alarm"
+  alarm_description = "Errors in Lambda Function on label generation"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
   dimensions = {
-    FunctionName = aws_lambda_function.generate_barcode.function_name
+    FunctionName = aws_lambda_function.generate_label.function_name
   }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
