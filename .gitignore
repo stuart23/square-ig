@@ -223,3 +223,6 @@ cython_debug/
 
 # Webpage
 static_website/www/
+
+# Output labels
+output/
