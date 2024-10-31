@@ -33,6 +33,13 @@ resource "aws_lambda_function" "catalog_update" {
 }
 
 
+resource "aws_lambda_provisioned_concurrency_config" "catalog_update" {
+  function_name                     = aws_lambda_function.catalog_update.function_name
+  provisioned_concurrent_executions = 1
+  qualifier                         = aws_lambda_function.catalog_update.version
+}
+
+
 resource "aws_lambda_permission" "catalog_update_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
