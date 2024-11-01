@@ -21,11 +21,11 @@ jobs:
       name: 'Authenticate to GCP'
       uses: 'google-github-actions/auth@v2'
       with:
-        # project_id: ${{ vars.gcp_project }}
+        project_id: ${{ vars.gcp_project }}
         workload_identity_provider: ${{ vars.gcp_workload_identity_provider }}
-        service_account: "cicd-role@plantsociety.iam.gserviceaccount.com"
-        create_credentials_file: true
-        activate_credentials_file: true
+        # service_account: "cicd-role@plantsociety.iam.gserviceaccount.com"
+        # create_credentials_file: true
+        # activate_credentials_file: true
   
     - id: 'gcloud'
       name: 'gcloud'
