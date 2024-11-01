@@ -125,7 +125,7 @@ def upsert_by_sku(item):
 
 def set_website_true(item):
     '''
-    Sets the website field in the database to `Y` for the item.
+    Sets the website field in the database to the current timestamp for the item.
     '''
     table.update_item(
         Key={'SKU': item.sku},
@@ -136,7 +136,7 @@ def set_website_true(item):
 
 def set_label_true(item):
     '''
-    Sets the label field in the database to `Y` for the item.
+    Sets the label field in the database to the current timestamp for the item.
     '''
     table.update_item(
         Key={'SKU': item.sku},
