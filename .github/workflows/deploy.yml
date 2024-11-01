@@ -14,12 +14,16 @@ jobs:
   setup-gcp:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
     - id: 'auth'
       name: 'Authenticate to GCP'
       uses: 'google-github-actions/auth@v2'
       with:
         project_id: ${{ vars.gcp_project }}
         workload_identity_provider: ${{ vars.gcp_workload_identity_provider }}
+
     - id: 'gcloud'
       name: 'gcloud'
       run: |-
