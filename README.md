@@ -15,15 +15,15 @@ store.
 
 Before deploying any application, the AWS account must first be bootstrapped so that it has the role to allow
 GitHub Actions to deploy resources, and a store for the Terraform state. To bootstrap, in a shell with AWS 
-credentials, execute the following from the `bootstrap` directory:
+and GCP auth, execute the following from the `bootstrap` directory:
 
 ```
 tf init && tf apply --var github_org_name=my_org_name --var github_repo_name=my_repo_name
 ```
 
-This command will produce an output called `cicd_role_arn`. Take this ARN and
+This command will produce an output called `cicd_role_arn` and `cicd_service_account`. Take `cicd_role_arn` and
 [create a GitHub Actions variable](https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/store-information-in-variables#creating-configuration-variables-for-a-repository)
-called `CICD_ROLE_ARN` with the ARN as the value. Now create another variable called `AWS_REGION` with the
+called `CICD_ROLE_ARN` with the ARN as the value. Also create Now create another variable called `AWS_REGION` with the
 preferred AWS region (e.g. `us-east-1`) as the value.
 
 This is a one-time setup, so there is no need to store the tf state file after it is created.
