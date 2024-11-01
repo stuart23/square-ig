@@ -1,6 +1,7 @@
 from boto3 import resource
 from boto3.dynamodb.conditions import Key
 from decimal import Decimal
+from datetime import datetime
 
 from .item import Item
 
@@ -129,7 +130,7 @@ def set_website_true(item):
     table.update_item(
         Key={'SKU': item.sku},
         UpdateExpression='SET website = :website',
-        ExpressionAttributeValues={':website': 'Y'}
+        ExpressionAttributeValues={':website': str(datetime.now())}
     )
 
 
@@ -140,6 +141,6 @@ def set_label_true(item):
     table.update_item(
         Key={'SKU': item.sku},
         UpdateExpression='SET label = :label',
-        ExpressionAttributeValues={':label': 'Y'}
+        ExpressionAttributeValues={':label': str(datetime.now())}
     )
     print(f'Marked item {item} as having an image.')
