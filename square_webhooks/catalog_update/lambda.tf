@@ -4,15 +4,16 @@ resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
 }
 
 resource "aws_lambda_function" "catalog_update" {
-  function_name = "catalog_update"
-  description   = "Triggered when the catalog updates. Updates the Dynamo table with the items."
-  package_type  = "Image"
-  architectures = ["arm64"]
-  image_uri     = var.lambda_image
-  role          = var.lambda_role_arn
-  timeout       = 30
-  memory_size   = 256
-  publish       = true
+  function_name                  = "catalog_update"
+  description                    = "Triggered when the catalog updates. Updates the Dynamo table with the items."
+  package_type                   = "Image"
+  architectures                  = ["arm64"]
+  reserved_concurrent_executions = 1
+  image_uri                      = var.lambda_image
+  role                           = var.lambda_role_arn
+  timeout                        = 30
+  memory_size                    = 256
+  publish                        = true
   image_config {
     command = ["catalog_update_lambda.handler"]
   }
@@ -31,13 +32,6 @@ resource "aws_lambda_function" "catalog_update" {
   ephemeral_storage {
     size = 1024 # Min 512 MB and the Max 10240 MB
   }
-}
-
-
-resource "aws_lambda_provisioned_concurrency_config" "catalog_update" {
-  function_name                     = aws_lambda_function.catalog_update.function_name
-  provisioned_concurrent_executions = 1
-  qualifier                         = aws_lambda_function.catalog_update.version
 }
 
 

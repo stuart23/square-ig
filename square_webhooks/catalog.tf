@@ -21,18 +21,18 @@ resource "aws_dynamodb_table" "catalog" {
   }
 
   global_secondary_index {
-    name               = "websiteIndex"
-    hash_key           = "website"
-    projection_type    = "ALL"
-    read_capacity      = 5
-    write_capacity     = 5
+    name            = "websiteIndex"
+    hash_key        = "website"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
   }
 
   global_secondary_index {
-    name               = "labelIndex"
-    hash_key           = "label"
-    projection_type    = "ALL"
-    read_capacity      = 5
-    write_capacity     = 5
+    name            = "labelIndex"
+    hash_key        = "label"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
   }
 }
