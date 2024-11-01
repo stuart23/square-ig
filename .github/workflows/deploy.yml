@@ -11,6 +11,20 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
+  setup-gcp:
+    runs-on: ubuntu-latest
+    steps:
+    - id: 'auth'
+      name: 'Authenticate to GCP'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        project_id: ${{ vars.gcp_project }}
+        workload_identity_provider: ${{${{ vars.gcp_workload_identity_provider }}}}
+    - id: 'gcloud'
+      name: 'gcloud'
+      run: |-
+        gcloud services list
+
   test-image-code:
     runs-on: ubuntu-latest
     steps:
