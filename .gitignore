@@ -226,3 +226,6 @@ static_website/www/
 
 # Output labels
 output/
+
+# terraform init file
+.terraform.lock.hcl
