@@ -23,7 +23,6 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
   workload_identity_pool_provider_id = "githubactions"
   display_name                       = "GitHub Actions"
   description                        = "GitHub Actions identity pool provider for automated test"
-  disabled                           = true
   attribute_condition = <<EOT
     attribute.repository == "${var.github_org_name}/${var.github_repo_name}"
 EOT
@@ -45,6 +44,7 @@ resource "google_service_account" "cicd_service_account" {
   display_name = "Service account used by Github Actions"
 }
 
+
 resource "google_service_account_iam_binding" "admin_account_iam" {
   service_account_id = google_service_account.cicd_service_account.name
   role               = "roles/iam.workloadIdentityUser"
@@ -55,7 +55,19 @@ resource "google_service_account_iam_binding" "admin_account_iam" {
 }
 
 
-output "cicd_service_account" {
-  description = "GitHub actions sworkload identity pool"
-  value       = google_iam_workload_identity_pool.pool.name
+output "workload_identity_provider" {
+  description = "GitHub actions workload identity pool"
+  value       = google_iam_workload_identity_pool_provider.github_actions.name
+}
+
+
+output "gcp_project" {
+  description = "GitHub actions project"
+  value       = google_project.plantsociety.project_id
+}
+
+
+output "service_account" {
+  description = "GitHub actions project"
+  value       = google_service_account.cicd_service_account.email
 }
