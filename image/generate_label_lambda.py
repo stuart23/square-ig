@@ -23,5 +23,5 @@ def handler(event, context):
         label2 = deepcopy(label)
 
         write_image(label, filename)
-        # create_catalog_image(item, label2)
+        create_catalog_image(item, label2)
         set_label_true(item)
