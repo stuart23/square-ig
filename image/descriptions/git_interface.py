@@ -81,8 +81,8 @@ class DescriptionsGit(object):
         '''
         Commits the added files and pushes to GitHub if there are changes.
         '''
+        file_list = ', '.join(self.modified_files)
         if len(file_list) > 0:
-            file_list = ', '.join(self.modified_files)
             print(f'Committing the following to git: {file_list}')
             self.repo.index.commit(f'Adding {file_list}')
             self.repo.remote('origin').push(env=self.git_environment)
