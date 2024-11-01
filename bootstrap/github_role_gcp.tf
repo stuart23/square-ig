@@ -47,7 +47,7 @@ resource "google_service_account" "cicd_service_account" {
 
 resource "google_service_account_iam_binding" "admin_account_iam" {
   service_account_id = google_service_account.cicd_service_account.name
-  role               = "roles/iam.workloadIdentityUser"
+  role               = "roles/editor"
 
   members = [
     "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.repository/${var.github_org_name}/${var.github_repo_name}",
