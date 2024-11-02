@@ -29,7 +29,7 @@ jobs:
   
     - id: 'gcloud'
       name: 'gcloud'
-      run: gcloud config list account
+      run: gcloud iam service-accounts list --project plantsociety
 
   test-image-code:
     runs-on: ubuntu-latest
