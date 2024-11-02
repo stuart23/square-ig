@@ -26,7 +26,7 @@ jobs:
         workload_identity_provider: ${{ vars.gcp_workload_identity_provider }}
         # service_account: "cicd-role@plantsociety.iam.gserviceaccount.com"
         create_credentials_file: true
-        activate_credentials_file: true
+        export_environment_variables: true
   
     - id: 'gcloud'
       name: 'gcloud'
