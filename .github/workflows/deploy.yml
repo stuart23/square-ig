@@ -29,8 +29,7 @@ jobs:
   
     - id: 'gcloud'
       name: 'gcloud'
-      run: |-
-        gcloud iam service-accounts list 
+      run: gcloud config list account
 
   test-image-code:
     runs-on: ubuntu-latest
