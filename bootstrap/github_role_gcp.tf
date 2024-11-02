@@ -1,3 +1,5 @@
+# Mostly taken from here: https://www.hashicorp.com/blog/access-google-cloud-from-hcp-terraform-with-workload-identity
+
 resource "google_project" "plantsociety" {
   name       = "Plant Society"
   project_id = "plantsociety"
@@ -5,9 +7,25 @@ resource "google_project" "plantsociety" {
 }
 
 
-resource "google_project_service" "cloudapis" {
-  project = google_project.plantsociety.project_id
-  service = "cloudapis.googleapis.com"
+locals {
+  services = toset([
+    # MUST-HAVE for GitHub Actions setup
+    "iam.googleapis.com",                  # Identity and Access Management (IAM) API
+    "iamcredentials.googleapis.com",       # IAM Service Account Credentials API
+    "cloudresourcemanager.googleapis.com", # Cloud Resource Manager API
+    "sts.googleapis.com",                  # Security Token Service API
+  ])
+  roles = [
+    "roles/iam.serviceAccountUser", # GitHub Actions identity
+    "roles/editor",                 # allow to manage all resources
+
+  ]
+}
+
+resource "google_project_service" "service" {
+  for_each = local.services
+  project  = google_project.plantsociety.project_id
+  service  = each.value
 }
 
 
@@ -23,9 +41,7 @@ resource "google_iam_workload_identity_pool_provider" "github_actions" {
   workload_identity_pool_provider_id = "githubactions"
   display_name                       = "GitHub Actions"
   description                        = "GitHub Actions identity pool provider for automated test"
-  attribute_condition = <<EOT
-    attribute.repository == "${var.github_org_name}/${var.github_repo_name}"
-EOT
+  attribute_condition                = "attribute.repository == \"${var.github_org_name}/${var.github_repo_name}\""
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
     "attribute.actor"      = "assertion.actor"
@@ -45,13 +61,22 @@ resource "google_service_account" "cicd_service_account" {
 }
 
 
-resource "google_service_account_iam_binding" "admin_account_iam" {
+# example service account that HCP Terraform will impersonate
+resource "google_service_account_iam_member" "github_actions" {
   service_account_id = google_service_account.cicd_service_account.name
-  role               = "roles/editor"
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.repository/${var.github_org_name}/${var.github_repo_name}"
+}
 
-  members = [
-    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.repository/${var.github_org_name}/${var.github_repo_name}",
-  ]
+
+# Allow to access all resources
+resource "google_project_iam_member" "roles" {
+  project = google_project.plantsociety.project_id
+  for_each = {
+    for role in local.roles : role => role
+  }
+  role   = each.value
+  member = "serviceAccount:${google_service_account.cicd_service_account.email}"
 }
 
 
