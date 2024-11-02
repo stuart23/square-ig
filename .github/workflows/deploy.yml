@@ -31,7 +31,7 @@ jobs:
     - id: 'gcloud'
       name: 'gcloud'
       run: |-
-        gcloud services list --project ${{ vars.gcp_project }}
+        gcloud auth list
 
   test-image-code:
     runs-on: ubuntu-latest
