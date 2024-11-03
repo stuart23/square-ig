@@ -118,7 +118,9 @@ jobs:
       env:
         drive_name: ${{ vars.drive_name }}
       id: google_drive_id
-      run: python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
+      run: |
+        pip3 install -y google-api-python-client
+        python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
 
     - name: Echo Google Drive ID
       run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
