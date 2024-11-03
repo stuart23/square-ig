@@ -123,7 +123,7 @@ jobs:
         python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
 
     - name: Echo Google Drive ID
-      run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
+      run: echo ${{ env.ECR_REPO_URL }}@${{ steps.google_drive_id.outputs.drive_id }}
 
     - name: Terraform Init Square Webhooks
       working-directory: square_webhooks
