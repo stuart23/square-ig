@@ -114,6 +114,15 @@ jobs:
     - name: Echo Image ID
       run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
 
+    - name: Get Google Drive ID
+      env:
+        drive_name: ${{ vars.drive_name }}
+      id: google_drive_id
+      run: python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
+
+    - name: Echo Google Drive ID
+      run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
+
     - name: Terraform Init Square Webhooks
       working-directory: square_webhooks
       run: terraform init
@@ -126,7 +135,8 @@ jobs:
           -var aws_region=${{ vars.aws_region }} \
           -var square_token="${{ secrets.square_token }}" \
           -var gh_key_arn="${{ vars.gh_key_arn }}" \
-          -var instructions_git_repo="${{ vars.instructions_git_repo }}"
+          -var instructions_git_repo="${{ vars.instructions_git_repo }}" \
+          -var google_drive_id="${{ steps.google_drive_id.outputs.docker_tag }}"
 
 
   deploy-static-website:
