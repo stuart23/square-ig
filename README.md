@@ -34,8 +34,11 @@ This is a one-time setup, so there is no need to store the tf state file after i
 
 ### Setup google drive
 Create a google drive and share it with the email address given in the `service_account` output from terraform.
-You should give it permissions to read and write to the drive.
+You should give it Content Manager (or Manager?) permissions to read and write to the drive.
 Setup another Github Actions `drive_name` = Name of the google drive to use.
+
+If you get a 404 error in the `Get Google Drive ID` Github actions step, the drive may not have been shared
+correctly.
 
 ### Deployment
 
