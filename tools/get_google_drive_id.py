@@ -1,7 +1,6 @@
 from os import getenv
-
-from google.oauth2.service_account import Credentials
-
+from json import load
+from google.auth.identity_pool import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -13,11 +12,12 @@ def main():
     Gets the google drive id from the drive name in the environment variable `drive_name
     """
     drive_name = getenv(DRIVE_NAME_ENV)
-
-    # credentials = Credentials.from_service_account_file(
-    #     "plantsociety-64c848da7bcd.json"
-    # )
-    # service = build("drive", "v3", credentials=credentials)
+    credentials_file = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    if not credentials_file:
+        raise Exception('Environment Variable GOOGLE_APPLICATION_CREDENTIALS is not set.')
+    with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as f:
+        key = load(f)
+    credentials = Credentials.from_info(key)
     service = build("drive", "v3")
 
     try:
