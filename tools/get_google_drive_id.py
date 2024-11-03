@@ -28,7 +28,7 @@ def main():
     drives = results['drives']
     target_drives = [x for x in drives if x['name'] == drive_name]
     if len(target_drives) != 1:
-        raise ValueError(f'Could not find drive or duplicate drive names in {drives}')
+        raise ValueError(f'Could not find drive \"{drive_name}\" or duplicate drive names in {drives}')
     print(f'drive_id=${target_drives[0]}')
     
 
