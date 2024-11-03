@@ -12,7 +12,7 @@ def main():
     Gets the google drive id from the drive name in the environment variable `drive_name
     """
     drive_name = getenv(DRIVE_NAME_ENV)
-    credentials_file = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    credentials_file = getenv["GOOGLE_APPLICATION_CREDENTIALS"]
     if not credentials_file:
         raise Exception('Environment Variable GOOGLE_APPLICATION_CREDENTIALS is not set.')
     with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as f:
