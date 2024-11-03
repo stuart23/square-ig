@@ -138,7 +138,7 @@ jobs:
           -var square_token="${{ secrets.square_token }}" \
           -var gh_key_arn="${{ vars.gh_key_arn }}" \
           -var instructions_git_repo="${{ vars.instructions_git_repo }}" \
-          -var google_drive_id="${{ steps.google_drive_id.outputs.docker_tag }}"
+          -var google_drive_id="${{ steps.google_drive_id.outputs.drive_id }}"
 
 
   deploy-static-website:

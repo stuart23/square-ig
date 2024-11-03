@@ -20,3 +20,9 @@ variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
 }
+
+
+variable "labels_google_drive_id" {
+  description = "The of the Google Drive to store the labels in"
+  type        = string
+}

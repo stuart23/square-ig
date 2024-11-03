@@ -26,11 +26,12 @@ module "catalog_update" {
 
 
 module "generate_label" {
-  source               = "./generate_label"
-  lambda_image         = var.lambda_image
-  lambda_role_arn      = aws_iam_role.lambda_role.arn
-  square_token_arn     = aws_secretsmanager_secret.square_token.arn
-  alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
+  source                 = "./generate_label"
+  lambda_image           = var.lambda_image
+  lambda_role_arn        = aws_iam_role.lambda_role.arn
+  square_token_arn       = aws_secretsmanager_secret.square_token.arn
+  alerts_sns_topic_arn   = module.alerts.alerts_sns_topic_arn
+  labels_google_drive_id = var.labels_google_drive_id
 }
 
 
