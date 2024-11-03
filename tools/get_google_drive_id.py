@@ -23,7 +23,8 @@ def main():
     try:
         results = service.drives().list().execute()
     except HttpError as error:
-        raise HttpError(f'Could not retrieve list of drives due to {error}')
+        print('Could not retrieve list of drives.')
+        raise error
     drives = results['drives']
     target_drives = [x for x in drives if x['name'] == drive_name]
     if len(target_drives) != 1:
