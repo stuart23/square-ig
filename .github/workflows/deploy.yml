@@ -119,7 +119,7 @@ jobs:
         drive_name: ${{ vars.drive_name }}
       id: google_drive_id
       run: |
-        pip3 install -y google-api-python-client
+        pip3 install google-api-python-client
         python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
 
     - name: Echo Google Drive ID
