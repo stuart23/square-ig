@@ -15,7 +15,7 @@ def main():
     credentials_file = getenv("GOOGLE_APPLICATION_CREDENTIALS")
     if not credentials_file:
         raise Exception('Environment Variable GOOGLE_APPLICATION_CREDENTIALS is not set.')
-    with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as f:
+    with open(credentials_file) as f:
         key = load(f)
     credentials = Credentials.from_info(key) # There is also a from_file constructor that may be easier.
     service = build("drive", "v3")
