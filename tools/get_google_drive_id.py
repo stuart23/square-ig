@@ -12,12 +12,12 @@ def main():
     Gets the google drive id from the drive name in the environment variable `drive_name
     """
     drive_name = getenv(DRIVE_NAME_ENV)
-    credentials_file = getenv["GOOGLE_APPLICATION_CREDENTIALS"]
+    credentials_file = getenv("GOOGLE_APPLICATION_CREDENTIALS")
     if not credentials_file:
         raise Exception('Environment Variable GOOGLE_APPLICATION_CREDENTIALS is not set.')
     with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as f:
         key = load(f)
-    credentials = Credentials.from_info(key)
+    credentials = Credentials.from_info(key) # There is also a from_file constructor that may be easier.
     service = build("drive", "v3")
 
     try:
