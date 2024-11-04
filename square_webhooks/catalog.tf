@@ -1,8 +1,8 @@
 resource "aws_dynamodb_table" "catalog" {
   name           = "catalog"
   billing_mode   = "PROVISIONED"
-  read_capacity  = 10
-  write_capacity = 10
+  read_capacity  = 5
+  write_capacity = 5
   hash_key       = "variation_id"
 
   attribute {
