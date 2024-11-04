@@ -27,7 +27,7 @@ resource "aws_dynamodb_table" "catalog" {
 
   global_secondary_index {
     name            = "skuIndex"
-    hash_key        = "sku"
+    hash_key        = "SKU"
     projection_type = "ALL"
     read_capacity   = 2
     write_capacity  = 2
