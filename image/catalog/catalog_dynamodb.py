@@ -54,13 +54,35 @@ def get_needs_label_items():
 
 def get_item_by_sku(sku):
     '''
-    Tries to get an item from the database with a sku. Raises ValueError if
-    the object does not exist
+    Tries to get an item from the database with a sku. May return more than one
+    item as this is not guarenteed to be unique.
     '''
     response = table.query(
         IndexName='skuIndex',
         KeyConditionExpression=Key('SKU').eq(sku)
     )
+    if 'Items' not in response.keys():
+        raise ValueError('Items not found')
+    else:
+        items_details = response['Items']
+        for item_detail in items_details:
+            yield Item(
+                sku=item_details['SKU'],
+                price=int(item_details.get('price')),
+                item_id=item_details.get('item_id'),
+                variation_id=item_details.get('variation_id'),
+                pet_safe=item_details.get('pet_safe'),
+                variation_str=item_details.get('variation_str'),
+                item_str=item_details.get('item_str'),
+            )
+
+
+def get_item_by_variation_id(variation_id):
+    '''
+    Tries to get an item from the database with an id. Raises ValueError if
+    the object does not exist
+    '''
+    response = table.get_item(Key={"variation_id": variation_id})
     if 'Item' not in response.keys():
         raise ValueError('Item not found')
     else:
@@ -76,7 +98,7 @@ def get_item_by_sku(sku):
         )
 
 
-def upsert_by_sku(item):
+def upsert_by_id(item):
     """
     Looks for an object and checks that the fields are all the same. If they
     are, it returns false.
@@ -85,7 +107,7 @@ def upsert_by_sku(item):
     but with the label and website fields set to False so they regenerate.
     """
     try:
-        dynamo_item = get_item(item.sku)
+        dynamo_item = get_item(item.variation_id)
     except ValueError:
         # No item with this sku exists, adding it.
         print(f'Adding item to DynamoDB: {item.item_str} - {item.variation_str}')
