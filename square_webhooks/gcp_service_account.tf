@@ -1,7 +1,9 @@
 # Mostly taken from here: https://www.hashicorp.com/blog/access-google-cloud-from-hcp-terraform-with-workload-identity
 
-data "google_project" "project" {
-}
+data "google_project" "project" {}
+
+
+data "aws_caller_identity" "current" {}
 
 
 resource "google_iam_workload_identity_pool" "pool" {
@@ -24,9 +26,9 @@ resource "google_iam_workload_identity_pool_provider" "aws" {
     "attribute.aws_role"="assertion.arn.extract('role/{role}/')"
     # "attribute.aws_ec2_instance"="assertion.arn.extract('assumed-role/{role_and_session}').extract('/{session}')"
   }
-  # oidc {
-  #   issuer_uri = "https://token.actions.githubusercontent.com"
-  # }
+  aws {
+    account_id = data.aws_caller_identity.current.account_id
+  }
 }
 
 
