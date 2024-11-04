@@ -47,14 +47,14 @@ resource "google_service_account_iam_member" "lambda_service_account_member" {
 
 
 # Allow to access all resources
-resource "google_project_iam_member" "roles" {
+resource "google_project_iam_member" "serviceAccountUser_role" {
   project = data.google_project.project.project_id
   role   = "roles/iam.serviceAccountUser"
   member = "serviceAccount:${google_service_account.lambda_service_account.email}"
 }
 
 
-resource "google_project_iam_member" "roles" {
+resource "google_project_iam_member" "viewer_role" {
   project = data.google_project.project.project_id
   role   = "roles/viewer"
   member = "serviceAccount:${google_service_account.lambda_service_account.email}"
