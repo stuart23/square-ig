@@ -54,6 +54,13 @@ resource "google_project_iam_member" "roles" {
 }
 
 
+resource "google_project_iam_member" "roles" {
+  project = data.google_project.project.project_id
+  role   = "roles/viewer"
+  member = "serviceAccount:${google_service_account.lambda_service_account.email}"
+}
+
+
 output "workload_identity_provider" {
   description = "Lambda workload identity pool"
   value       = google_iam_workload_identity_pool_provider.aws.name
