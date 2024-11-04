@@ -12,7 +12,7 @@ def handler(event, context):
         if item.update_sku():
             validate_sku(item)
             patch_objects_id(item)
-        upsert_by_sku(item)
+        upsert_by_id(item)
 
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
