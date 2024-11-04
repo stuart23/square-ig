@@ -5,13 +5,13 @@ data "google_project" "project" {
 
 
 resource "google_iam_workload_identity_pool" "pool" {
-  project                   = google_project.plantsociety.project_id
+  project                   = data.google_project.project.project_id
   workload_identity_pool_id = "aws-pool"
 }
 
 
 resource "google_iam_workload_identity_pool_provider" "aws" {
-  project                            = google_project.plantsociety.project_id
+  project                            = data.google_project.project.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.pool.workload_identity_pool_id
   workload_identity_pool_provider_id = "aws"
   display_name                       = "AWS WI Pool"
@@ -31,7 +31,7 @@ resource "google_iam_workload_identity_pool_provider" "aws" {
 
 
 resource "google_service_account" "lambda_service_account" {
-  project      = google_project.plantsociety.project_id
+  project      = data.google_project.project.project_id
   account_id   = "lambda-role"
   display_name = "Service account used by AWS Lambda Function"
 }
@@ -46,7 +46,7 @@ resource "google_service_account_iam_member" "lambda_service_account_member" {
 
 # Allow to access all resources
 resource "google_project_iam_member" "roles" {
-  project = data.google_project.plantsociety.project_id
+  project = data.google_project.project.project_id
   role   = "roles/iam.serviceAccountUser"
   member = "serviceAccount:${google_service_account.lambda_service_account_member.email}"
 }
