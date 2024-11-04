@@ -25,6 +25,6 @@ provider "aws" {
 
 # Configure the GCP Provider
 provider "google" {
-  project = var.gcp_project
+  # project = var.gcp_project
   # region  = var.gcp_region
 }
