@@ -17,7 +17,7 @@ locals {
   ])
   roles = [
     "roles/iam.serviceAccountUser", # GitHub Actions identity
-    "roles/editor",                 # allow to manage all resources
+    "roles/owner",                 # allow to manage all resources
 
   ]
 }
