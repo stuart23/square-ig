@@ -107,7 +107,7 @@ def upsert_by_id(item):
     but with the label and website fields set to False so they regenerate.
     """
     try:
-        dynamo_item = get_item(item.variation_id)
+        dynamo_item = get_item_by_variation_id(item.variation_id)
     except ValueError:
         # No item with this sku exists, adding it.
         print(f'Adding item to DynamoDB: {item.item_str} - {item.variation_str}')
