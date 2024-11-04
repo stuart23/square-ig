@@ -1,13 +1,13 @@
 from pytest import raises
 from types import GeneratorType
 
-from .catalog_dynamodb import get_item, get_needs_label_items, get_website_needs_update_items
+from .catalog_dynamodb import get_item_by_sku, get_needs_label_items, get_website_needs_update_items
 
 
 def test_get_item_doesnt_exist():
     sku = 'poiuytrewq'
     with raises(ValueError) as excinfo:
-        get_item(sku)
+        get_item_by_sku(sku)
     assert str(excinfo.value) == 'Item not found'
 
 

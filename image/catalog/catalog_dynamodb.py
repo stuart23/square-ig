@@ -52,12 +52,15 @@ def get_needs_label_items():
         )
 
 
-def get_item(sku):
+def get_item_by_sku(sku):
     '''
     Tries to get an item from the database with a sku. Raises ValueError if
     the object does not exist
     '''
-    response = table.get_item(Key={"SKU": sku})
+    response = table.query(
+        IndexName='skuIndex',
+        KeyConditionExpression=Key('SKU').eq(sku)
+    )
     if 'Item' not in response.keys():
         raise ValueError('Item not found')
     else:
