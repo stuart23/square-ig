@@ -1,5 +1,5 @@
 from square_client import get_catalog_items, patch_objects_sku
-from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_sku
+from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_id
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
