@@ -53,7 +53,8 @@ def test_update_sku_missing_sku():
         pet_safe=True
     )
     assert item.update_sku() == True
-    assert item.sku
+    assert len(item.sku) == 21
+    assert item.sku.startswith('plantsoc.com/')
 
 
 def test_sku_stem_url_sku():

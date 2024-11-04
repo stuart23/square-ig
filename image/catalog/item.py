@@ -53,7 +53,7 @@ class Item:
         """
         # No sku
         if not self.sku:
-            self.sku = '/'.join([URL_PREFIX, str(uuid4()).replace('-', '')[:8]])
+            self.sku = self._random_sku()
             return True
         if self.sku.startswith(URL_PREFIX):
             return False
@@ -65,6 +65,27 @@ class Item:
             self.sku = new_sku
             return True
 
+    def validate_sku(item):
+        '''
+        Checks that the sku doesn't already exist in the database.
+        
+        If the sku exists, a new one will be generated for the item.
+
+        If the sku exists but already belongs to this item, then it is unchanged.
+        '''
+        from .catalog_dynamodb import get_item_by_sku
+
+        while True:
+            db_items = list(get_item_by_sku(item.sku))
+
+            # If there is another entry in the database that has a different variation id, then we replace this.
+            if any([db_item.variation_id != item.variation_id for db_item in db_items]):
+                new_sku = self._random_sku()
+                print('Item with sku {item.sku} already exists in the database. Changing the sku to {new_sku}')
+                item.sku = new_sku
+            else:
+                break
+
     @property
     def sku_stem(self):
         """
@@ -74,3 +95,7 @@ class Item:
             return self.sku.replace(f"{URL_PREFIX}/", "")
         else:
             return None
+
+    @staticmethod
+    def _random_sku():
+        return '/'.join([URL_PREFIX, str(uuid4()).replace('-', '')[:8]])

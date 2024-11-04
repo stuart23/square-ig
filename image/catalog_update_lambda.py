@@ -10,7 +10,8 @@ def handler(event, context):
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
-            patch_objects_sku(item)
+            validate_sku(item)
+            patch_objects_id(item)
         upsert_by_sku(item)
 
     needs_label_items = get_needs_label_items()
