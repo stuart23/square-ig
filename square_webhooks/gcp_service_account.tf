@@ -15,11 +15,11 @@ resource "google_iam_workload_identity_pool" "pool" {
 resource "google_iam_workload_identity_pool_provider" "aws" {
   project                            = data.google_project.project.project_id
   workload_identity_pool_id          = google_iam_workload_identity_pool.pool.workload_identity_pool_id
-  workload_identity_pool_provider_id = "aws"
+  workload_identity_pool_provider_id = "aws-pool"
   display_name                       = "AWS WI Pool"
   description                        = "AWS identity pool provider for accessing Service Accounts"
   # attribute_condition                = "assertion.arn.startsWith('arn:aws:sts::AWS_ACCOUNT_ID:role/')"
-  attribute_condition                = "assertion.arn.equals(\"${aws_iam_role.lambda_role.arn}\")"
+  attribute_condition                = "assertion.arn==\"${aws_iam_role.lambda_role.arn}\""
   attribute_mapping = {
     "google.subject"       = "assertion.arn"
     "attribute.account"= "assertion.account"
@@ -50,7 +50,7 @@ resource "google_service_account_iam_member" "lambda_service_account_member" {
 resource "google_project_iam_member" "roles" {
   project = data.google_project.project.project_id
   role   = "roles/iam.serviceAccountUser"
-  member = "serviceAccount:${google_service_account.lambda_service_account_member.email}"
+  member = "serviceAccount:${google_service_account.lambda_service_account.email}"
 }
 
 
