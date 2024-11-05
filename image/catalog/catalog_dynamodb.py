@@ -153,7 +153,7 @@ def set_website_true(item):
     Sets the website field in the database to the current timestamp for the item.
     '''
     table.update_item(
-        Key={"variation_id": variation_id},
+        Key={"variation_id": item.variation_id},
         UpdateExpression='SET website = :website',
         ExpressionAttributeValues={':website': str(datetime.now())}
     )
@@ -164,7 +164,7 @@ def set_label_true(item):
     Sets the label field in the database to the current timestamp for the item.
     '''
     table.update_item(
-        Key={"variation_id": variation_id},
+        Key={"variation_id": item.variation_id},
         UpdateExpression='SET label = :label',
         ExpressionAttributeValues={':label': str(datetime.now())}
     )
