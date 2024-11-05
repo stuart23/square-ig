@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-from uuid import uuid4
-
-
 URL_PREFIX = "plantsoc.com"
 
 
@@ -53,7 +50,7 @@ class Item:
         """
         # No sku
         if not self.sku:
-            self.sku = self._random_sku()
+            self.sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
             return True
         if self.sku.startswith(URL_PREFIX):
             return False
@@ -80,7 +77,7 @@ class Item:
 
             # If there is another entry in the database that has a different variation id, then we replace this.
             if any([db_item.variation_id != item.variation_id for db_item in db_items]):
-                new_sku = self._random_sku()
+                new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
                 print('Item with sku {item.sku} already exists in the database. Changing the sku to {new_sku}')
                 item.sku = new_sku
             else:
@@ -95,7 +92,3 @@ class Item:
             return self.sku.replace(f"{URL_PREFIX}/", "")
         else:
             return None
-
-    @staticmethod
-    def _random_sku():
-        return '/'.join([URL_PREFIX, str(uuid4()).replace('-', '')[:8]])
