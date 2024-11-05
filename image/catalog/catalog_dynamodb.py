@@ -133,7 +133,7 @@ def upsert_by_id(item):
         print(f'Item {item} has changed. Updating Dynamo')
         table.update_item(
             Key={'variation_id': item.variation_id},
-            UpdateExpression='SET SKU = :SKU, price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, variation_id = :variation_id, pet_safe = :pet_safe, label = :label, website = :website',
+            UpdateExpression='SET SKU = :SKU, price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, pet_safe = :pet_safe, label = :label, website = :website',
             ExpressionAttributeValues={
                 ':SKU': item.sku,
                 ':price': item.price,
