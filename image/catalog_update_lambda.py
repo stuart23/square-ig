@@ -14,7 +14,8 @@ def handler(event, context):
             validate_sku(item)
             patch_objects_id(item)
             update_items.append(item)
-    patch_objects_sku(update_items)
+    if update_items:
+        patch_objects_sku(update_items)
 
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
