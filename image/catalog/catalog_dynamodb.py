@@ -138,8 +138,8 @@ def upsert_by_id(item):
                 ':SKU': item.sku,
                 ':price': item.price,
                 ':item_str': item.item_str,
+                ':variation_str': item.variation_str,
                 ':item_id': item.item_id,
-                ":variation_id": item.variation_id,
                 ':pet_safe': item.pet_safe,
                 ':label': 'N',
                 ':website': 'N'
