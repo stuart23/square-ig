@@ -91,7 +91,7 @@ def patch_objects_sku(items):
     print('Patching {0} records in Square'.format(len(items)))
     catalog = get_square_client().catalog
     item_map = {item.variation_id: item.sku for item in items}
-    response = catalog.retrieve_catalog_object(object_ids=item_map.keys())
+    response = catalog.batch_retrieve_catalog_objects(object_ids=item_map.keys())
     square_items = response.body['objects']
     objects = []
     for item in square_items:
