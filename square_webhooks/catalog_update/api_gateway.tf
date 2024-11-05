@@ -7,7 +7,7 @@ resource "aws_apigatewayv2_integration" "catalog_update_sqs" {
 
   request_parameters = {
     "QueueUrl"    = aws_sqs_queue.catalog_update.url
-    "MessageBody" = "$request.body.message"
+    "MessageBody" = "$request.body"
   }
 }
 
