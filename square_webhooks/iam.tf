@@ -54,7 +54,7 @@ resource "aws_iam_policy" "dynamo_access" {
           "dynamodb:Update*",
           "dynamodb:PutItem"
         ]
-        Effect   = "Allow"
+        Effect = "Allow"
         Resource = [
           "${aws_dynamodb_table.catalog.arn}/*",
           aws_dynamodb_table.catalog.arn

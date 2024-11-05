@@ -19,11 +19,11 @@ resource "google_iam_workload_identity_pool_provider" "aws" {
   display_name                       = "AWS WI Pool"
   description                        = "AWS identity pool provider for accessing Service Accounts"
   # attribute_condition                = "assertion.arn.startsWith('arn:aws:sts::AWS_ACCOUNT_ID:role/')"
-  attribute_condition                = "assertion.arn==\"${aws_iam_role.lambda_role.arn}\""
+  attribute_condition = "assertion.arn==\"${aws_iam_role.lambda_role.arn}\""
   attribute_mapping = {
-    "google.subject"       = "assertion.arn"
-    "attribute.account"= "assertion.account"
-    "attribute.aws_role"="assertion.arn.extract('role/{role}/')"
+    "google.subject"     = "assertion.arn"
+    "attribute.account"  = "assertion.account"
+    "attribute.aws_role" = "assertion.arn.extract('role/{role}/')"
     # "attribute.aws_ec2_instance"="assertion.arn.extract('assumed-role/{role_and_session}').extract('/{session}')"
   }
   aws {
@@ -49,15 +49,15 @@ resource "google_service_account_iam_member" "lambda_service_account_member" {
 # Allow to access all resources
 resource "google_project_iam_member" "serviceAccountUser_role" {
   project = data.google_project.project.project_id
-  role   = "roles/iam.serviceAccountUser"
-  member = "serviceAccount:${google_service_account.lambda_service_account.email}"
+  role    = "roles/iam.serviceAccountUser"
+  member  = "serviceAccount:${google_service_account.lambda_service_account.email}"
 }
 
 
 resource "google_project_iam_member" "viewer_role" {
   project = data.google_project.project.project_id
-  role   = "roles/viewer"
-  member = "serviceAccount:${google_service_account.lambda_service_account.email}"
+  role    = "roles/viewer"
+  member  = "serviceAccount:${google_service_account.lambda_service_account.email}"
 }
 
 
