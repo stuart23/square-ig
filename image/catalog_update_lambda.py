@@ -5,6 +5,7 @@ from descriptions import DescriptionsGit
 
 
 def handler(event, context):
+    return
     items = get_catalog_items()
     update_items = []
     for item in items:
