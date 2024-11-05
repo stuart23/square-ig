@@ -83,6 +83,27 @@ resource "aws_iam_policy" "sns_publish" {
   })
 }
 
+# IAM policy for reading from SNS
+resource "aws_iam_policy" "sqs_read" {
+  name        = "sqs_read"
+  description = "Read from SQS"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [     
+          "sqs:ChangeMessageVisibility",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes",
+          "sqs:ReceiveMessage",
+        ]
+        Effect   = "Allow"
+        Resource = "arn:aws:sqs:*"
+      },
+    ]
+  })
+}
+
 
 resource "aws_iam_role" "lambda_role" {
   name = "lambda_role"
@@ -116,6 +137,12 @@ resource "aws_iam_role_policy_attachment" "lambda_role_secrets_policy_attachment
 resource "aws_iam_role_policy_attachment" "lambda_role_sns_publish_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.sns_publish.arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "lambda_role_sqs_read_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.sqs_read.arn
 }
 
 
