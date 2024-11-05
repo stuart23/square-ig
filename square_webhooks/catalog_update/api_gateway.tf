@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_integration" "catalog_update" {
   integration_subtype = "SQS-SendMessage"
 
   request_parameters = {
-    "QueueUrl"    = aws_apigatewayv2_integration.catalog_update.url
+    "QueueUrl"    = aws_sqs_queue.catalog_update.url
     "MessageBody" = "$request.body.message"
   }
 }
