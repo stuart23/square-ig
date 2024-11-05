@@ -4,9 +4,10 @@ from square.client import Client as SquareClient
 from json import dumps
 from hashlib import sha256
 from time import sleep, time
+from uuid import uuid4
 
 from catalog import Item
-from utils import get_secret
+from utils import batch, get_secret
 
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
@@ -82,19 +83,32 @@ def _get_all_catalog_items():
     return objects
 
 
-def patch_objects_sku(item):
+@batch(batch_size=500)
+def patch_objects_sku(items):
+    '''
+    Updates multiple objects sku.
+    '''
+    print('Patching {0} records in Square'.format(len(items)))
     catalog = get_square_client().catalog
-    response = catalog.retrieve_catalog_object(object_id=item.variation_id)
-    square_item = response.body['object']
-    item_variation_data = square_item['item_variation_data']
-    item_variation_data['sku'] = item.sku
-    upsert_response = catalog.upsert_catalog_object({
-        "idempotency_key": generate_idempotency_key(item),
-        "object": {
-            'type': 'ITEM_VARIATION',
-            'id': item.variation_id,
-            'version': square_item['version'],
-            'item_variation_data': item_variation_data
+    item_map = {item.variation_id: item.sku for item in items}
+    response = catalog.retrieve_catalog_object(object_ids=item_map.keys())
+    square_items = response.body['objects']
+    objects = []
+    for item in square_items:
+        item_variation_data = item['item_variation_data']
+        item_variation_data['sku'] = item_map[item['variation_id']]
+        objects.append(
+            {
+                'type': 'ITEM_VARIATION',
+                'id': item['variation_id'],
+                'version': item['version'],
+                'item_variation_data': item_variation_data
+            }
+        )
+    upsert_response = catalog.batch_upsert_catalog_objects({
+        "idempotency_key": str(uuid4()),
+        "batches": {
+            "objects": objects
         }
     })
     if upsert_response.is_success():
