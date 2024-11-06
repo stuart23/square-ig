@@ -47,14 +47,13 @@ def test_update_sku_missing_sku():
         sku=None,
         price=123,
         item_str='no_sku_123',
-        variation_str='abc',
+        variation_str='abcdef',
         item_id='qwerty',
         variation_id='asdfg',
         pet_safe=True
     )
     assert item.update_sku() == True
-    assert len(item.sku) == 21
-    assert item.sku.startswith('plantsoc.com/')
+    assert item.sku == 'plantsoc.com/asdfg'
 
 
 def test_sku_stem_url_sku():
