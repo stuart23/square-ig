@@ -21,7 +21,7 @@ def write_image(content, mimetype='image/png'):
         mimetype=mimetype,
         resumable=True
     )
-
+    print(f'Writing {content.name} to google drive.')
     file = (
         service.files()
         .create(body=file_metadata, media_body=media_body, supportsAllDrives=True)
