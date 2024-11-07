@@ -1,12 +1,10 @@
-import google.auth
-from google.auth.identity_pool import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
 
 def handler(event, context):
-    credentials, project_id = google.auth.default()
-    service = build("drive", "v3")
+
+    service = build("drive", "v3", credentials=credentials)
 
     try:
         results = service.drives().list().execute()
@@ -19,3 +17,5 @@ def handler(event, context):
         raise ValueError(f'Could not find drive \"{drive_name}\" or duplicate drive names in {drives}')
     print(f'drive_id={target_drives[0]["id"]}')
     
+if __name__ == '__main__':
+    handler(None, None)
