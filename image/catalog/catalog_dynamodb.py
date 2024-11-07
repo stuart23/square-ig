@@ -171,6 +171,18 @@ def set_label_true(item):
     print(f'Marked item {item} as having an image.')
 
 
+def set_label_false(item):
+    '''
+    Sets the label field in the database to 'N' for the item.
+    '''
+    table.update_item(
+        Key={"variation_id": item.variation_id},
+        UpdateExpression='SET label = :label',
+        ExpressionAttributeValues={':label': 'N'}
+    )
+    print(f'Marked item {item} as not having an image.')
+
+
 def get_items():
     """
     Returns all the objects in the dynamo database.
