@@ -15,11 +15,11 @@ def writeFile():
 
     service = build("drive", "v3")
     
-    file_metadata = {"name": "pet_safe.png"}
+    file_metadata = {"name": "pet_safe.png", 'parents': [drive_id]}
     media = MediaFileUpload("labels/assets/pet_safe.png", mimetype="image/png")
 
     file = (
         service.files()
-        .create(body=file_metadata, media_body=media, fields="id", driveId=drive_id)
+        .create(body=file_metadata, media_body=media, supportsAllDrives=True)
         .execute()
     )
