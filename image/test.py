@@ -1,6 +1,7 @@
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
+drive_name = 'labels'
 
 def handler(event, context):
 
