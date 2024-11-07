@@ -18,12 +18,10 @@ resource "google_iam_workload_identity_pool_provider" "aws" {
   workload_identity_pool_provider_id = "aws-pool"
   display_name                       = "AWS WI Pool"
   description                        = "AWS identity pool provider for accessing Service Accounts"
-  attribute_condition                = "assertion.arn.startsWith('arn:aws:sts::AWS_ACCOUNT_ID:role/')"
   attribute_mapping = {
     "google.subject"     = "assertion.arn"
     "attribute.account"  = "assertion.account"
     "attribute.aws_role" = "assertion.arn.extract('role/{role}/')"
-    # "attribute.aws_ec2_instance"="assertion.arn.extract('assumed-role/{role_and_session}').extract('/{session}')"
   }
   aws {
     account_id = data.aws_caller_identity.current.account_id
