@@ -4,6 +4,8 @@ from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
 
+# TODO: Make this a function that runs every day.
+
 def handler(event, context):
     items = get_catalog_items()
     update_items = []
