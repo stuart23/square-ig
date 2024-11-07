@@ -54,7 +54,11 @@ def batch_filter_images(object_ids):
             "include_category_path_to_root":False
         }
     )
-    objects = response.body['objects']
+    try:
+        objects = response.body['objects']
+    except KeyError:
+        print(f'No images retrieved because {response}')
+        return
     for image in objects:
         if image['image_data'].get('caption') == 'QR Code':
             to_delete.append(image['id'])
@@ -67,14 +71,14 @@ if __name__ == '__main__':
     catalog = get_square_client().catalog
 
     for item in items:
-        print(item['item_data'])
+        print(item['item_data']['name'])
         images = item['item_data'].get('image_ids', [])
         print(f'Number of images: {len(images)}')
         object_ids = []
         to_delete = []
         for image_id in images:
             object_ids.append(image_id)
-            if len(object_ids) >= 50:
+            if len(object_ids) >= 100:
                 batch_filter_images(object_ids)
                 object_ids = []
                 to_delete = []
