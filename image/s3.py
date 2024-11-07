@@ -6,7 +6,8 @@ s3client = Boto3Client('s3')
 BUCKET_NAME = getenv('catalog_bucket_name')
 
 
-def write_image(image, key):
+def write_image(image):
+    key = image.name
     print(f"Writing object, {key} to bucket {BUCKET_NAME}")
 
     # Upload image to s3

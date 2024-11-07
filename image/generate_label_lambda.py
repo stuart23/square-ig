@@ -22,7 +22,7 @@ def handler(event, context):
         # BytesIO can only be used once, so we make a copy to upload to square
         label2 = deepcopy(label)
 
-        s3_write_image(label, filename)
+        s3_write_image(label)
         # Unset to update item
-        gdrive_write_image(item, label2)
+        gdrive_write_image(label2)
         set_label_true(item)
