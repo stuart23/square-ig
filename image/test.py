@@ -1,4 +1,6 @@
-from .gdrive import writeFile
+from gdrive import writeFile
+
+
 def handler(event, context):
 
     writeFile()
