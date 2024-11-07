@@ -20,7 +20,7 @@ resource "google_iam_workload_identity_pool_provider" "aws" {
   description                        = "AWS identity pool provider for accessing Service Accounts"
   attribute_mapping = {
     "google.subject"     = "assertion.arn"
-    "attribute.account"  = "assertion.account"
+    "attribute.aws_account"  = "assertion.account"
     "attribute.aws_role" = "assertion.arn.extract('role/{role}/')"
   }
   aws {
@@ -39,7 +39,8 @@ resource "google_service_account" "lambda_service_account" {
 resource "google_service_account_iam_member" "lambda_service_account_member" {
   service_account_id = google_service_account.lambda_service_account.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.aws_role/${aws_iam_role.lambda_role.arn}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}"
+  # member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.aws_role/${aws_iam_role.lambda_role.arn}"
 }
 
 
