@@ -11,3 +11,5 @@ RUN pip install -r requirements.txt
 
 # Copy function code
 COPY . ${LAMBDA_TASK_ROOT}
+
+ENV GOOGLE_APPLICATION_CREDENTIALS gcp_config.json
