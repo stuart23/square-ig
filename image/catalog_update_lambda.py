@@ -6,14 +6,16 @@ from descriptions import DescriptionsGit
 
 def handler(event, context):
     items = get_catalog_items()
+    print(f'Retrieved {len(items)} items.')
     update_items = []
     for item in items:
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
+            print('Updating SKU')
             validate_sku(item)
-            patch_objects_id(item)
             update_items.append(item)
+        upsert_by_id(item)
     if update_items:
         patch_objects_sku(update_items)
 

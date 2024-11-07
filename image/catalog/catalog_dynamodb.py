@@ -169,3 +169,45 @@ def set_label_true(item):
         ExpressionAttributeValues={':label': str(datetime.now())}
     )
     print(f'Marked item {item} as having an image.')
+
+
+def get_items():
+    """
+    Returns all the objects in the dynamo database.
+    """
+    start_key = None
+    while True:
+        if start_key:
+            response = table.scan(ExclusiveStartKey=start_key)
+        else:
+            response = table.scan()
+        for item_details in response.get("Items"):
+            yield Item(
+                sku=item_details.get('SKU'),
+                price=int(item_details.get('price', 0)),
+                item_id=item_details.get('item_id'),
+                variation_id=item_details.get('variation_id'),
+                pet_safe=item_details.get('pet_safe'),
+                variation_str=item_details.get('variation_str'),
+                item_str=item_details.get('item_str'),
+            )
+
+        start_key = response.get("LastEvaluatedKey", None)
+        if not start_key:
+            break
+
+
+def delete_item(item):
+    '''
+    Deletes an individual item from dynamodb.
+    '''
+    try:
+        table.delete_item(Key={"variation_id": item.variation_id})
+    except ClientError as err:
+        logger.error(
+            "Couldn't delete record %s. Here's why: %s: %s",
+            sku,
+            err.response["Error"]["Code"],
+            err.response["Error"]["Message"],
+        )
+        raise err
