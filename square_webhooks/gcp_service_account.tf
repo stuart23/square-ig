@@ -39,8 +39,8 @@ resource "google_service_account" "lambda_service_account" {
 resource "google_service_account_iam_member" "lambda_service_account_member" {
   service_account_id = google_service_account.lambda_service_account.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}"
-  # member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.aws_role/${aws_iam_role.lambda_role.arn}"
+  # member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.pool.name}/attribute.aws_account/${data.aws_caller_identity.current.account_id}"
 }
 
 
