@@ -11,8 +11,8 @@ def handler(event, context):
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
-            print('Updating SKU')
-            validate_sku(item)
+            print('Updating SKU for item {item}')
+            item.validate_sku()
             update_items.append(item)
         upsert_by_id(item)
     if update_items:

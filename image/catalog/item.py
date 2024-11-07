@@ -62,7 +62,7 @@ class Item:
             self.sku = new_sku
             return True
 
-    def validate_sku(item):
+    def validate_sku(self):
         '''
         Checks that the sku doesn't already exist in the database.
         
@@ -73,13 +73,13 @@ class Item:
         from .catalog_dynamodb import get_item_by_sku
 
         while True:
-            db_items = list(get_item_by_sku(item.sku))
+            db_items = list(get_item_by_sku(self.sku))
 
             # If there is another entry in the database that has a different variation id, then we replace this.
-            if any([db_item.variation_id != item.variation_id for db_item in db_items]):
+            if any([db_item.variation_id != self.variation_id for db_item in db_items]):
                 new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
-                print('Item with sku {item.sku} already exists in the database. Changing the sku to {new_sku}')
-                item.sku = new_sku
+                print('Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
+                self.sku = new_sku
             else:
                 break
 
