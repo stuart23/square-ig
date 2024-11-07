@@ -4,7 +4,7 @@ from googleapiclient.errors import HttpError
 
 def handler(event, context):
 
-    service = build("drive", "v3", credentials=credentials)
+    service = build("drive", "v3")
 
     try:
         results = service.drives().list().execute()
