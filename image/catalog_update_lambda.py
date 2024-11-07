@@ -6,7 +6,6 @@ from descriptions import DescriptionsGit
 
 def handler(event, context):
     items = get_catalog_items()
-    print(f'Retrieved {len(items)} items.')
     update_items = []
     for item in items:
         # update the sku with the url format or generate one if it doesn't exist.
