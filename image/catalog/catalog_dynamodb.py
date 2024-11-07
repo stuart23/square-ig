@@ -67,13 +67,13 @@ def get_item_by_sku(sku):
         items_details = response['Items']
         for item_detail in items_details:
             yield Item(
-                sku=item_details['SKU'],
-                price=int(item_details.get('price')),
-                item_id=item_details.get('item_id'),
-                variation_id=item_details.get('variation_id'),
-                pet_safe=item_details.get('pet_safe'),
-                variation_str=item_details.get('variation_str'),
-                item_str=item_details.get('item_str'),
+                sku=item_detail['SKU'],
+                price=int(item_detail.get('price')),
+                item_id=item_detail.get('item_id'),
+                variation_id=item_detail.get('variation_id'),
+                pet_safe=item_detail.get('pet_safe'),
+                variation_str=item_detail.get('variation_str'),
+                item_str=item_detail.get('item_str'),
             )
 
 

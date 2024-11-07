@@ -71,17 +71,18 @@ class Item:
         If the sku exists but already belongs to this item, then it is unchanged.
         '''
         from .catalog_dynamodb import get_item_by_sku
-
+        is_valid = True
         while True:
             db_items = list(get_item_by_sku(self.sku))
 
             # If there is another entry in the database that has a different variation id, then we replace this.
             if any([db_item.variation_id != self.variation_id for db_item in db_items]):
+                is_valid = False
                 new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
-                print('Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
+                print(f'Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
                 self.sku = new_sku
             else:
-                break
+                return is_valid
 
     @property
     def sku_stem(self):

@@ -91,25 +91,32 @@ def patch_objects_sku(items):
     print('Patching {0} records in Square'.format(len(items)))
     catalog = get_square_client().catalog
     item_map = {item.variation_id: item.sku for item in items}
-    response = catalog.batch_retrieve_catalog_objects(object_ids=item_map.keys())
+    response = catalog.batch_retrieve_catalog_objects(
+        body={
+            "object_ids":list(item_map.keys()),
+            "include_related_objects":False,
+            "catalog_version":None,
+            "include_category_path_to_root":False
+        }
+    )
     square_items = response.body['objects']
     objects = []
     for item in square_items:
         item_variation_data = item['item_variation_data']
-        item_variation_data['sku'] = item_map[item['variation_id']]
+        item_variation_data['sku'] = item_map[item['id']]
         objects.append(
             {
                 'type': 'ITEM_VARIATION',
-                'id': item['variation_id'],
+                'id': item['id'],
                 'version': item['version'],
                 'item_variation_data': item_variation_data
             }
         )
     upsert_response = catalog.batch_upsert_catalog_objects({
         "idempotency_key": str(uuid4()),
-        "batches": {
-            "objects": objects
-        }
+        "batches": [
+            {"objects": objects}
+        ]
     })
     if upsert_response.is_success():
         return
