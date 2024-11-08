@@ -24,5 +24,5 @@ def handler(event, context):
 
         s3_write_image(label)
         # Unset to update item
-        gdrive_write_image(label2)
+        gdrive_write_image(label2, overwrite=True)
         set_label_true(item)
