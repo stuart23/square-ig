@@ -39,6 +39,7 @@ def delete_image(filename):
         q = f"name = '{filename}'",
         driveId=drive_id,
         supportsAllDrives=True,
+        includeItemsFromAllDrives=True,
         fields="files(id, name)"
     ).execute().get('files', [])
     print(f'Deleting {len(fileIds)} files.')
