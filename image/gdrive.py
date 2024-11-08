@@ -23,7 +23,7 @@ def write_image(content, mimetype='image/png', overwrite=False):
     )
     if overwrite:
         print(f'Deleting old files with name {content.name} before writing.')
-        delete_images(content.name)
+        delete_image(content.name)
     print(f'Writing {content.name} to google drive.')
     file = (
         service.files()
