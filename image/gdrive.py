@@ -38,6 +38,7 @@ def delete_image(filename):
     fileIds = service.files().list(
         q = f"name = '{filename}'",
         driveId=drive_id,
+        corpora='drive',
         supportsAllDrives=True,
         includeItemsFromAllDrives=True,
         fields="files(id, name)"
