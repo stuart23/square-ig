@@ -7,7 +7,7 @@ from qrcode.image.styledpil import StyledPilImage
 from qrcode.image.styles.moduledrawers.pil import RoundedModuleDrawer
 from qrcode.image.styles.colormasks import SolidFillColorMask
 
-from super_rounded_module_drawer import SuperRoundedModuleDrawer
+from catalog.super_rounded_module_drawer import SuperRoundedModuleDrawer
 
 MASK = Path(__file__).parent.resolve() / 'assets' / 'anthurium_mask.png'
 
