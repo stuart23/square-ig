@@ -37,6 +37,8 @@ def delete_image(filename):
     '''
     fileIds = service.files().list(
         q = f"name = '{filename}'",
+        driveId=drive_id,
+        supportsAllDrives=True,
         fields="files(id, name)"
     ).execute().get('files', [])
     print(f'Deleting {len(fileIds)} files.')
@@ -44,3 +46,6 @@ def delete_image(filename):
     for fileId in fileIds:
         print(f'Deleting file id f{fileId}')
         service.files().delete(fileId=fileId).execute()
+
+if __name__ == '__main__':
+    delete_image('0ce96306.png')
