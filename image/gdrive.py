@@ -14,8 +14,12 @@ if not drive_id:
 service = build("drive", "v3")
 
 
-def write_image(content, mimetype='image/png', overwrite=False):
-    file_metadata = {"name": content.name, 'parents': [drive_id]}
+def write_image(content, description, mimetype='image/png', overwrite=False):
+    file_metadata = {
+        "name": content.name,
+        "description": description,
+        'parents': [drive_id]
+    }
     media_body = MediaIoBaseUpload(
         content,
         mimetype=mimetype,
