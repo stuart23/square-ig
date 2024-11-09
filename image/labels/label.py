@@ -46,7 +46,7 @@ def generate_label(item):
     label.paste(variation_text_box, (text_left, 11*LABEL_DPMM))
 
     text_center = (label.width - real_padding + text_left) //2
-    price_text_box = cropped_text(f"${item.price/100}", 1, TROPICA_FONT)
+    price_text_box = cropped_text(f"${item.price/100:.2f}", 1, TROPICA_FONT)
     label.paste(price_text_box, (text_center - price_text_box.width//2, 16*LABEL_DPMM))
     if item.pet_safe:
         pet_safe_graphic = generate_pet_safe(label)
