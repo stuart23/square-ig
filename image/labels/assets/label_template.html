@@ -1,56 +1,84 @@
 <!DOCTYPE html>
 <html><head><title>Flexbox test</title>
 <style>
+  @font-face {
+    font-family: TropicaGardensSans;
+    src: url("assets/Tropica Gardens Sans.otf") format("opentype");
+  }
+  @font-face {
+    font-family: Flatty;
+    src: url("assets/Flatty.otf") format("opentype");
+  }
+
   body {
     margin: 0px;
   }
-  .container {
+  .outer {
     width: 500px;
     height: 300px;
-    margin: 0%;
-    background-color: gray;
+    {% if debug %}
+      background-color: gray;
+    {% endif %}
+  }
+
+  .container {
+    margin: 5px;
+    {% if debug %}
+      background-color: red;
+    {% endif %}
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     display: -webkit-flex;
     -webkit-flex-direction: row;
     -webkit-justify-content: space-between;
+    height: -webkit-fill-available;
   }
+
   .left_container {
     display: flex;
     flex: 0 0 150px;
-    background-color: blue;
+    {% if debug %}
+      background-color: blue;
+    {% endif %}
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     display: -webkit-flex;
     -webkit-flex-direction: column;
-    -webkit-justify-content: space-between;
+    -webkit-justify-content: space-evenly;
   }
+
   .right_container {
     display: flex;
     flex: 2;
-    background-color: rgb(0, 255, 72);
+    {% if debug %}
+      background-color: green;
+    {% endif %}
+    display: -webkit-flex;
+    -webkit-justify-content: left;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     display: -webkit-flex;
     -webkit-flex-direction: column;
-    -webkit-justify-content: space-between;
+    -webkit-justify-content: space-evenly;
   }
+
   .column {
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-evenly;
     display: -webkit-flex;
     -webkit-flex-direction: row;
     -webkit-justify-content: space-between;
   }
 
-  .image_container {
+  .logo_container {
     text-align: center;
-    height: 125px;
+    height: 100px;
   }
-  .image_container img {
+
+  .logo_container img {
     object-fit: contain;
     width: 120px;
     display: inline-block;
@@ -58,18 +86,35 @@
     vertical-align: middle;
   } 
 
+  .qr_container {
+    text-align: center;
+  }
+
+  .qr_container img {
+    object-fit: contain;
+    width: 100%;
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+  } 
+
   .care_instructions {
+    font-family: 'TropicaGardensSans';
     text-align: center;
     font-size: 0.75em;
+    margin-top: 1%;
+    margin-bottom: 1%;
   }
 
   .separator_container {
     display: inline-block;
     vertical-align: middle;
+    text-align: center;
+    width: 3%;
   }
   svg {
       width: 10px;
-      height: 300px;
+      height: 100%;
       overflow: visible;
   }
   svg > line {
@@ -78,37 +123,75 @@
       stroke-linecap: round;
   }
   div {
-    background-color: yellow;
-    border: 1px dashed black;
+    {% if debug %}
+      background-color: yellow;
+      border: 1px dashed black;
+    {% endif %}
   }
 
   .title {
+    font-family: 'TropicaGardensSans';
     text-align: left;
     font-size: 4em;
   }
+
+  .variation {
+    font-family: 'TropicaGardensSans';
+    text-align: left;
+    font-size: 3em;
+  }
+
+  .price {
+    font-family: 'TropicaGardensSans';
+    text-align: right;
+    font-size: 6em;
+  }
+
+  .pet_safe {
+    font-family: 'TropicaGardensSans';
+    text-align: center;
+    font-size: 1.5em;
+  }
+
+  .pet_safe img {
+    object-fit: contain;
+    display: inline-block;
+    height: 1em;
+    vertical-align: middle;
+  } 
 </style>
 </head>
 <body>
-  <div class="container">
-    <div class="left_container">
-        <div class="image_container">
-            <img src="assets/store_logo.png">
-        </div>
-        <div>
-            goodbye
-        </div>
-        <div class="care_instructions">
-            SCAN FOR<br>CARE INSTRUCTIONS
-        </div>
-    </div>
-    <div class="separator_container">
-        <svg>
-        <line x1="5" y1="50" x2="5" y2="250"></line>
-        </svg>
-    </div>
-    <div class="right_container">
-      <div class="title">{{ item_str }}</div>
-      <div>{{ variation_str }}</div>
+  <div class="outer">
+    <div class="container">
+      <div class="left_container">
+          <div class="logo_container">
+              <img src="assets/store_logo.png">
+          </div>
+          <div class="qr_container">
+            <img src={{ "\"data:image/png;base64,{0}\"".format(qr_code_base64) }} />
+          </div>
+          <div class="care_instructions">
+              SCAN FOR<br>CARE INSTRUCTIONS
+          </div>
+      </div>
+      <div class="separator_container">
+          <svg>
+          <line x1="5" y1="50" x2="5" y2="250"></line>
+          </svg>
+      </div>
+      <div class="right_container">
+          <div class="title">{{ item_str }}</div>
+          {% if variation_str != "Regular" %}
+            <div class="variation">{{ variation_str }}</div>
+          {% endif %}
+          <div class="price">{{ '${0:0.2f}'.format(price/100) }}</div>
+          {% if pet_safe %}
+            <div class="pet_safe">
+              <img src="assets/pet_safe.png"> PET SAFE
+            </div>
+          {% endif %}
+      </div>
     </div>
   </div>
 </body>

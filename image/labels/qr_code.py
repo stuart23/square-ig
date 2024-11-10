@@ -1,6 +1,8 @@
 from PIL import ImageOps, ImageFilter, Image
 from random import random
 from pathlib import Path
+from base64 import b64encode
+from io import BytesIO
 
 from qrcode import QRCode as _QRCode, ERROR_CORRECT_H
 from qrcode.image.styledpil import StyledPilImage
@@ -40,6 +42,13 @@ class QRCode(object):
         )._img
 
         return qr_code_image
+
+    @property
+    def base64_bw(self):
+        qr_code = self.bw_qr
+        buffered = BytesIO()
+        qr_code.save(buffered, format="png")
+        return b64encode(buffered.getvalue())
 
 if __name__ == '__main__':
     QRCode('plantsoc.com/abcdefgh').bw_qr.save('test.png')
