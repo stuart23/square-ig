@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html><head>
 <title>Label</title>
+<script>
+  {{ textFit }}
+</script>
 <style>
   @font-face {
     font-family: TropicaGardensSans;
@@ -131,12 +134,11 @@
   }
 
   .title {
+    display: inline-block;
     font-family: 'TropicaGardensSans';
     text-align: left;
     font-size: 4em;
-    line-clamp: 2; 
-    -webkit-line-clamp: 2; /* number of lines to show */
-    -webkit-box-orient: vertical;
+    max-height: 50%;
   }
 
   .variation {
@@ -185,7 +187,8 @@
           </svg>
       </div>
       <div class="right_container">
-          <div class="title">{{ item_str }}</div>
+          <div class="title" id="title">{{ item_str }}</div>
+          <script>textFit(document.getElementById('title'), {maxFontSize: 100});</script>
           {% if variation_str != "Regular" %}
             <div class="variation">{{ variation_str }}</div>
           {% endif %}

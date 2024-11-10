@@ -31,6 +31,9 @@ def load_statics():
     with open(assets_dir / "pet_safe.png", "rb") as fh:
         tokens['pet_safe_img'] = b64encode(fh.read()).decode()
 
+    with open(assets_dir / "textFit/textFit.js", "r") as fh:
+        tokens['textFit'] = fh.read()
+
     return tokens
 
 def render_html(item, statics, html_output_file=None, debug=False):

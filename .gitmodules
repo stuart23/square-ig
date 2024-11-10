@@ -1,0 +1,3 @@
+[submodule "image/labels/assets/textFit"]
+	path = image/labels/assets/textFit
+	url = https://github.com/STRML/textFit.git
