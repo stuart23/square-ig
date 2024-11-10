@@ -35,6 +35,9 @@ RUN pip install -r ${LAMBDA_TASK_ROOT}/requirements.txt
 # Create function directory and copy the function code into it
 COPY . .
 
+# Google credentials file
+ENV GOOGLE_APPLICATION_CREDENTIALS gcp_config.json
+
 # Considering your handler function is called lambda_handler in app.py
 ENTRYPOINT [ "/usr/bin/python", "-m", "awslambdaric" ]
 CMD [ "app.lambda_handler" ]
