@@ -2,7 +2,7 @@ from json import loads
 from copy import deepcopy
 from json import dumps
 
-from labels import generate_label_bytes
+from labels import generate_label
 from s3 import write_image as s3_write_image
 from catalog import Item
 from catalog.catalog_dynamodb import set_label_true
@@ -19,7 +19,7 @@ def handler(event, context):
         message = loads(message)
         item = Item(**message)
         filename = f'{item.sku_stem}.png'
-        label = generate_label_bytes(item, filename=filename)
+        label = generate_label(item)
         # BytesIO can only be used once, so we make a copy to upload to square
         label2 = deepcopy(label)
 

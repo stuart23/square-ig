@@ -1,3 +1,4 @@
+from labels.label import generate_label
 from pathlib import Path
 
 '''
