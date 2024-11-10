@@ -2,7 +2,6 @@ from playwright.sync_api import sync_playwright
 from jinja2 import Environment, FileSystemLoader
 from base64 import b64encode
 
-from labels import assets_dir
 from labels.qr_code import QRCode
 
 
@@ -18,6 +17,8 @@ def load_statics():
     Loads the static files that are in the template and
     returns them as a dict of base64 encoded strings
     '''
+    from labels import assets_dir
+
     tokens = {}
     with open(assets_dir / "Flatty.otf", "rb") as fh:
         tokens['Flatty'] = b64encode(fh.read()).decode()
@@ -37,6 +38,8 @@ def load_statics():
     return tokens
 
 def render_html(item, statics, html_output_file=None, debug=False):
+    from labels import assets_dir
+    
     qr_code_base64 = QRCode(item.sku).base64_bw
 
     jinja_environment = Environment(
