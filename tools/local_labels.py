@@ -25,4 +25,5 @@ for item in items:
     label = generate_label(item)
     filename = f'{item.sku_stem}.png'
     print(f'Saving {filename}')
-    label.save(output_dir / filename)
+    with open(output_dir / filename, 'wb') as fh:
+        fh.write(label)

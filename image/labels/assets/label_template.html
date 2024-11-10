@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html><head><title>Flexbox test</title>
+<html><head>
+<title>Label</title>
 <style>
   @font-face {
     font-family: TropicaGardensSans;
-    src: url("assets/Tropica Gardens Sans.otf") format("opentype");
+    src: url({{ "\"data:file/octet-stream;base64,{0}\"".format(TropicaGardensSans) }}) format("opentype");
   }
   @font-face {
     font-family: Flatty;
-    src: url("assets/Flatty.otf") format("opentype");
+    src: url({{ "\"data:file/octet-stream;base64,{0}\"".format(Flatty) }}) format("opentype");
   }
 
   body {
@@ -133,6 +134,9 @@
     font-family: 'TropicaGardensSans';
     text-align: left;
     font-size: 4em;
+    line-clamp: 2; 
+    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-box-orient: vertical;
   }
 
   .variation {
@@ -166,7 +170,7 @@
     <div class="container">
       <div class="left_container">
           <div class="logo_container">
-              <img src="assets/store_logo.png">
+            <img src={{ "\"data:image/png;base64,{0}\"".format(store_logo) }} />
           </div>
           <div class="qr_container">
             <img src={{ "\"data:image/png;base64,{0}\"".format(qr_code_base64) }} />
@@ -188,7 +192,7 @@
           <div class="price">{{ '${0:0.2f}'.format(price/100) }}</div>
           {% if pet_safe %}
             <div class="pet_safe">
-              <img src="assets/pet_safe.png"> PET SAFE
+              <img src={{ "\"data:image/png;base64,{0}\"".format(pet_safe_img) }} /> PET SAFE
             </div>
           {% endif %}
       </div>

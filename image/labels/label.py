@@ -1,25 +1,49 @@
 from playwright.sync_api import sync_playwright
 from jinja2 import Environment, FileSystemLoader
+from base64 import b64encode
 
+from labels import assets_dir
 from labels.qr_code import QRCode
 
 
 def generate_label(item, html_output_file=None, debug=False):
-    html = render_html(item, html_output_file, debug)
+    statics = load_statics()
+    html = render_html(item, statics, html_output_file, debug)
     screenshot = render_html_to_image(html)
     return screenshot
 
 
-def render_html(item, html_output_file=None, debug=False):
+def load_statics():
+    '''
+    Loads the static files that are in the template and
+    returns them as a dict of base64 encoded strings
+    '''
+    tokens = {}
+    with open(assets_dir / "Flatty.otf", "rb") as fh:
+        tokens['Flatty'] = b64encode(fh.read()).decode()
+
+    with open(assets_dir / "Tropica Gardens Sans.otf", "rb") as fh:
+        tokens['TropicaGardensSans'] = b64encode(fh.read()).decode()
+
+    with open(assets_dir / "store_logo.png", "rb") as fh:
+        tokens['store_logo'] = b64encode(fh.read()).decode()
+
+    with open(assets_dir / "pet_safe.png", "rb") as fh:
+        tokens['pet_safe_img'] = b64encode(fh.read()).decode()
+
+    return tokens
+
+def render_html(item, statics, html_output_file=None, debug=False):
     qr_code_base64 = QRCode(item.sku).base64_bw
 
     jinja_environment = Environment(
-                loader=FileSystemLoader('assets')
+                loader=FileSystemLoader(assets_dir)
             )
     template = jinja_environment.get_template("label_template.html")
 
     rendered_template = template.render(
         **item.__dict__,
+        **statics,
         debug=debug,
         qr_code_base64=qr_code_base64.decode()
     )
@@ -46,7 +70,7 @@ if __name__ == '__main__':
     item = Item(
         sku='plantsoc.com/abcd1234',
         price=123,
-        item_str='Pilea abcdef',
+        item_str='Worlds best plant killer sticker',
         variation_str='4"',
         item_id='qwerty',
         variation_id='asdfg',
