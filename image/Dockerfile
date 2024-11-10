@@ -8,6 +8,7 @@ COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
 # Install the specified packages
 RUN pip install -r requirements.txt
+RUN playwright install --with-deps webkit
 
 # Copy function code
 COPY . ${LAMBDA_TASK_ROOT}
