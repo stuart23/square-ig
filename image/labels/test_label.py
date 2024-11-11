@@ -1,6 +1,6 @@
 from pytest import raises
 
-from .label import generate_label, generate_label_bytes, split_text
+from .label import generate_label
 from catalog import Item
 
 

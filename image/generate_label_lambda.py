@@ -20,11 +20,22 @@ def handler(event, context):
         item = Item(**message)
         filename = f'{item.sku_stem}.png'
         label = generate_label(item)
-        # BytesIO can only be used once, so we make a copy to upload to square
-        label2 = deepcopy(label)
 
-        s3_write_image(label)
+        s3_write_image(label, filename)
 
         description = dumps(item.__dict__)
-        gdrive_write_image(label2, description, overwrite=True)
+        gdrive_write_image(label, filename, description, overwrite=True)
         set_label_true(item)
+
+if __name__ == '__main__':
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    from json import dumps
+    handler({'Records':[{'Sns': {'Message': dumps(item.__dict__)}}]}, None)

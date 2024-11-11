@@ -2,7 +2,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaIoBaseUpload
 
-
+from io import BytesIO
 from os import getenv
 
 
@@ -14,21 +14,21 @@ if not drive_id:
 service = build("drive", "v3")
 
 
-def write_image(content, description, mimetype='image/png', overwrite=False):
+def write_image(content, filename, description, mimetype='image/png', overwrite=False):
     file_metadata = {
-        "name": content.name,
+        "name": filename,
         "description": description,
         'parents': [drive_id]
     }
     media_body = MediaIoBaseUpload(
-        content,
+        BytesIO(content),
         mimetype=mimetype,
         resumable=True
     )
     if overwrite:
-        print(f'Deleting old files with name {content.name} before writing.')
-        delete_image(content.name)
-    print(f'Writing {content.name} to google drive.')
+        print(f'Deleting old files with name {filename} before writing.')
+        delete_image(filename)
+    print(f'Writing {filename} to google drive.')
     file = (
         service.files()
         .create(body=file_metadata, media_body=media_body, supportsAllDrives=True)
