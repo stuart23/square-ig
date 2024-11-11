@@ -11,7 +11,7 @@ resource "aws_lambda_function" "generate_label" {
   image_uri     = var.lambda_image
   role          = var.lambda_role_arn
   timeout       = 30
-  memory_size   = 256
+  memory_size   = 512
   image_config {
     command = ["generate_label_lambda.handler"]
   }
