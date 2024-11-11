@@ -66,7 +66,10 @@ def render_html(item, statics, html_output_file=None, debug=False):
 def render_html_to_image(html):
     print('Rendering HTML')
     with sync_playwright() as p:
-        browser = p.webkit.launch()
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=["--disable-gpu", "--single-process"],
+        )
         context = browser.new_context(viewport={"width": 500, "height": 300})
         page = context.new_page()
         page.set_content(html)
