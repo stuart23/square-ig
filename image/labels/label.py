@@ -38,6 +38,7 @@ def load_statics():
     return tokens
 
 def render_html(item, statics, html_output_file=None, debug=False):
+    print('Templating HTML')
     from labels import assets_dir
     
     qr_code_base64 = QRCode(item.sku).base64_bw
@@ -57,11 +58,13 @@ def render_html(item, statics, html_output_file=None, debug=False):
     if html_output_file:
         with open(html_output_file, 'w') as fh:
             fh.write(rendered_template)
+    print('Templating HTML finished')
     
     return rendered_template
 
 
 def render_html_to_image(html):
+    print('Rendering HTML')
     with sync_playwright() as p:
         browser = p.webkit.launch()
         context = browser.new_context(viewport={"width": 500, "height": 300})
@@ -69,6 +72,7 @@ def render_html_to_image(html):
         page.set_content(html)
         screenshot = page.screenshot()
         browser.close()
+    print('Rendering HTML finished')
     return screenshot
 
 if __name__ == '__main__':
