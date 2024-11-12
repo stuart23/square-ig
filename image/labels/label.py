@@ -80,8 +80,8 @@ def render_html_to_image(html):
         )
         context = browser.new_context(viewport={"width": 500, "height": 300})
         page = context.new_page()
+        page.on("console", lambda msg: print("BROWSER CONSOLE", msg.text))
         page.set_content(html)
-        from time import sleep
         sleep(1)
         page.wait_for_function("ready")
         screenshot = page.screenshot()
