@@ -1,14 +1,25 @@
 from playwright.sync_api import sync_playwright
 from jinja2 import Environment, FileSystemLoader
 from base64 import b64encode
+from time import sleep
 
 from labels.qr_code import QRCode
 
 
-def generate_label(item, html_output_file=None, debug=False):
+def generate_label(item, html_output_file=None, image_output_file=None, debug=False):
     statics = load_statics()
-    html = render_html(item, statics, html_output_file, debug)
+    html = render_html(item, statics, html_output_file=None, debug=debug)
+    
+    if html_output_file:
+        with open(html_output_file, 'w') as fh:
+            fh.write(html)
+
     screenshot = render_html_to_image(html)
+            
+    if image_output_file:
+        with open(image_output_file, 'wb') as fh:
+            fh.write(screenshot)
+            
     return screenshot
 
 
@@ -31,9 +42,6 @@ def load_statics():
 
     with open(assets_dir / "pet_safe.png", "rb") as fh:
         tokens['pet_safe_img'] = b64encode(fh.read()).decode()
-
-    with open(assets_dir / "textFit/textFit.js", "r") as fh:
-        tokens['textFit'] = fh.read()
 
     return tokens
 
@@ -73,6 +81,9 @@ def render_html_to_image(html):
         context = browser.new_context(viewport={"width": 500, "height": 300})
         page = context.new_page()
         page.set_content(html)
+        from time import sleep
+        sleep(1)
+        page.wait_for_function("ready")
         screenshot = page.screenshot()
         browser.close()
     print('Rendering HTML finished')

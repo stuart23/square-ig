@@ -2,7 +2,80 @@
 <html><head>
 <title>Label</title>
 <script>
-  {{ textFit }}
+  // Convert percentages
+  function percentageStringToNumber(percentageString) {
+    // Remove the percentage sign and any whitespace
+    const cleanedString = percentageString.replace('%', '').trim();
+
+    // Convert the string to a number
+    const number = parseFloat(cleanedString);
+
+    // Divide by 100 to get the decimal value
+    return number / 100;
+  }
+
+
+  // Calculate height without padding.
+  function innerHeight(el){
+    var style = window.getComputedStyle(el, null);
+    return el.getBoundingClientRect().height -
+      parseInt(style.getPropertyValue('padding-top'), 10) -
+      parseInt(style.getPropertyValue('padding-bottom'), 10);
+  }
+
+
+  // Calculate width without padding.
+  function innerWidth(el){
+    var style = window.getComputedStyle(el, null);
+    return el.getBoundingClientRect().width -
+      parseInt(style.getPropertyValue('padding-left'), 10) -
+      parseInt(style.getPropertyValue('padding-right'), 10);
+  }
+
+  function wrapSpan(element){
+    innerSpan = document.createElement('span');
+    innerSpan.className = 'textFitted';
+    // Inline block ensure it takes on the size of its contents, even if they are enclosed
+    // in other tags like <p>
+    innerSpan.style['display'] = 'inline-block';
+    innerSpan.innerHTML = element.innerHTML;
+    element.innerHTML = '';
+    element.appendChild(innerSpan);
+    return innerSpan;
+  }
+
+  function resizeFont(element){
+    innerSpan = wrapSpan(element);
+    var font_size = 1;
+    element.style.fontSize = font_size + 'px';
+
+    var max_width = innerWidth(element);
+    console.log('Maximum element width: ' + max_width);
+    var max_height = window.getComputedStyle(element, null).maxHeight;
+    if (max_height.includes('%')) {
+      max_height = percentageStringToNumber(max_height) * element.parentElement.getBoundingClientRect().height
+    }
+    console.log('Maximum element height: ' + max_height);
+    
+
+    var step_size = 10;
+    var current_height;
+    var current_width;
+
+    while (step_size > 0.1) {
+      new_size = font_size + step_size;
+      element.style.fontSize = new_size + 'px';
+      current_height = innerHeight(innerSpan);
+      current_width = innerWidth(innerSpan);
+      if ((current_width > max_width) || (current_height > max_height)) {
+        element.style.fontSize = font_size + 'px';
+        step_size = step_size / 2;
+      } else {
+        font_size = new_size;
+      }
+      console.log('ITERATION: step size ' + step_size + ', font size ' + font_size + ' current height ' + current_height + ' current width ' + current_width)
+    }
+  }
 </script>
 <style>
   @font-face {
@@ -62,7 +135,6 @@
     -webkit-justify-content: left;
     flex-direction: column;
     justify-content: space-evenly;
-    display: -webkit-flex;
     -webkit-flex-direction: column;
     -webkit-justify-content: space-evenly;
   }
@@ -134,11 +206,10 @@
   }
 
   .title {
-    display: inline-block;
     font-family: 'TropicaGardensSans';
     text-align: left;
-    font-size: 4em;
     max-height: 50%;
+    font-size: 4em;
   }
 
   .variation {
@@ -188,7 +259,6 @@
       </div>
       <div class="right_container">
           <div class="title" id="title">{{ item_str }}</div>
-          <script>textFit(document.getElementById('title'), {maxFontSize: 100});</script>
           {% if variation_str != "Regular" %}
             <div class="variation">{{ variation_str }}</div>
           {% endif %}
@@ -201,5 +271,15 @@
       </div>
     </div>
   </div>
+  <script>
+    var ready = false;
+    const title = document.getElementById('title');
+    document.fonts.ready.then(
+      function () {
+        resizeFont(title);
+        ready = true;
+      }
+    );
+  </script>
 </body>
 </html>
