@@ -1,8 +1,8 @@
-from .qr_leaf import QRLeaf
+from .qr_code import QRCode
 
 
 def test_colour_qr(tmp_path):
-    qr = QRLeaf(code_text='plantsoc.app/asdf1234')
+    qr = QRCode(code_text='plantsoc.app/asdf1234')
     output_file = tmp_path / 'colour_plain.png'
     output_file.unlink(missing_ok=True)
     assert not output_file.is_file()
@@ -12,7 +12,7 @@ def test_colour_qr(tmp_path):
 
 
 def test_bw_qr(tmp_path):
-    qr = QRLeaf(code_text='plantsoc.app/asdf1234')
+    qr = QRCode(code_text='plantsoc.app/asdf1234')
     output_file = tmp_path / 'bw_plain.png'
     output_file.unlink(missing_ok=True)
     assert not output_file.is_file()

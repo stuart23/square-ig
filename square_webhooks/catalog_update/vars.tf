@@ -28,7 +28,7 @@ variable "square_authorizer_id" {
 }
 
 
-variable "generate_barcode_sns_topic_arn" {
+variable "generate_label_sns_topic_arn" {
   type        = string
   description = "ARN of the SNS topic to publish events to."
 }

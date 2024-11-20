@@ -4,6 +4,7 @@ from pathlib import Path
 from shutil import rmtree
 from boto3 import client as Boto3Client
 from jinja2 import Environment, FileSystemLoader
+from time import sleep
 
 from utils import get_secret
 
@@ -39,17 +40,22 @@ class DescriptionsGit(object):
         )
 
 
-    def add_item(self, item):
+    def add_item(self, item, replace=False):
         '''
         Creates an item by templating the item.md file.
 
         If it already exists, then we wont overwrite it, just leave it as is and return False.
+
+        If replace is true, it will delete the existing folder and re-template.
         '''
         template = self.jinja_environment.get_template("item.md")
-        item_dir = self.repo_dir / "content" / item.sku_path
-        if item_dir.is_dir():
+        item_dir = self.repo_dir / "content" / item.sku_stem
+        if item_dir.is_dir() and not replace:
             print(f'Skipping {item} as directory {item_dir} already exists')
             return False
+        elif item_dir.is_dir():
+            print(f'Deleting and recreating for {item} as directory {item_dir} already exists')
+            rmtree(item_dir)
         item_dir.mkdir()
         output_file = item_dir / "index.md"
 
@@ -64,30 +70,43 @@ class DescriptionsGit(object):
         
 
     @property
-    def added_files(self):
+    def modified_files(self):
         '''
-        Returns all the files that were added to the git index.
+        Returns all the files that were modified in the git index.
         '''
         return [x.a_path for x in self.repo.index.diff("HEAD")]
 
 
     def commit(self):
         '''
-        Commits the added files and pushes to GitHub.
+        Commits the added files and pushes to GitHub if there are changes.
         '''
-        file_list = ', '.join(self.added_files)
-        print(f'Committing the following to git: {file_list}')
-        self.repo.index.commit(f'Adding {file_list}')
-        self.repo.remote('origin').push(env=self.git_environment)
+        file_list = ', '.join(self.modified_files)
+        if len(file_list) > 0:
+            print(f'Committing the following to git: {file_list}')
+            self.repo.index.commit(f'Adding {file_list}')
+            self.repo.remote('origin').push(env=self.git_environment)
+        else:
+            print(f'No changes, nothing to commit.')
 
 
     def __del__(self):
         '''
-        Cleans up by removing the repo dir. If the object failed to init, the repo dir may not exist
+        Cleans up by removing the repo dir. If the object failed to init, the repo dir may not exist.
+        Will try 5 times and 
         '''
         try:
             repo_dir = self.repo_dir
         except AttributeError:
             print('Repo dir was not created')
         else:
-            rmtree(self.repo_dir)
+            for _ in range(5):
+                rmtree(self.repo_dir)
+                if self.repo_dir.is_dir():
+                    print('Cleanup repo dir failed, retrying in 5 seconds.')
+                    sleep(5)
+                else:
+                    print('Repo dir deleted.')
+                    break
+            else:
+                print('Could not delete the repo dir.')

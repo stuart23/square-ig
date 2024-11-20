@@ -24,11 +24,16 @@ def test_git_interface_clone():
     assert instructions.repo_dir.is_dir(), 'Directory not created.'
     assert len(listdir(instructions.repo_dir)) > 0, 'No files in the directory.'
 
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert repo_dir.is_dir() == False
+
 
 def test_git_interface_add_item():
     '''
     Test templating.
     '''
+    repo_dir = Path(REPO_DIR)
     item1 = Item(
         sku='plantsoc.com/do_not_use_this_sku',
         price=123,
@@ -61,4 +66,80 @@ def test_git_interface_add_item():
     item2_readme = item2_instructions_dir / "index.md"
     assert item2_readme.is_file(), 'Readme not created.'
 
-    assert instructions.added_files == ['content/do_not_use_this_sku/index.md', 'content/do_not_use_this_sku2/index.md']
+    assert instructions.modified_files == ['content/do_not_use_this_sku/index.md', 'content/do_not_use_this_sku2/index.md']
+
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert repo_dir.is_dir() == False
+    
+
+def test_git_interface_existing():
+    repo_dir = Path(REPO_DIR)
+    instructions = DescriptionsGit()
+
+    # Get one of the items directories that has an index.md
+    for item_dir in (instructions.repo_dir / "content").iterdir():
+        index_file = item_dir / "index.md"
+        if index_file.exists():
+            break
+    else:
+        raise Exception('Could not find a content directory with an index file.')
+    with open(index_file) as fh:
+        og_index_contents = fh.read()
+    sku = item_dir.stem
+    item = Item(
+        sku=sku,
+        price=456,
+        item_str='def',
+        variation_str='def',
+        item_id='asdfg',
+        variation_id='zxcvb',
+        pet_safe=False
+    )
+    assert instructions.add_item(item) == False
+
+    # assert the contents haven't changed.
+    with open(index_file) as fh:
+        new_index_contents = fh.read()
+    
+    assert new_index_contents == og_index_contents
+
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert repo_dir.is_dir() == False
+
+
+def test_git_interface_replace():
+    repo_dir = Path(REPO_DIR)
+    instructions = DescriptionsGit()
+
+    # Get one of the items directories that has an index.md
+    for item_dir in (instructions.repo_dir / "content").iterdir():
+        index_file = item_dir / "index.md"
+        if index_file.exists():
+            break
+    else:
+        raise Exception('Could not find a content directory with an index file.')
+    with open(index_file) as fh:
+        og_index_contents = fh.read()
+    sku = item_dir.stem
+    item = Item(
+        sku=sku,
+        price=456,
+        item_str='def',
+        variation_str='def',
+        item_id='asdfg',
+        variation_id='zxcvb',
+        pet_safe=False
+    )
+    assert instructions.add_item(item, replace=True) == index_file
+
+    # assert the contents have changed.
+    with open(index_file) as fh:
+        new_index_contents = fh.read()
+    
+    assert new_index_contents != og_index_contents
+
+    # Ensure directory is cleaned up
+    del(instructions)
+    assert repo_dir.is_dir() == False

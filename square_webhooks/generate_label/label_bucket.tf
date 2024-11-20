@@ -1,11 +1,32 @@
-resource "aws_s3_bucket" "barcode_bucket" {
-  bucket = "barcode-catalog-bucket"
+resource "aws_s3_bucket" "label_bucket" {
+  bucket = "label-catalog-bucket"
 }
 
 
-resource "aws_s3_bucket_versioning" "barcode_bucket_versioning" {
-  bucket = aws_s3_bucket.barcode_bucket.id
+resource "aws_s3_bucket_versioning" "label_bucket_versioning" {
+  bucket = aws_s3_bucket.label_bucket.id
   versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+
+
+resource "aws_s3_bucket_lifecycle_configuration" "versioning-bucket-config" {
+  # Must have bucket versioning enabled first
+  depends_on = [aws_s3_bucket_versioning.label_bucket_versioning]
+
+  bucket = aws_s3_bucket.label_bucket.id
+
+  rule {
+    id = "expire_non_current"
+
+    filter {}
+
+    noncurrent_version_expiration {
+      noncurrent_days = 14
+    }
+
     status = "Enabled"
   }
 }

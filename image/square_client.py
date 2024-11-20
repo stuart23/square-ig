@@ -3,10 +3,11 @@ from square.client import Client as SquareClient
 
 from json import dumps
 from hashlib import sha256
-from time import time
+from time import sleep, time
+from uuid import uuid4
 
 from catalog import Item
-from utils import get_secret
+from utils import batch, get_secret
 
 
 SQUARE_TOKEN_ARN_ENV = "square_token_arn"
@@ -82,20 +83,40 @@ def _get_all_catalog_items():
     return objects
 
 
-def patch_objects_sku(item):
+@batch(batch_size=500)
+def patch_objects_sku(items):
+    '''
+    Updates multiple objects sku.
+    '''
+    print('Patching {0} records in Square'.format(len(items)))
     catalog = get_square_client().catalog
-    response = catalog.retrieve_catalog_object(object_id=item.variation_id)
-    square_item = response.body['object']
-    item_variation_data = square_item['item_variation_data']
-    item_variation_data['sku'] = item.sku
-    upsert_response = catalog.upsert_catalog_object({
-        "idempotency_key": generate_idempotency_key(item),
-        "object": {
-            'type': 'ITEM_VARIATION',
-            'id': item.variation_id,
-            'version': square_item['version'],
-            'item_variation_data': item_variation_data
+    item_map = {item.variation_id: item.sku for item in items}
+    response = catalog.batch_retrieve_catalog_objects(
+        body={
+            "object_ids":list(item_map.keys()),
+            "include_related_objects":False,
+            "catalog_version":None,
+            "include_category_path_to_root":False
         }
+    )
+    square_items = response.body['objects']
+    objects = []
+    for item in square_items:
+        item_variation_data = item['item_variation_data']
+        item_variation_data['sku'] = item_map[item['id']]
+        objects.append(
+            {
+                'type': 'ITEM_VARIATION',
+                'id': item['id'],
+                'version': item['version'],
+                'item_variation_data': item_variation_data
+            }
+        )
+    upsert_response = catalog.batch_upsert_catalog_objects({
+        "idempotency_key": str(uuid4()),
+        "batches": [
+            {"objects": objects}
+        ]
     })
     if upsert_response.is_success():
         return
@@ -104,31 +125,37 @@ def patch_objects_sku(item):
 
 
 def create_catalog_image(item, image):
-    catalog = get_square_client().catalog
-    item_name = "{0} - {1}".format(item['item_str'], item['variation_str'])
-    item_id = item['item_id']
-    print(f'Saving image to item: {item_id}: {item_name}')
-    response = catalog.create_catalog_image(
-        request={
-            "idempotency_key": generate_idempotency_key(item),
-            "object_id": item['item_id'],
-            "image": {
-                "type": "ITEM",
-                "id": "#TEMP_ID",
-                "image_data": {
-                    "name": item_name,
-                    "caption": "QR Code"
-                },
-                "type": "IMAGE",
-                "is_deleted": False,
-            }
-        },
-        image_file=image
-    )
-    if response.is_success():
-        return response
-    else:
-        raise Exception(f'Could not add image to item {item_id} due to: {response.errors}')
+    pass
+    # catalog = get_square_client().catalog
+    # item_name = "{0} - {1}".format(item.item_str, item.variation_str)
+    # print(f'Saving image to item: {item}')
+    # for try_number in range(5):
+    #     response = catalog.create_catalog_image(
+    #         request={
+    #             "idempotency_key": generate_idempotency_key(item),
+    #             "object_id": item.item_id,
+    #             "image": {
+    #                 "type": "ITEM",
+    #                 "id": "#TEMP_ID",
+    #                 "image_data": {
+    #                     "name": item_name,
+    #                     "sku": item.sku,
+    #                     "caption": "QR Code"
+    #                 },
+    #                 "type": "IMAGE",
+    #                 "is_deleted": False,
+    #             }
+    #         },
+    #         image_file=image
+    #     )
+    #     if response.is_success():
+    #         return response
+    #     elif any([x['category'] == 'RATE_LIMIT_ERROR' for x in response.errors]):
+    #         sleep_time = 10 * try_number
+    #         print(f'Upload failed due to rate limit. Waiting {sleep_time} seconds to retry')
+    #         sleep(sleep_time)
+    # else:
+    #     raise Exception(f'Could not add image to item {item} due to: {response.errors}')
 
 
 def generate_idempotency_key(item):

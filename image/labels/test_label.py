@@ -1,28 +1,21 @@
-from .label import generate_label, generate_label_bytes
+from pytest import raises
+
+from .label import generate_label
+from catalog import Item
 
 
 def test_generate_label(tmp_path):
-    label = generate_label(
-        sku='plantsoc.io/abcd1234',
-        title='Pilea',
-        variation='4"',
-        price=123.45,
+    '''
+    Smoke test
+    '''
+    item = Item(
+        sku='plantsoc.com/do_not_use_this_sku',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
         pet_safe=True
     )
-    label_file = tmp_path / 'label.png'
-    label.save(label_file)
-    assert label_file.is_file()
-
-
-def test_generate_label_bytes(tmp_path):
-    filename = 'Pilea-4.png'
-    label_bytes = generate_label_bytes(
-        filename=filename,
-        sku='plantsoc.io/abcd1234',
-        title='Pilea',
-        variation='4"',
-        price=123.45,
-        pet_safe=True
-    )
-    assert label_bytes
-    assert label_bytes.name == filename
+    label = generate_label(item)
+    assert len(label) > 1

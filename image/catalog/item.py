@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-from uuid import uuid4
-
-
 URL_PREFIX = "plantsoc.com"
 
 
@@ -53,7 +50,7 @@ class Item:
         """
         # No sku
         if not self.sku:
-            self.sku = '/'.join([URL_PREFIX, str(uuid4()).replace('-', '')[:8]])
+            self.sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
             return True
         if self.sku.startswith(URL_PREFIX):
             return False
@@ -65,8 +62,30 @@ class Item:
             self.sku = new_sku
             return True
 
+    def validate_sku(self):
+        '''
+        Checks that the sku doesn't already exist in the database.
+        
+        If the sku exists, a new one will be generated for the item.
+
+        If the sku exists but already belongs to this item, then it is unchanged.
+        '''
+        from .catalog_dynamodb import get_item_by_sku
+        is_valid = True
+        while True:
+            db_items = list(get_item_by_sku(self.sku))
+
+            # If there is another entry in the database that has a different variation id, then we replace this.
+            if any([db_item.variation_id != self.variation_id for db_item in db_items]):
+                is_valid = False
+                new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
+                print(f'Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
+                self.sku = new_sku
+            else:
+                return is_valid
+
     @property
-    def sku_path(self):
+    def sku_stem(self):
         """
         Returns just the last bit of the sku - the path. E.g. if the sku is `plantsoc.com/abcd1234`, returns just `abcd1234`
         """

@@ -5,6 +5,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 6.9.0"
+    }
   }
   backend "s3" {
     bucket         = "square-ig-tfstate"
@@ -17,4 +21,10 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region = var.aws_region
+}
+
+# Configure the GCP Provider
+provider "google" {
+  # project = var.gcp_project
+  # region  = var.gcp_region
 }

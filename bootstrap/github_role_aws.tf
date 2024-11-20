@@ -1,15 +1,3 @@
-variable "github_org_name" {
-  type        = string
-  default     = "stuart23"
-  description = "The GitHub user or organization that contains the repo that will run actions as this role."
-}
-
-variable "github_repo_name" {
-  type        = string
-  default     = "square-ig"
-  description = "The GitHub repo that will run actions as this role."
-}
-
 resource "aws_iam_openid_connect_provider" "github" {
   url = "https://token.actions.githubusercontent.com"
   client_id_list = [
@@ -20,6 +8,7 @@ resource "aws_iam_openid_connect_provider" "github" {
     "1c58a3a8518e8759bf075b76b750d4f2df264fcd"
   ]
 }
+
 
 resource "aws_iam_role" "cicd_role" {
   name = "cicd_role"
@@ -45,10 +34,12 @@ resource "aws_iam_role" "cicd_role" {
   })
 }
 
+
 resource "aws_iam_role_policy_attachment" "admin_policy_attachment" {
   role       = aws_iam_role.cicd_role.name
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
+
 
 output "cicd_role_arn" {
   description = "GitHub action role"

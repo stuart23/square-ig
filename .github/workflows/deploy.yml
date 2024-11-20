@@ -48,12 +48,23 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+      with:
+        submodules: 'true'
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
         role-to-assume: ${{ vars.cicd_role_arn }}
         aws-region: ${{ vars.aws_region }}
+
+    - name: 'Authenticate to GCP'
+      uses: 'google-github-actions/auth@v2'
+      with:
+        # project_id: ${{ vars.gcp_project }}
+        workload_identity_provider: ${{ vars.gcp_workload_identity_provider }}
+        service_account: ${{ vars.cicd_service_account }}
+        create_credentials_file: true
+        export_environment_variables: true
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
@@ -105,6 +116,17 @@ jobs:
     - name: Echo Image ID
       run: echo ${{ env.ECR_REPO_URL }}@${{ steps.image-build.outputs.digest }}
 
+    - name: Get Google Drive ID
+      env:
+        drive_name: ${{ vars.drive_name }}
+      id: google_drive_id
+      run: |
+        pip3 install google-api-python-client
+        python3 tools/get_google_drive_id.py >> $GITHUB_OUTPUT 
+
+    - name: Echo Google Drive ID
+      run: echo ${{ steps.google_drive_id.outputs.drive_id }}
+
     - name: Terraform Init Square Webhooks
       working-directory: square_webhooks
       run: terraform init
@@ -117,7 +139,8 @@ jobs:
           -var aws_region=${{ vars.aws_region }} \
           -var square_token="${{ secrets.square_token }}" \
           -var gh_key_arn="${{ vars.gh_key_arn }}" \
-          -var instructions_git_repo="${{ vars.instructions_git_repo }}"
+          -var instructions_git_repo="${{ vars.instructions_git_repo }}" \
+          -var labels_google_drive_id="${{ steps.google_drive_id.outputs.drive_id }}"
 
 
   deploy-static-website:
