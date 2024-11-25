@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Optional
+from re import match
 
 URL_PREFIX = "plantsoc.com"
-
+SKU_FORMAT = '^[A-Za-z0-9]{3,8}$' # 3 to 8 alphanumeric characters
 
 @dataclass
 class Item:
@@ -65,25 +66,35 @@ class Item:
 
     def validate_sku(self):
         '''
-        Checks that the sku doesn't already exist in the database.
-        
-        If the sku exists, a new one will be generated for the item.
+        First checks that the sku is alphanumeric characters only. If not, we use the first 8 chars of the variation ID.
+
+        Checks that the sku doesn't already exist in the database. If the sku exists, we use the first 8 chars of the variation ID.
 
         If the sku exists but already belongs to this item, then it is unchanged.
         '''
         from .catalog_dynamodb import get_item_by_sku
-        is_valid = True
-        while True:
-            db_items = list(get_item_by_sku(self.sku))
 
-            # If there is another entry in the database that has a different variation id, then we replace this.
-            if any([db_item.variation_id != self.variation_id for db_item in db_items]):
-                is_valid = False
-                new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
-                print(f'Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
-                self.sku = new_sku
-            else:
-                return is_valid
+        is_valid = True
+
+        # If the sku is not alphanumeric, then we replace it with the first 8 chars of the variation_id.
+        if not match(SKU_FORMAT, self.sku_stem):
+            new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
+            print(f'Item with sku {self.sku} is not valid. Changing the sku to {new_sku}')
+            self.sku = new_sku
+            is_valid = False
+
+        db_items = list(get_item_by_sku(self.sku))
+
+        # If there is another entry in the database that has a different variation id, then we replace
+        # this items sku with the first 8 chars of the variation_id.
+        if any([db_item.variation_id != self.variation_id for db_item in db_items]):
+            new_sku = '/'.join([URL_PREFIX, self.variation_id[:8]])
+            print(f'Item with sku {self.sku} already exists in the database. Changing the sku to {new_sku}')
+            self.sku = new_sku
+            is_valid = False
+
+        return is_valid
+
 
     @property
     def sku_stem(self):
