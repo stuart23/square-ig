@@ -105,7 +105,7 @@ def test_square_link():
         variation_id='asdfg',
         pet_safe=True
     )
-    assert item.square_link == 'https://app.squareup.com/dashboard/items/library/asdfg'
+    assert item.square_link == 'https://app.squareup.com/dashboard/items/library/qwerty'
 
 
 def test_serde():

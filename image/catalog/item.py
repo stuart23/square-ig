@@ -100,5 +100,5 @@ class Item:
         '''
         Returns a link to square to the exact item.
         '''
-        variation_id = self.variation_id
-        return f'https://app.squareup.com/dashboard/items/library/{variation_id}'
+        item_id = self.item_id
+        return f'https://app.squareup.com/dashboard/items/library/{item_id}'
