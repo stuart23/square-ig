@@ -95,6 +95,19 @@ def test_sku_stem_url_sku_empty():
     assert item.sku_stem == None
 
 
+def test_square_link():
+    item = Item(
+        sku=None,
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    assert item.square_link == 'https://app.squareup.com/dashboard/items/library/asdfg'
+
+
 def test_serde():
     item = Item(
         sku=None,

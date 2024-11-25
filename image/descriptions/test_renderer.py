@@ -54,6 +54,6 @@ def test_directory_render():
 
     comparison = ARTIFACTS / "directory.md"
 
-    with open(comparison, 'w') as fh:
-        fh.write(result)
-    assert len(result.splitlines()) > 2
+    with open(comparison) as fh:
+        comparison_contents = fh.read()
+    assert comparison_contents == result

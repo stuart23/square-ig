@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 URL_PREFIX = "plantsoc.com"
 
@@ -93,3 +94,11 @@ class Item:
             return self.sku.replace(f"{URL_PREFIX}/", "")
         else:
             return None
+
+    @property
+    def square_link(self):
+        '''
+        Returns a link to square to the exact item.
+        '''
+        variation_id = self.variation_id
+        return f'https://app.squareup.com/dashboard/items/library/{variation_id}'
