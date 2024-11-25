@@ -1,9 +1,9 @@
 ---
 date: "{% now 'utc' %}"
 draft: false
-title: "{{ item_str|e }}"
+title: "{{ item.item_str|e }}"
 ---
 
-### {{ item_str }}
+### {{ item.item_str }}
 
 This is an item.
