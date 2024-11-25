@@ -22,7 +22,7 @@ def handler(event, context):
     for item in needs_label_items:
         publish(item.__dict__)
 
-    # Generate website descriptions for new items
+    # Generate website descriptions for new items - this should probably be another function triggered by an sns
     website_needs_update_items = get_website_needs_update_items()
     descriptions = DescriptionsGit()
     new_items = False
@@ -31,6 +31,7 @@ def handler(event, context):
         set_website_true(item)
         new_items = True
     if new_items:
+        print('Items needed their description updated - Adding the directory and committing.')
         descriptions.update_directory(get_catalog_items())
         descriptions.commit()
 
