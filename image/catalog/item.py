@@ -3,7 +3,7 @@ from typing import Optional
 from re import match
 
 URL_PREFIX = "plantsoc.com"
-SKU_FORMAT = '^[A-Za-z0-9]{3,8}$' # 3 to 8 alphanumeric characters
+SKU_FORMAT = '^[A-Za-z0-9-]{3,9}$' # 3 to 8 alphanumeric characters
 
 @dataclass
 class Item:
