@@ -166,7 +166,7 @@ def test_serde():
     assert item == item_serde
 
 
-def test_fromSquare():
+def test_fromSquare_without_petsafe():
     item_str = 'Pink Princess Pin'
     variation_details = {
         'id': 'HFS35APE35PLE74GAKFGCL3M',
@@ -188,23 +188,63 @@ def test_fromSquare():
     assert item.pet_safe == False
 
 
-# def test_fromSquare_petsafe():
-#     item_str = 'Pink Princess Pin'
-#     variation_details = {
-#         'id': 'HFS35APE35PLE74GAKFGCL3M',
-#         'item_variation_data': {
-#             'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
-#             'name': 'Regular',
-#             'price_money': {'amount': 399, 'currency': 'USD'},
-#             'sku': 'plantsoc.com/542513F',
-#         },
-#     }
+def test_fromSquare_with_petsafe_true():
+    item_str = 'Pink Princess Pin'
+    variation_details = {
+        'id': 'HFS35APE35PLE74GAKFGCL3M',
+        'item_variation_data': {
+            'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
+            'name': 'Regular',
+            'price_money': {'amount': 399, 'currency': 'USD'},
+            'sku': 'plantsoc.com/542513F',
+        },
+    }
+    custom_attribute_values = {
+        'Square:93cd2840-5cff-4bea-8b7d-c83434f6f6c0': {
+            'name': 'Pet Safe',
+            'custom_attribute_definition_id': 'E7NHJOCYVPOYBVGARDS73ASE',
+            'type': 'BOOLEAN',
+            'boolean_value': True,
+            'key': 'Square:93cd2840-5cff-4bea-8b7d-c83434f6f6c0'
+        }
+    }
 
-#     item = Item.fromSquareDetails(item_str, variation_details)
-#     assert item.sku == 'plantsoc.com/542513F'
-#     assert item.price == 399
-#     assert item.item_str == 'Pink Princess Pin'
-#     assert item.variation_str == 'Regular'
-#     assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
-#     assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
-#     assert item.pet_safe == False
+    item = Item.fromSquareDetails(item_str, variation_details, custom_attribute_values)
+    assert item.sku == 'plantsoc.com/542513F'
+    assert item.price == 399
+    assert item.item_str == 'Pink Princess Pin'
+    assert item.variation_str == 'Regular'
+    assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
+    assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
+    assert item.pet_safe == True
+
+
+def test_fromSquare_with_petsafe_false():
+    item_str = 'Pink Princess Pin'
+    variation_details = {
+        'id': 'HFS35APE35PLE74GAKFGCL3M',
+        'item_variation_data': {
+            'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
+            'name': 'Regular',
+            'price_money': {'amount': 399, 'currency': 'USD'},
+            'sku': 'plantsoc.com/542513F',
+        },
+    }
+    custom_attribute_values = {
+        'Square:93cd2840-5cff-4bea-8b7d-c83434f6f6c0': {
+            'name': 'Pet Safe',
+            'custom_attribute_definition_id': 'E7NHJOCYVPOYBVGARDS73ASE',
+            'type': 'BOOLEAN',
+            'boolean_value': False,
+            'key': 'Square:93cd2840-5cff-4bea-8b7d-c83434f6f6c0'
+        }
+    }
+
+    item = Item.fromSquareDetails(item_str, variation_details, custom_attribute_values)
+    assert item.sku == 'plantsoc.com/542513F'
+    assert item.price == 399
+    assert item.item_str == 'Pink Princess Pin'
+    assert item.variation_str == 'Regular'
+    assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
+    assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
+    assert item.pet_safe == False

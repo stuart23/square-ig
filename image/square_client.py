@@ -16,6 +16,7 @@ class SquareClient(object):
     def __init__(self):
         self._client = self._get_square_client()
 
+
     @staticmethod
     def _get_square_client():
         '''
@@ -38,9 +39,10 @@ class SquareClient(object):
 
         for item in items:
             item_data = item['item_data']
+            custom_attribute_values = item.get('custom_attribute_values', {})
             item_str = item_data['name']
             for variation_details in item_data['variations']:
-                yield Item.fromSquareDetails(item_str, variation_details)
+                yield Item.fromSquareDetails(item_str, variation_details, custom_attribute_values)
 
 
     def _get_all_catalog_items(self):
