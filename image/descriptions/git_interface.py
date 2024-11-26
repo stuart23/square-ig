@@ -3,16 +3,15 @@ from os import getenv, chmod
 from pathlib import Path
 from shutil import rmtree
 from boto3 import client as Boto3Client
-from jinja2 import Environment, FileSystemLoader
 from time import sleep
 
+from descriptions.renderer import Renderer
 from utils import get_secret
 
 GITHUB_KEY_ARN_ENV = "gh_key_arn"
 KEY_FILE = Path('/tmp/id_rsa')
 GIT_REPO_ENV = "instructions_git_repo"
 REPO_DIR = '/tmp/repo'
-TEMPLATE_DIR = Path(__file__).parent.resolve() / 'templates'
 
 
 class DescriptionsGit(object):
@@ -34,10 +33,8 @@ class DescriptionsGit(object):
 
         self.repo = Repo.clone_from(self.repo_url, self.repo_dir, env=self.git_environment)
         print(f'Repo {self.repo_url} successfully cloned to {self.repo_dir}')
-        self.jinja_environment = Environment(
-            loader=FileSystemLoader(TEMPLATE_DIR),
-            extensions=['jinja2_time.TimeExtension']
-        )
+
+        self.renderer = Renderer()
 
 
     def add_item(self, item, replace=False):
@@ -48,7 +45,6 @@ class DescriptionsGit(object):
 
         If replace is true, it will delete the existing folder and re-template.
         '''
-        template = self.jinja_environment.get_template("item.md")
         item_dir = self.repo_dir / "content" / item.sku_stem
         if item_dir.is_dir() and not replace:
             print(f'Skipping {item} as directory {item_dir} already exists')
@@ -59,7 +55,8 @@ class DescriptionsGit(object):
         item_dir.mkdir()
         output_file = item_dir / "index.md"
 
-        content = template.render(**item.__dict__)
+        content = self.renderer.render_item(item)
+
         with open(output_file, 'w') as fh:
             fh.write(content)
             print(f'Description for {item} written to {output_file}.')
@@ -67,6 +64,25 @@ class DescriptionsGit(object):
         self.repo.index.add(output_file)
 
         return output_file
+        
+
+    def update_directory(self, items, replace=True):
+        '''
+        Updates the Directory in the README.md file at the base of the repo.
+        '''
+        readme_path = self.repo_dir / "README.md"
+        if readme_path.exists() and not replace:
+            raise Exception('README.md already exists and replace is not true.')
+
+        content = self.renderer.render_directory(items)
+
+        with open(readme_path, 'w') as fh:
+            fh.write(content)
+            print(f'Directory written to {readme_path}.')
+
+        self.repo.index.add(readme_path)
+
+        return readme_path
         
 
     @property
