@@ -164,3 +164,47 @@ def test_serde():
     item_dict = item.__dict__
     item_serde = Item(**item_dict)
     assert item == item_serde
+
+
+def test_fromSquare():
+    item_str = 'Pink Princess Pin'
+    variation_details = {
+        'id': 'HFS35APE35PLE74GAKFGCL3M',
+        'item_variation_data': {
+            'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
+            'name': 'Regular',
+            'price_money': {'amount': 399, 'currency': 'USD'},
+            'sku': 'plantsoc.com/542513F',
+        },
+    }
+
+    item = Item.fromSquareDetails(item_str, variation_details)
+    assert item.sku == 'plantsoc.com/542513F'
+    assert item.price == 399
+    assert item.item_str == 'Pink Princess Pin'
+    assert item.variation_str == 'Regular'
+    assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
+    assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
+    assert item.pet_safe == False
+
+
+# def test_fromSquare_petsafe():
+#     item_str = 'Pink Princess Pin'
+#     variation_details = {
+#         'id': 'HFS35APE35PLE74GAKFGCL3M',
+#         'item_variation_data': {
+#             'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
+#             'name': 'Regular',
+#             'price_money': {'amount': 399, 'currency': 'USD'},
+#             'sku': 'plantsoc.com/542513F',
+#         },
+#     }
+
+#     item = Item.fromSquareDetails(item_str, variation_details)
+#     assert item.sku == 'plantsoc.com/542513F'
+#     assert item.price == 399
+#     assert item.item_str == 'Pink Princess Pin'
+#     assert item.variation_str == 'Regular'
+#     assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
+#     assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
+#     assert item.pet_safe == False

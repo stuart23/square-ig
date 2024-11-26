@@ -10,7 +10,7 @@ pwd = Path(__file__).parent.resolve()
 sys.path.append(str(pwd / '..' / 'image'))
 
 environ['square_token_arn'] = 'arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85'
-from square_client import get_catalog_items
+from square_client import SquareClient
 from labels.label import generate_label
 
 output_dir = pwd / "output"
@@ -19,11 +19,14 @@ try:
 except FileExistsError:
     pass
 
-items = get_catalog_items()
+items = SquareClient().get_catalog_items()
 
 for item in items:
-    label = generate_label(item)
-    filename = f'{item.sku_stem}.png'
-    print(f'Saving {filename}')
-    with open(output_dir / filename, 'wb') as fh:
-        fh.write(label)
+    print(item.pet_safe)
+        # import pdb
+        # pdb.set_trace()
+#     label = generate_label(item)
+#     filename = f'{item.sku_stem}.png'
+#     print(f'Saving {filename}')
+#     with open(output_dir / filename, 'wb') as fh:
+#         fh.write(label)

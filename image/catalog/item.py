@@ -17,6 +17,32 @@ class Item:
     variation_id: str
     pet_safe: bool
 
+    @classmethod
+    def fromSquareDetails(cls, item_str, variation_details):
+        '''
+        Creates a new item from the item string and variation details.
+
+        The item is created from variation_details, but the item name
+        is not included in the variation_details so it must be passed
+        in separately.
+        '''
+        # Try and get the pet_safe status from the variation
+        item_details = {'item_str': item_str, 'pet_safe': False}
+        for custom_attribute in variation_details.get('custom_attribute_values', {}).values():
+            if custom_attribute.get('name', '') == 'Pet Safe':
+                item_details['pet_safe'] = custom_attribute['boolean_value']
+                break
+        item_variation_data = variation_details['item_variation_data']
+        item_details['sku'] = item_variation_data.get('sku')
+        item_details['variation_str'] = item_variation_data['name']
+        item_details['item_id'] = item_variation_data["item_id"]
+        item_details['variation_id'] = variation_details['id']
+        try:
+            item_details['price'] = item_variation_data['price_money']['amount']
+        except KeyError:
+            item_details['price'] = 0
+        return cls(**item_details)
+
     def __eq__(self, other):
         '''
         Check equality

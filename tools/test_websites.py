@@ -6,10 +6,10 @@ from os import environ
 from requests import request
 
 environ['square_token_arn'] = 'arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85'
-from square_client import get_catalog_items
+from square_client import SquareClient
 
 def main():
-    items = get_catalog_items()
+    items = SquareClient().get_catalog_items()
     for item in items:
         response = request(url='https://' + item.sku, method='GET')
         if response.ok:

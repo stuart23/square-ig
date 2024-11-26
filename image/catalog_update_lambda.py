@@ -1,11 +1,12 @@
-from square_client import get_catalog_items, patch_objects_sku
+from square_client import SquareClient
 from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_id
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
 
 def handler(event, context):
-    items = get_catalog_items()
+    square_client = SquareClient()
+    items = square_client.get_catalog_items()
     update_items = []
     for item in items:
         # update the sku with the url format or generate one if it doesn't exist.
@@ -16,7 +17,7 @@ def handler(event, context):
             update_items.append(item)
         upsert_by_id(item)
     if update_items:
-        patch_objects_sku(update_items)
+        square_client.patch_objects_sku(update_items)
 
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
