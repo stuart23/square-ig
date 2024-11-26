@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional
 from re import match
 
 URL_PREFIX = "plantsoc.com"
