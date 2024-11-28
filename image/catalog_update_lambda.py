@@ -33,7 +33,7 @@ def handler(event, context):
         new_items = True
     if new_items:
         print('Items needed their description updated - Adding the directory and committing.')
-        descriptions.update_directory(get_catalog_items())
+        descriptions.update_directory(square_client.get_catalog_items())
         descriptions.commit()
 
 if __name__ == "__main__":
