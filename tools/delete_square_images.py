@@ -1,47 +1,6 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
-from square.client import Client as SquareClient
+from square_client import SquareClient
 from boto3 import client as Boto3Client
-
-
-def get_square_client():
-    '''
-    Gets the the square API key from AWS secrets manager and return a client with that.
-    '''
-    credentials_arn = 'arn:aws:secretsmanager:us-east-1:015140017687:secret:square_token-oMlH85'
-    secretsmanager_client = Boto3Client('secretsmanager')
-    square_token = secretsmanager_client.get_secret_value(SecretId=credentials_arn)['SecretString']
-    return SquareClient(
-        bearer_auth_credentials=BearerAuthCredentials(
-            access_token=square_token
-        ),
-        environment='production'
-    )
-
-
-def get_all_catalog_items():
-    """Retrieves all catalog items using pagination."""
-
-    cursor = None
-    objects = []
-    catalog = get_square_client().catalog
-
-    while True:
-        response = catalog.list_catalog(
-            cursor=cursor,
-            types="ITEM"
-        )
-
-        if response.is_success():
-            objects.extend(response.body["objects"])
-            cursor = response.body.get("cursor")
-
-            if cursor is None:
-                break  # No more pages
-        else:
-            print(f"Error: {response.errors}")
-            break  # Stop on error
-
-    return objects
 
 
 def batch_filter_images(object_ids):

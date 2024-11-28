@@ -8,7 +8,7 @@ def test_batch_1():
     def func(items):
         output.append(items)
     x = list(range(20))
-    func(x)
+    func(items=x)
     assert output[0] == [0,1,2,3,4]
     assert output[1] == [5,6,7,8,9]
     assert output[2] == [10,11,12,13,14]
@@ -23,7 +23,7 @@ def test_batch_loop_2():
     def func(items):
         output.append(items)
     x = list(range(11))
-    func(x)
+    func(items=x)
     assert output[0] == [0,1,2,3,4]
     assert output[1] == [5,6,7,8,9]
     assert output[2] == [10]
@@ -37,7 +37,7 @@ def test_batch_loop_3():
     def func(items):
         output.append(items)
     x = list(range(5))
-    func(x)
+    func(items=x)
     assert output[0] == [0,1,2,3,4]
     assert len(output) == 1
 
@@ -49,6 +49,6 @@ def test_batch_loop_4():
     def func(items):
         output.append(items)
     x = list(range(4))
-    func(x)
+    func(items=x)
     assert output[0] == [0,1,2,3]
     assert len(output) == 1

@@ -80,7 +80,7 @@ class SquareClient(object):
         Updates multiple objects sku.
         '''
         print('Patching {0} records in Square'.format(len(items)))
-        catalog = get_square_client().catalog
+        catalog = self._client.catalog
         item_map = {item.variation_id: item.sku for item in items}
         response = catalog.batch_retrieve_catalog_objects(
             body={

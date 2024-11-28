@@ -51,7 +51,10 @@ def test_upsert_catalog_object():
     for item in client.get_catalog_items():
         if item.item_str.startswith('no_sku'):
             item.sku = sku
-            patch_objects_sku(item)
+            client.patch_objects_sku(items=[item])
+            break
+    else:
+        raise Exception('No no_sku items exist')
     for item in client.get_catalog_items():
         if item.item_str.startswith('no_sku'):
             assert item.sku == sku
