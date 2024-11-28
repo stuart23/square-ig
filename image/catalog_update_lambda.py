@@ -17,7 +17,7 @@ def handler(event, context):
             update_items.append(item)
         upsert_by_id(item)
     if update_items:
-        square_client.patch_objects_sku(update_items)
+        square_client.patch_objects_sku(items=update_items)
 
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
