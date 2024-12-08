@@ -5,6 +5,7 @@ from json import dumps
 from hashlib import sha256
 from time import sleep, time
 from uuid import uuid4
+from functools import cached_property
 
 from catalog import Item
 from utils import batch, get_secret
@@ -30,24 +31,36 @@ class SquareClient(object):
             environment='production'
         )
 
+    @cached_property
+    def categories(self):
+        '''
+        Set the property self._categories
+        '''
+        return list(self._get_records_from_square(object_type="CATEGORY"))
 
     def get_catalog_items(self):
         '''
         Returns a generator of all the catalog items.
         '''
-        items = self._get_all_catalog_items()
+        items = self._get_records_from_square()
 
         for item in items:
             item_data = item['item_data']
             custom_attribute_values = item.get('custom_attribute_values', {})
             item_str = item_data['name']
             for variation_details in item_data['variations']:
-                yield Item.fromSquareDetails(item_str, variation_details, custom_attribute_values)
+                yield Item.fromSquareDetails(
+                    item_str,
+                    variation_details,
+                    custom_attribute_values
+                )
 
 
-    def _get_all_catalog_items(self):
+    def _get_records_from_square(self, object_type="ITEM"):
         """
-        Retrieves all catalog items as a generator.
+        Retrieves all records of a particular type as a generator.
+
+        Defaults to ITEM
         """
 
         cursor = None
@@ -56,7 +69,7 @@ class SquareClient(object):
         while True:
             response = catalog.list_catalog(
                 cursor=cursor,
-                types="ITEM"
+                types=object_type
             )
 
             if response.is_success():
@@ -71,7 +84,7 @@ class SquareClient(object):
                 raise Exception(f"Could not retrieve objects due to: {response.errors}")
                 break  # Stop on error
 
-        return objects
+        return objects # Why is this returning if it is already a generator??
 
 
     @batch(batch_size=500)
