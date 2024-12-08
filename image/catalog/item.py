@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 from re import match
 
 URL_PREFIX = "plantsoc.com"
@@ -16,9 +17,10 @@ class Item:
     item_id: str
     variation_id: str
     pet_safe: bool
+    categories: Optional[list] = None
 
     @classmethod
-    def fromSquareDetails(cls, item_str, variation_details, custom_attribute_values={}):
+    def fromSquareDetails(cls, item_str, variation_details, custom_attribute_values={}, categories=None):
         '''
         Creates a new item from the item string and variation details.
 
@@ -42,6 +44,7 @@ class Item:
             item_details['price'] = item_variation_data['price_money']['amount']
         except KeyError:
             item_details['price'] = 0
+        item_details['categories'] = categories
         return cls(**item_details)
 
     def __eq__(self, other):

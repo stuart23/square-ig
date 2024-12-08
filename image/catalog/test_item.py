@@ -84,7 +84,6 @@ def test_validate_sku_too_long():
     assert item.sku == 'plantsoc.com/poiuytre'
 
 
-
 def test_validate_sku_invalid_chars():
     item = Item(
         sku='plantsoc.com/abc. 12',
@@ -97,6 +96,21 @@ def test_validate_sku_invalid_chars():
     )
     assert item.validate_sku() == False
     assert item.sku == 'plantsoc.com/poiuytre'
+
+
+def test_item_categories():
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True,
+        categories=['my_category']
+    )
+    assert len(item.categories) == 1
+    assert item.categories[0] == 'my_category'
 
 
 def test_sku_stem_url_sku():
@@ -166,7 +180,7 @@ def test_serde():
     assert item == item_serde
 
 
-def test_fromSquare_without_petsafe():
+def test_fromSquare():
     item_str = 'Pink Princess Pin'
     variation_details = {
         'id': 'HFS35APE35PLE74GAKFGCL3M',
@@ -185,6 +199,7 @@ def test_fromSquare_without_petsafe():
     assert item.variation_str == 'Regular'
     assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
     assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
+    # Should default to false
     assert item.pet_safe == False
 
 
@@ -248,3 +263,21 @@ def test_fromSquare_with_petsafe_false():
     assert item.item_id == 'N3PPIULUZSBLXA3AESGITJ7T'
     assert item.variation_id == 'HFS35APE35PLE74GAKFGCL3M'
     assert item.pet_safe == False
+
+
+def test_fromSquare_with_categories():
+    item_str = 'Pink Princess Pin'
+    variation_details = {
+        'id': 'HFS35APE35PLE74GAKFGCL3M',
+        'item_variation_data': {
+            'item_id': 'N3PPIULUZSBLXA3AESGITJ7T',
+            'name': 'Regular',
+            'price_money': {'amount': 399, 'currency': 'USD'},
+            'sku': 'plantsoc.com/542513F',
+        },
+    }
+
+    item = Item.fromSquareDetails(item_str, variation_details, categories=['my_category_1', 'my_category_2'])
+    assert len(item.categories) == 2
+    assert item.categories[0] == 'my_category_1'
+    assert item.categories[1] == 'my_category_2'
