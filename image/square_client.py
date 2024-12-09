@@ -52,7 +52,8 @@ class SquareClient(object):
                 yield Item.fromSquareDetails(
                     item_str,
                     variation_details,
-                    custom_attribute_values
+                    custom_attribute_values,
+                    categories=self.categories
                 )
 
 
