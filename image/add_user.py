@@ -1,8 +1,7 @@
 from boto3 import client as Boto3Client
 from json import loads
 from os import getenv
-from square_client import getInstagramHandle
-from insta import WebS3
+from square_client import SquareClient
 
 
 def handler(event, context):
@@ -17,5 +16,5 @@ def handler(event, context):
     id = data['id']
     print(f'Retrieving user {id}')
 
-    instagram_handle = getInstagramHandle(customer_id=id)
+    instagram_handle = SquareClient().getInstagramHandle(customer_id=id)
     print(f'Instagram Handle is {instagram_handle}')
