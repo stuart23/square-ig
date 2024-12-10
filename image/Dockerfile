@@ -17,7 +17,7 @@ RUN pip install --target ${LAMBDA_TASK_ROOT} awslambdaric
 # ==== MULTI STAGE BUILD ====
 
 # Use multi-stage build, to keep the final image cleaner
-FROM mcr.microsoft.com/playwright/python:v1.48.0-noble
+FROM mcr.microsoft.com/playwright/python:v1.49.0-noble
 
 # Re-declare ARG so it's available in this stage
 ARG LAMBDA_TASK_ROOT
