@@ -281,3 +281,49 @@ def test_fromSquare_with_categories():
     assert len(item.categories) == 2
     assert item.categories[0] == 'my_category_1'
     assert item.categories[1] == 'my_category_2'
+
+
+def test_category_membership():
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True,
+        categories=[
+            {'id': 'abcd', 'name': 'my_category'},
+            {'id': 'efgh', 'name': 'my_category_69'},
+        ]
+    )
+    assert item.is_category('my_category') == True
+
+
+def test_category_membership_false():
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True,
+        categories=[
+            {'id': 'abcd', 'name': 'my_category'},
+            {'id': 'efgh', 'name': 'my_category_69'},
+        ]
+    )
+    assert item.is_category('my_category_23') == False
+
+def test_category_membership_missing():
+    item = Item(
+        sku='plantsoc.com/abcd1234',
+        price=123,
+        item_str='abc',
+        variation_str='abc',
+        item_id='qwerty',
+        variation_id='asdfg',
+        pet_safe=True
+    )
+    assert item.is_category('my_category_23') == False

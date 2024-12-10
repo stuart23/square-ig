@@ -31,12 +31,14 @@ class SquareClient(object):
             environment='production'
         )
 
+
     @cached_property
     def categories(self):
         '''
         Set the property self._categories
         '''
         return list(self._get_records_from_square(object_type="CATEGORY"))
+
 
     def get_catalog_items(self):
         '''
@@ -48,13 +50,51 @@ class SquareClient(object):
             item_data = item['item_data']
             custom_attribute_values = item.get('custom_attribute_values', {})
             item_str = item_data['name']
+            categories = self.get_categories(item_data)
             for variation_details in item_data['variations']:
                 yield Item.fromSquareDetails(
                     item_str,
                     variation_details,
                     custom_attribute_values,
-                    categories=self.categories
+                    categories=categories
                 )
+
+
+    def get_categories(self, item_data):
+        '''
+        Translates the item_data's categories (in the format `[{'id': ..., 'ordinal': ...},]`)
+        and returns it as a list of human readable categories with ids: `[{'id': ..., 'name': ...},]`.
+
+        Input must be a dict with a 'categories' key or [] is returned.
+        '''
+        if categories := item_data.get('categories'):
+            output = []
+            for category in categories:
+                try:
+                    match = self._get_matching_category(category.get('id'))
+                except ValueError:
+                    continue
+                # Record the category in the format `[{'id': ..., 'name': ...},]`
+                output.append({
+                    'id': match['id'],
+                    'name': match['category_data']['name']
+                })
+            return output
+        else:
+            return []
+
+
+    def _get_matching_category(self, category_id):
+        '''
+        Returns a category struct for a category ID. Used by `get_categories`
+        '''
+        match = [category for category in self.categories if category['id'] == category_id]
+        if len(match) == 0:
+            raise ValueError(f'No matching category with ID {category_id}')
+        elif len(match) > 1:
+            raise ValueError(f'More than one category exists with ID {category_id}')
+        else:
+            return match[0]
 
 
     def _get_records_from_square(self, object_type="ITEM"):

@@ -1,6 +1,7 @@
 from types import GeneratorType
 from uuid import uuid4
 from os import getenv
+from pytest import raises
 
 from square_client import SquareClient, SQUARE_TOKEN_ARN_ENV
 from catalog import Item
@@ -81,8 +82,33 @@ def test_upsert_catalog_object():
             assert item.sku == sku
 
 
-def test_get_categories():
+def test_categories():
     client = SquareClient()
     categories = client.categories
     assert len(categories) > 0
     assert categories[0]['type'] == 'CATEGORY'
+
+
+def test_get_matching_category():
+    client = SquareClient()
+    match = client._get_matching_category('ODMHZODS4WHR7NV3UAVE43PB')
+    assert match['id'] == 'ODMHZODS4WHR7NV3UAVE43PB'
+    assert match['category_data']['name'] == 'Pins'
+
+
+def test_get_matching_category_missing():
+    client = SquareClient()
+    with raises(ValueError) as excinfo:
+        client._get_matching_category('ASDFGHQWERTY')
+    assert str(excinfo.value) == 'No matching category with ID ASDFGHQWERTY'
+
+
+def test_get_categories():
+    '''
+    Assume `ODMHZODS4WHR7NV3UAVE43PB` maps to ``
+    if this starts failing, check that the mapping is still correct in square.
+    '''
+    client = SquareClient()
+    item_data = {'categories': [{'id': 'ODMHZODS4WHR7NV3UAVE43PB', 'ordinal': -2251731094208512},]}
+    categories = client.get_categories(item_data)
+    assert categories == [{'id': 'ODMHZODS4WHR7NV3UAVE43PB', 'name': 'Pins'}]

@@ -67,7 +67,22 @@ class Item:
             return False
         else:
             return True
-    
+
+
+    def is_category(self, category):
+        '''
+        Returns true if the items categories contain the given 'category'.
+
+        Categories are just expressed as their names, e.g. item.is_category('Plants')
+        '''
+        if self.categories == None:
+            return False
+        if any([x['name'] == category for x in self.categories]):
+            return True
+        else:
+            return False
+
+
     def update_sku(self):
         """
         Rewrites the sku with the format URL_PREFIX/sku.
