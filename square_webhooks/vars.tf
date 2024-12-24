@@ -10,26 +10,7 @@ variable "aws_region" {
 }
 
 
-variable "labels_google_drive_id" {
-  description = "The of the Google Drive to store the labels in"
-  type        = string
-}
-
-
-variable "square_token" {
-  description = "Token for accessing Square"
-  type        = string
-  sensitive   = true
-}
-
-
-variable "instructions_git_repo" {
-  description = "Github repo for instructions"
-  type        = string
-}
-
-
-variable "gh_key_arn" {
-  description = "Secretsmanager ARN for the git ssh private key"
+variable "env_prefix" {
+  description = "Prefix for all the resources, e.g. dev, stage, prod"
   type        = string
 }

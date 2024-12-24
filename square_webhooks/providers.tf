@@ -22,9 +22,3 @@ terraform {
 provider "aws" {
   region = var.aws_region
 }
-
-# Configure the GCP Provider
-provider "google" {
-  # project = var.gcp_project
-  # region  = var.gcp_region
-}

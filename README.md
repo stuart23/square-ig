@@ -14,11 +14,11 @@ store.
 ### Bootstrap
 
 Before deploying any application, the AWS account must first be bootstrapped so that it has the role to allow
-GitHub Actions to deploy resources, and a store for the Terraform state. To bootstrap, in a shell with AWS 
-and GCP auth (`gcloud auth application-default login`), execute the following from the `bootstrap` directory:
+GitHub Actions to deploy resources, and a store for the Terraform state. To bootstrap, in a shell with AWS auth,
+execute the following from the `bootstrap` directory with the `environment-prefix` variable as the name you want to use:
 
 ```
-tf init && tf apply --var github_org_name=my_org_name --var github_repo_name=my_repo_name
+tf init && tf apply --var github_org_name=my_org_name --var github_repo_name=my_repo_name --var environment-prefix=prod
 ```
 
 This command will produce an output called `cicd_role_arn` and `cicd_service_account`. Take `cicd_role_arn` and
@@ -26,9 +26,6 @@ This command will produce an output called `cicd_role_arn` and `cicd_service_acc
 called `CICD_ROLE_ARN` with the ARN as the value. Create variables with the following keys and values:
 
 - `AWS_REGION` = the preferred AWS region (e.g. `us-east-1`).
-- `gcp_workload_identity_provider` = Output value of `service_account` - CICD Service Account
-- `cicd_service_account` = Output value of `workload_identity_provider` - Workload Identity Provider
-- `gcp_project` = Output value of `gcp_project` - Workload Identity Provider
 
 This is a one-time setup, so there is no need to store the tf state file after it is created.
 

@@ -1,5 +1,5 @@
 resource "aws_apigatewayv2_api" "square_webhooks_gateway" {
-  name          = "square_http_api"
+  name          = var.env_prefix + "square_http_api"
   description   = "Endpoint for Square webhooks."
   protocol_type = "HTTP"
 }
@@ -18,7 +18,7 @@ resource "aws_apigatewayv2_stage" "square_webhooks_stage" {
 
 
 resource "aws_cloudwatch_log_group" "square_webhooks_logs" {
-  name              = "square_webhooks_logs"
+  name              = var.env_prefix + "square_webhooks_logs"
   retention_in_days = 14
 }
 

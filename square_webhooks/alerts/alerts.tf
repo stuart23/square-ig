@@ -1,10 +1,10 @@
 resource "aws_sns_topic" "alerts" {
-  name = "alerts"
+  name = var.env_prefix + "_alerts"
 }
 
 
 resource "aws_iam_role" "sns_cloudwatch_role" {
-  name = "sns_cloudwatch_role"
+  name = var.env_prefix + "_sns_cloudwatch_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
