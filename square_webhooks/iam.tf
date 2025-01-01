@@ -1,6 +1,6 @@
 # IAM policy for interacting with Dynamo table
 resource "aws_iam_policy" "dynamo_access" {
-  name        = var.env_prefix + "_dynamo_access"
+  name        = "${var.env_prefix}_dynamo_access"
   description = "Access DynamoDB table with catalog data"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -44,7 +44,7 @@ resource "aws_iam_policy" "dynamo_access" {
 
 # IAM policy for publishing to SNS
 resource "aws_iam_policy" "sns_publish" {
-  name        = var.env_prefix + "_sns_publish"
+  name        = "${var.env_prefix}_sns_publish"
   description = "Publish to SNS topic"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -62,7 +62,7 @@ resource "aws_iam_policy" "sns_publish" {
 
 # IAM policy for reading from SNS
 resource "aws_iam_policy" "sqs_read" {
-  name        = var.env_prefix + "_sqs_read"
+  name        = "${var.env_prefix}_sqs_read"
   description = "Read from SQS"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -83,7 +83,7 @@ resource "aws_iam_policy" "sqs_read" {
 
 
 resource "aws_iam_role" "lambda_role" {
-  name = var.env_prefix + "_lambda_role"
+  name = "${var.env_prefix}_lambda_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -130,7 +130,7 @@ resource "aws_iam_role_policy_attachment" "lambda_role_execute_policy_attachment
 
 
 resource "aws_iam_role" "api_authorizer_role" {
-  name = var.env_prefix + "_api_authorizer_role"
+  name = "${var.env_prefix}_api_authorizer_role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

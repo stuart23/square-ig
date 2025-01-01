@@ -1,5 +1,5 @@
 resource "aws_dynamodb_table" "catalog" {
-  name           = var.env_prefix + "_catalog"
+  name           = "${var.env_prefix}_catalog"
   billing_mode   = "PROVISIONED"
   read_capacity  = 5
   write_capacity = 5
