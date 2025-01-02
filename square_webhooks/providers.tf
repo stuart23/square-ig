@@ -5,10 +5,6 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 5.0"
     }
-    google = {
-      source  = "hashicorp/google"
-      version = "~> 6.9.0"
-    }
   }
   backend "s3" {
     bucket         = "square-ig-tfstate"
