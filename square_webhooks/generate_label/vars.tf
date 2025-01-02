@@ -10,19 +10,13 @@ variable "lambda_role_arn" {
 }
 
 
-variable "square_token_arn" {
-  type        = string
-  description = "ARN of the secret containing the square token."
-}
-
-
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
 }
 
 
-variable "labels_google_drive_id" {
-  description = "The of the Google Drive to store the labels in"
+variable "env_prefix" {
+  description = "Prefix for all the resources, e.g. dev, stage, prod"
   type        = string
 }

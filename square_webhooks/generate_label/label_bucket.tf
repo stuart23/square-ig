@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "label_bucket" {
-  bucket = "label-catalog-bucket"
+  bucket = "${var.env_prefix}-label-catalog-bucket"
 }
 
 

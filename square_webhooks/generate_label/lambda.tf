@@ -22,8 +22,6 @@ resource "aws_lambda_function" "generate_label" {
   environment {
     variables = {
       catalog_bucket_name    = aws_s3_bucket.label_bucket.id
-      square_token_arn       = var.square_token_arn
-      labels_google_drive_id = var.labels_google_drive_id
     }
   }
   ephemeral_storage {

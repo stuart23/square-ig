@@ -11,16 +11,16 @@
 # }
 
 
-# module "generate_label" {
-#   source                 = "./generate_label"
-#   lambda_image           = var.lambda_image
-#   lambda_role_arn        = aws_iam_role.lambda_role.arn
-#   square_token_arn       = aws_secretsmanager_secret.square_token.arn
-#   alerts_sns_topic_arn   = module.alerts.alerts_sns_topic_arn
-# }
+module "generate_label" {
+  source               = "./generate_label"
+  lambda_image         = var.lambda_image
+  lambda_role_arn      = aws_iam_role.lambda_role.arn
+  alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
+  env_prefix           = var.env_prefix
+}
 
 
 module "alerts" {
-  source = "./alerts"
+  source     = "./alerts"
   env_prefix = var.env_prefix
 }
