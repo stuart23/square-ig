@@ -7,10 +7,10 @@ terraform {
     }
   }
   backend "s3" {
-    bucket         = "square-ig-tfstate"
-    key            = "square_ig/terraform.tfstate"
+    bucket         = "square-qr-tfstate"
+    key            = "${var.env_prefix}_square_qr/terraform.tfstate"
     encrypt        = true
-    dynamodb_table = "square-ig-tfstate"
+    dynamodb_table = "square-qr-tfstate"
   }
 }
 
