@@ -8,7 +8,6 @@ terraform {
   }
   backend "s3" {
     bucket         = "square-qr-tfstate"
-    key            = "${var.env_prefix}_square_qr/terraform.tfstate"
     encrypt        = true
     dynamodb_table = "square-qr-tfstate"
   }

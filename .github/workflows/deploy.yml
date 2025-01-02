@@ -117,7 +117,7 @@ jobs:
 
     - name: Terraform Init Square Webhooks
       working-directory: square_webhooks
-      run: terraform init
+      run: terraform init -backend-config="key=${{ env.ENV_PREFIX }}_square_qr/terraform.tfstate"
 
     - name: Terraform Apply Square Webhooks
       working-directory: square_webhooks
