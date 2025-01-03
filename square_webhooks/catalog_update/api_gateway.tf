@@ -5,10 +5,10 @@ resource "aws_apigatewayv2_integration" "catalog_update_sqs" {
   integration_type    = "AWS_PROXY"
   integration_subtype = "SQS-SendMessage"
 
-  request_parameters = {
-    "QueueUrl"    = aws_sqs_queue.catalog_update.url
-    "MessageBody" = "$request.body"
-  }
+  # request_parameters = {
+  #   "QueueUrl"    = aws_sqs_queue.catalog_update.url
+  #   "MessageBody" = "$request.body"
+  # }
 }
 
 resource "aws_apigatewayv2_route" "catalog_update_sqs" {
