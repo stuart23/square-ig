@@ -3,7 +3,7 @@ resource "aws_apigatewayv2_integration" "oauth" {
   description         = "oauth redirect URL"
   integration_type    = "AWS_PROXY"
 
-  integration_method     = "POST"
+  integration_method     = "GET"
   integration_uri        = aws_lambda_function.oauth.invoke_arn
   payload_format_version = "2.0"
 }
