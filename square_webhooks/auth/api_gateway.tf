@@ -1,13 +1,13 @@
 resource "aws_apigatewayv2_integration" "oauth" {
-  api_id           = var.square_gateway_id
-  credentials_arn  = aws_iam_role.gateway_sqs_write.arn
-  description      = "oauth redirect URL"
-  integration_type = "AWS_PROXY"
+  api_id              = var.square_gateway_id
+  credentials_arn     = aws_iam_role.gateway_sqs_write.arn
+  description         = "oauth redirect URL"
+  integration_type    = "AWS_PROXY"
   integration_subtype = "SQS-SendMessage"
 
   request_parameters = {
     "QueueUrl"    = aws_sqs_queue.auth_queue.url
-    "Action"      = "oauth"
+    # "Action"      = "oauth"
     "MessageBody" = "$request.body"
   }
 }
