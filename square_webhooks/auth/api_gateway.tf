@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_integration" "oauth" {
   integration_subtype = "SQS-SendMessage"
 
   request_parameters = {
-    "QueueUrl"    = aws_sqs_queue.auth_queue.url
+    "QueueUrl" = aws_sqs_queue.auth_queue.url
     # "Action"      = "oauth"
     "MessageBody" = "$request.body"
   }
