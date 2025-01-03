@@ -1,10 +1,10 @@
 resource "aws_sqs_queue" "catalog_update" {
-  name = "catalog_update"
+  name = "${var.env_prefix}_catalog_update"
 }
 
 
 resource "aws_iam_policy" "sqs_write" {
-  name        = "sqs_write"
+  name        = "${var.env_prefix}_sqs_write"
   description = "Write to sqs queue"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -20,7 +20,7 @@ resource "aws_iam_policy" "sqs_write" {
 
 
 resource "aws_iam_role" "gateway_sqs_write" {
-  name = "sqs_write"
+  name = "${var.env_prefix}_sqs_write"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
