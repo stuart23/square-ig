@@ -22,7 +22,7 @@ resource "aws_iam_role" "sns_cloudwatch_role" {
 
 # IAM policy for publishing to SNS
 resource "aws_iam_policy" "sns_cloudwatch_policy" {
-  name = "${var.env_prefix}_sns_cloudwatch_policy"
+  name        = "${var.env_prefix}_sns_cloudwatch_policy"
   description = "Write logs to cloudwatch"
   policy = jsonencode({
     Version = "2012-10-17"

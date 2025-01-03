@@ -5,14 +5,14 @@ resource "aws_cloudwatch_log_group" "oauth" {
 
 resource "aws_lambda_function" "oauth" {
   function_name = "${var.env_prefix}_oauth"
-  description                    = "Triggered by square API oauth flow."
-  package_type                   = "Image"
-  architectures                  = ["arm64"]
-  image_uri                      = var.lambda_image
-  role                           = var.lambda_role_arn
-  timeout                        = 30
-  memory_size                    = 256
-  publish                        = true
+  description   = "Triggered by square API oauth flow."
+  package_type  = "Image"
+  architectures = ["arm64"]
+  image_uri     = var.lambda_image
+  role          = var.lambda_role_arn
+  timeout       = 30
+  memory_size   = 256
+  publish       = true
   image_config {
     command = ["oauth_lambda.handler"]
   }
@@ -22,7 +22,7 @@ resource "aws_lambda_function" "oauth" {
   }
   environment {
     variables = {
-      TENANTS_TABLE         = var.
+      TENANTS_TABLE = var.tenants_table
     }
   }
 }

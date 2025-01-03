@@ -1,5 +1,5 @@
 resource "aws_cloudwatch_log_group" "generate_label" {
-  name = "${var.env_prefix}_generate_label"
+  name              = "${var.env_prefix}_generate_label"
   retention_in_days = 14
 }
 
@@ -21,7 +21,7 @@ resource "aws_lambda_function" "generate_label" {
   }
   environment {
     variables = {
-      catalog_bucket_name    = aws_s3_bucket.label_bucket.id
+      catalog_bucket_name = aws_s3_bucket.label_bucket.id
     }
   }
   ephemeral_storage {

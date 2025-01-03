@@ -4,7 +4,7 @@ resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
 }
 
 resource "aws_lambda_function" "catalog_update" {
-  function_name = "${var.env_prefix}_catalog_update"
+  function_name                  = "${var.env_prefix}_catalog_update"
   description                    = "Triggered when the catalog updates. Updates the Dynamo table with the items."
   package_type                   = "Image"
   architectures                  = ["arm64"]
@@ -23,7 +23,7 @@ resource "aws_lambda_function" "catalog_update" {
   }
   environment {
     variables = {
-      sns_topic_arn         = var.generate_label_sns_topic_arn
+      sns_topic_arn = var.generate_label_sns_topic_arn
     }
   }
   ephemeral_storage {
