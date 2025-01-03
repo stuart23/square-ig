@@ -1,4 +1,4 @@
- from boto3 import client as Boto3Client
+from boto3 import client as Boto3Client
 from json import dumps
 from os import getenv
 
