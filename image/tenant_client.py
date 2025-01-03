@@ -7,7 +7,7 @@ class TenantClient(object):
         self._table = resource("dynamodb").Table("tenants")
 
 
-    def upsert_tenant(sku, oauth_code):
+    def upsert_tenant(self, oauth_code):
         """
         If an object does not exist in the database, it will be added.
         """
