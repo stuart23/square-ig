@@ -11,7 +11,7 @@ class TenantClient(object):
         """
         If an object does not exist in the database, it will be added.
         """
-        response = table.query(
+        response = self._table.query(
             KeyConditionExpression=(
                 Key("oauth_code").eq(oauth_code)
             ),
@@ -19,7 +19,7 @@ class TenantClient(object):
         if response['Count'] == 0:
             # No item with this sku exists.
             print(f'Adding item to DynamoDB: {oauth_code}')
-            table.put_item(
+            self._table.put_item(
                     Item={
                         "oauth_code": oauth_code,
                     }
