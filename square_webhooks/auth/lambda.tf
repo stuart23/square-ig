@@ -40,13 +40,13 @@ resource "aws_lambda_permission" "auth_permission" {
 }
 
 
-resource "aws_cloudwatch_metric_alarm" "oauth_failure_alarm" {
-  alarm_name        = "${var.env_prefix}_oauth_failure_alarm"
+resource "aws_cloudwatch_metric_alarm" "auth_failure_alarm" {
+  alarm_name        = "${var.env_prefix}_auth_failure_alarm"
   alarm_description = "Errors in Lambda Function from square oauth flow"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
   dimensions = {
-    FunctionName = aws_lambda_function.oauth.function_name
+    FunctionName = aws_lambda_function.auth.function_name
   }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
