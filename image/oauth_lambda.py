@@ -5,4 +5,4 @@ def handler(event, context):
     Adds the tenant to the dynamo table.
     '''
     if code := event['queryStringParameters'].get('code'):
-        TenantClient().upsert_tenant(code=code)
+        TenantClient().upsert_tenant(oauth_code=code)
