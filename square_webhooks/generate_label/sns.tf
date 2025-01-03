@@ -1,6 +1,6 @@
 
 resource "aws_sns_topic" "generate_label" {
-  name = "generate_label"
+  name = "${var.env_prefix}_generate_label"
 }
 
 

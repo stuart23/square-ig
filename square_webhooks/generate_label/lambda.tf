@@ -1,10 +1,10 @@
 resource "aws_cloudwatch_log_group" "generate_label" {
-  name              = "generate_label"
+  name = "${var.env_prefix}_generate_label"
   retention_in_days = 14
 }
 
 resource "aws_lambda_function" "generate_label" {
-  function_name = "generate_label"
+  function_name = "${var.env_prefix}_generate_label"
   description   = "Generates a label and saves it in S3"
   package_type  = "Image"
   architectures = ["arm64"]
@@ -40,7 +40,7 @@ resource "aws_lambda_permission" "generate_label_permission" {
 
 
 resource "aws_cloudwatch_metric_alarm" "generate_label_failure_alarm" {
-  alarm_name        = "generate_label_failure_alarm"
+  alarm_name        = "${var.env_prefix}_generate_label_failure_alarm"
   alarm_description = "Errors in Lambda Function on label generation"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
