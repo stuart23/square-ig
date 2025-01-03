@@ -11,8 +11,8 @@ module "catalog_update" {
 }
 
 
-module "oauth" {
-  source                       = "./oauth"
+module "auth" {
+  source                       = "./auth"
   lambda_image                 = var.lambda_image
   square_gateway_id            = aws_apigatewayv2_api.square_webhooks_gateway.id
   square_gateway_execution_arn = aws_apigatewayv2_api.square_webhooks_gateway.execution_arn
