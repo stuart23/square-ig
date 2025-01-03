@@ -1,10 +1,10 @@
 resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
-  name              = "catalog_update_lambda"
+  name              = "${var.env_prefix}_catalog_update_lambda"
   retention_in_days = 14
 }
 
 resource "aws_lambda_function" "catalog_update" {
-  function_name                  = "catalog_update"
+  function_name = "${var.env_prefix}_catalog_update"
   description                    = "Triggered when the catalog updates. Updates the Dynamo table with the items."
   package_type                   = "Image"
   architectures                  = ["arm64"]
@@ -24,9 +24,6 @@ resource "aws_lambda_function" "catalog_update" {
   environment {
     variables = {
       sns_topic_arn         = var.generate_label_sns_topic_arn
-      square_token_arn      = var.square_token_arn
-      instructions_git_repo = var.instructions_git_repo
-      gh_key_arn            = var.gh_key_arn
     }
   }
   ephemeral_storage {
@@ -38,7 +35,7 @@ resource "aws_lambda_function" "catalog_update" {
 resource "aws_lambda_permission" "catalog_update_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "catalog_update"
+  function_name = "${var.env_prefix}_catalog_update"
   principal     = "apigateway.amazonaws.com"
 
   # The /* part allows invocation from any stage, method and resource path

@@ -34,25 +34,13 @@ variable "generate_label_sns_topic_arn" {
 }
 
 
-variable "square_token_arn" {
-  type        = string
-  description = "ARN of the secret containing the square token."
-}
-
-
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
 }
 
 
-variable "instructions_git_repo" {
-  description = "Github repo for instructions"
-  type        = string
-}
-
-
-variable "gh_key_arn" {
-  description = "KMS ARN for the git ssh private key"
+variable "env_prefix" {
+  description = "Prefix for all the resources, e.g. dev, stage, prod"
   type        = string
 }
