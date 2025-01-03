@@ -16,10 +16,3 @@ resource "aws_apigatewayv2_route" "oauth" {
   # authorizer_id      = var.square_authorizer_id
   target = "integrations/${aws_apigatewayv2_integration.oauth.id}"
 }
-
-
-resource "aws_apigatewayv2_integration_response" "oauth_response" {
-  api_id                   = var.square_gateway_id
-  integration_id           = aws_apigatewayv2_integration.oauth.id
-  integration_response_key = "/302 https://google.com/"
-}

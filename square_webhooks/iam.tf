@@ -34,7 +34,9 @@ resource "aws_iam_policy" "dynamo_access" {
         Effect = "Allow"
         Resource = [
           "${aws_dynamodb_table.catalog.arn}/*",
-          aws_dynamodb_table.catalog.arn
+          aws_dynamodb_table.catalog.arn,
+          "${aws_dynamodb_table.tenants.arn}/*",
+          aws_dynamodb_table.tenants.arn
         ]
       },
     ]

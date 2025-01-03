@@ -1,6 +1,8 @@
+from tenant_client import TenantClient
+
 def handler(event, context):
-    print('RUNNINGGGG')
-    print('event')
-    print(event)
-    print('context')
-    print(context)
+    '''
+    Adds the tenant to the dynamo table.
+    '''
+    if code := event['queryStringParameters'].get('code')
+        TenantClient().upsert_tenant(code=code)
