@@ -22,12 +22,6 @@ variable "lambda_role_arn" {
 }
 
 
-# variable "square_authorizer_id" {
-#   type        = string
-#   description = "ID of the authorizer to only allow square IP addresses"
-# }
-
-
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
@@ -36,5 +30,11 @@ variable "alerts_sns_topic_arn" {
 
 variable "env_prefix" {
   description = "Prefix for all the resources, e.g. dev, stage, prod"
+  type        = string
+}
+
+
+variable "tenants_table" {
+  description = "Name of the tenants table"
   type        = string
 }

@@ -20,11 +20,11 @@ resource "aws_lambda_function" "oauth" {
     log_group  = aws_cloudwatch_log_group.oauth.name
     log_format = "Text"
   }
-  # environment {
-  #   variables = {
-  #     sns_topic_arn         = var.generate_label_sns_topic_arn
-  #   }
-  # }
+  environment {
+    variables = {
+      TENANTS_TABLE         = var.
+    }
+  }
 }
 
 

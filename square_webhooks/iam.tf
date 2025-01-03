@@ -17,7 +17,7 @@ resource "aws_iam_policy" "dynamo_access" {
         Resource = "*"
       },
       {
-        Sid = "AccessCatalog"
+        Sid = "AccessTables"
         Action = [
           "dynamodb:BatchGet*",
           "dynamodb:DescribeStream",

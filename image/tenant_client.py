@@ -1,10 +1,14 @@
 from boto3 import resource
 from boto3.dynamodb.conditions import Key
+from utils import getenv_or_raise
+
+
+TABLE = getenv_or_raise('TENANTS_TABLE')
 
 
 class TenantClient(object):
     def __init__(self):
-        self._table = resource("dynamodb").Table("tenants")
+        self._table = resource("dynamodb").Table(TABLE)
 
 
     def upsert_tenant(self, oauth_code):
