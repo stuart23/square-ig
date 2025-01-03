@@ -12,7 +12,7 @@ resource "aws_iam_policy" "sqs_write" {
       {
         Action   = "sqs:SendMessage"
         Effect   = "Allow"
-        Resource = aws_sqs_queue.auth.arn
+        Resource = aws_sqs_queue.auth_queue.arn
       },
     ]
   })
@@ -49,6 +49,6 @@ resource "aws_iam_role_policy_attachment" "push_logs" {
 
 
 resource "aws_lambda_event_source_mapping" "trigger_lambda" {
-  event_source_arn = aws_sqs_queue.catalog_update.arn
-  function_name    = aws_lambda_function.catalog_update.arn
+  event_source_arn = aws_sqs_queue.auth_queue.arn
+  function_name    = aws_lambda_function.auth.arn
 }

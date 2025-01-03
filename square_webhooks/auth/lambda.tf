@@ -3,7 +3,7 @@ resource "aws_cloudwatch_log_group" "auth" {
   retention_in_days = 14
 }
 
-resource "aws_lambda_function" "oauth" {
+resource "aws_lambda_function" "auth" {
   function_name = "${var.env_prefix}_auth"
   description   = "Auth functions"
   package_type  = "Image"
@@ -14,10 +14,10 @@ resource "aws_lambda_function" "oauth" {
   memory_size   = 256
   publish       = true
   image_config {
-    command = ["oauth_lambda.handler"]
+    command = ["auth_lambda.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.oauth.name
+    log_group  = aws_cloudwatch_log_group.auth.name
     log_format = "Text"
   }
   environment {
@@ -28,10 +28,10 @@ resource "aws_lambda_function" "oauth" {
 }
 
 
-resource "aws_lambda_permission" "oauth_permission" {
+resource "aws_lambda_permission" "auth_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "${var.env_prefix}_oauth"
+  function_name = "${var.env_prefix}_auth"
   principal     = "apigateway.amazonaws.com"
 
   # The /* part allows invocation from any stage, method and resource path
