@@ -22,10 +22,10 @@ variable "lambda_role_arn" {
 }
 
 
-variable "square_authorizer_id" {
-  type        = string
-  description = "ID of the authorizer to only allow square IP addresses"
-}
+# variable "square_authorizer_id" {
+#   type        = string
+#   description = "ID of the authorizer to only allow square IP addresses"
+# }
 
 
 variable "generate_label_sns_topic_arn" {
