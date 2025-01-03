@@ -1,10 +1,10 @@
-resource "aws_sqs_queue" "catalog_update" {
-  name = "${var.env_prefix}_catalog_update"
+resource "aws_sqs_queue" "auth_queue" {
+  name = "${var.env_prefix}_auth"
 }
 
 
 resource "aws_iam_policy" "sqs_write" {
-  name        = "${var.env_prefix}_catalog_update_sqs_write"
+  name        = "${var.env_prefix}_auth_sqs_write"
   description = "Write to sqs queue"
   policy = jsonencode({
     Version = "2012-10-17"
@@ -12,7 +12,7 @@ resource "aws_iam_policy" "sqs_write" {
       {
         Action   = "sqs:SendMessage"
         Effect   = "Allow"
-        Resource = aws_sqs_queue.catalog_update.arn
+        Resource = aws_sqs_queue.auth.arn
       },
     ]
   })
@@ -20,7 +20,7 @@ resource "aws_iam_policy" "sqs_write" {
 
 
 resource "aws_iam_role" "gateway_sqs_write" {
-  name = "${var.env_prefix}_catalog_update_sqs_write"
+  name = "${var.env_prefix}_auth_sqs_write"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

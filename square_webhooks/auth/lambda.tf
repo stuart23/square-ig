@@ -1,11 +1,11 @@
-resource "aws_cloudwatch_log_group" "oauth" {
-  name              = "${var.env_prefix}_oauth"
+resource "aws_cloudwatch_log_group" "auth" {
+  name              = "${var.env_prefix}_auth"
   retention_in_days = 14
 }
 
 resource "aws_lambda_function" "oauth" {
-  function_name = "${var.env_prefix}_oauth"
-  description   = "Triggered by square API oauth flow."
+  function_name = "${var.env_prefix}_auth"
+  description   = "Auth functions"
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
