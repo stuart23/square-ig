@@ -16,9 +16,12 @@ def handler(event, context):
         }
     elif code := queryStringParameters.get('code'):
         publish({
-            'code': code,
-            'state': queryStringParameters.get('state'),
-            'response_type': queryStringParameters.get('response_type'),
+            'action': 'new_connection',
+            'data': {
+                'code': code,
+                'state': queryStringParameters.get('state'),
+                'response_type': queryStringParameters.get('response_type'),
+            }
         })
         return {
             'statusCode' : 200,
