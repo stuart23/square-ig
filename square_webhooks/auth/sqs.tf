@@ -50,5 +50,5 @@ resource "aws_iam_role_policy_attachment" "push_logs" {
 
 resource "aws_lambda_event_source_mapping" "trigger_lambda" {
   event_source_arn = aws_sqs_queue.auth_queue.arn
-  function_name    = aws_lambda_function.auth.arn
+  function_name    = aws_lambda_function.auth_handler.arn
 }

@@ -35,7 +35,7 @@ resource "aws_lambda_function" "catalog_update" {
 resource "aws_lambda_permission" "catalog_update_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "${var.env_prefix}_catalog_update"
+  function_name = aws_lambda_function.catalog_update.function_name
   principal     = "apigateway.amazonaws.com"
 
   # The /* part allows invocation from any stage, method and resource path

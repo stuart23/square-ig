@@ -1,10 +1,10 @@
-resource "aws_cloudwatch_log_group" "auth" {
-  name              = "${var.env_prefix}_auth"
+resource "aws_cloudwatch_log_group" "auth_handler" {
+  name              = "${var.env_prefix}_auth_handler"
   retention_in_days = 14
 }
 
-resource "aws_lambda_function" "oauth_callback" {
-  function_name = "${var.env_prefix}_oauth_callback"
+resource "aws_lambda_function" "auth_handler" {
+  function_name = "${var.env_prefix}_auth_handler"
   description   = "oAuth callback function"
   package_type  = "Image"
   architectures = ["arm64"]
@@ -17,7 +17,7 @@ resource "aws_lambda_function" "oauth_callback" {
     command = ["auth_callback_lambda.handler"]
   }
   logging_config {
-    log_group  = aws_cloudwatch_log_group.auth.name
+    log_group  = aws_cloudwatch_log_group.auth_handler.name
     log_format = "Text"
   }
   environment {
@@ -28,10 +28,10 @@ resource "aws_lambda_function" "oauth_callback" {
 }
 
 
-resource "aws_lambda_permission" "auth_permission" {
+resource "aws_lambda_permission" "auth_handler_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = "${var.env_prefix}_auth"
+  function_name = aws_lambda_function.auth_handler.function_name
   principal     = "apigateway.amazonaws.com"
 
   # The /* part allows invocation from any stage, method and resource path
@@ -40,13 +40,13 @@ resource "aws_lambda_permission" "auth_permission" {
 }
 
 
-resource "aws_cloudwatch_metric_alarm" "auth_failure_alarm" {
-  alarm_name        = "${var.env_prefix}_auth_failure_alarm"
+resource "aws_cloudwatch_metric_alarm" "auth_handler_failure_alarm" {
+  alarm_name        = "${var.env_prefix}_auth_handler_failure_alarm"
   alarm_description = "Errors in Lambda Function from square oauth flow"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
   dimensions = {
-    FunctionName = aws_lambda_function.auth.function_name
+    FunctionName = aws_lambda_function.auth_handler.function_name
   }
   comparison_operator = "GreaterThanThreshold"
   statistic           = "Maximum"
