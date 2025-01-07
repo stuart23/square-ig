@@ -1,14 +1,14 @@
 from boto3 import client as Boto3Client
 from json import dumps
 from os import getenv
+from utils import getenv_or_raise
 
-sns_client = Boto3Client('sns')
-TOPIC_ARN = getenv('TOKEN_QUEUE_ARN')
 
 def publish(message):
-    print(f"Publishing the following to topic {TOPIC_ARN}: {message}")
-    response = sns_client.publish(
-        TopicArn=TOPIC_ARN,
-        Message=dumps({'default': dumps(message)}),
-        MessageStructure='json'
+    QUEUE_URL = getenv_or_raise('QUEUE_URL')
+    sqs_client = Boto3Client('sqs')
+    print(f"Publishing the following to topic {QUEUE_URL}: {message}")
+    response = sqs_client.send_message(
+        QueueUrl=QUEUE_URL,
+        MessageBody=message
     )

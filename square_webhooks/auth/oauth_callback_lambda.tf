@@ -20,6 +20,11 @@ resource "aws_lambda_function" "oauth_callback" {
     log_group  = aws_cloudwatch_log_group.oauth_callback.name
     log_format = "Text"
   }
+  environment {
+    variables = {
+      QUEUE_URL = aws_sqs_queue.auth_queue.url
+    }
+  }
 }
 
 
