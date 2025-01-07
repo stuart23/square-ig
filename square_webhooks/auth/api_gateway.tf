@@ -1,4 +1,4 @@
-resource "aws_apigatewayv2_integration" "catalog_update_sqs" {
+resource "aws_apigatewayv2_integration" "oauth_callback" {
   api_id              = var.square_gateway_id
   credentials_arn     = aws_iam_role.gateway_sqs_write.arn
   description         = "Calls auth_callback_lambda to handle oauth callbacks."
@@ -6,7 +6,7 @@ resource "aws_apigatewayv2_integration" "catalog_update_sqs" {
   integration_uri     = aws_lambda_function.oauth_callback.invoke_arn
 }
 
-resource "aws_apigatewayv2_route" "oauth" {
+resource "aws_apigatewayv2_route" "oauth_callback" {
   api_id    = var.square_gateway_id
   route_key = "GET /oauth"
   # authorization_type = "CUSTOM"
