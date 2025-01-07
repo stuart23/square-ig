@@ -10,5 +10,5 @@ def publish(message):
     print(f"Publishing the following to topic {QUEUE_URL}: {message}")
     response = sqs_client.send_message(
         QueueUrl=QUEUE_URL,
-        MessageBody=message
+        MessageBody=dumps(message)
     )
