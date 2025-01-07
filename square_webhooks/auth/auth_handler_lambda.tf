@@ -15,7 +15,7 @@ resource "aws_lambda_function" "auth_handler" {
   timeout       = 5
   publish       = true
   image_config {
-    command = ["auth_callback_lambda.handler"]
+    command = ["auth_handler_lambda.handler"]
   }
   logging_config {
     log_group  = aws_cloudwatch_log_group.auth_handler.name
