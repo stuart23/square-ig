@@ -3,7 +3,7 @@ resource "aws_sqs_queue" "auth_queue" {
 }
 
 
-resource "aws_iam_policy" "sqs_write" {
+resource "aws_iam_policy" "auth_queue_sqs_write" {
   name        = "${var.env_prefix}_auth_sqs_write"
   description = "Write to sqs queue"
   policy = jsonencode({
@@ -19,32 +19,9 @@ resource "aws_iam_policy" "sqs_write" {
 }
 
 
-resource "aws_iam_role" "gateway_sqs_write" {
-  name = "${var.env_prefix}_auth_sqs_write"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "apigateway.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-
-resource "aws_iam_role_policy_attachment" "gateway_sqs_write" {
-  role       = aws_iam_role.gateway_sqs_write.name
-  policy_arn = aws_iam_policy.sqs_write.arn
-}
-
-
-resource "aws_iam_role_policy_attachment" "push_logs" {
-  role       = aws_iam_role.gateway_sqs_write.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs"
+resource "aws_iam_role_policy_attachment" "auth_queue_sqs_write" {
+  role       = var.lambda_role_arn
+  policy_arn = aws_iam_policy.auth_queue_sqs_write.arn
 }
 
 
