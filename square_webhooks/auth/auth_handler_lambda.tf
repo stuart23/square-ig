@@ -3,15 +3,16 @@ resource "aws_cloudwatch_log_group" "auth_handler" {
   retention_in_days = 14
 }
 
+# Unlike most of the other lambdas, this uses its own role because
+# all it needs to do is write to the sqs queue.
 resource "aws_lambda_function" "auth_handler" {
   function_name = "${var.env_prefix}_auth_handler"
   description   = "oAuth callback function"
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = var.lambda_role_arn
-  timeout       = 30
-  memory_size   = 256
+  role          = aws_iam_role.auth_queue_sqs_write.arn
+  timeout       = 5
   publish       = true
   image_config {
     command = ["auth_callback_lambda.handler"]
