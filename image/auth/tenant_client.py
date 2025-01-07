@@ -3,10 +3,9 @@ from boto3.dynamodb.conditions import Key
 from utils import getenv_or_raise
 
 
-TABLE = getenv_or_raise('TENANTS_TABLE')
-
-
 class TenantClient(object):
+    TABLE = getenv_or_raise('TENANTS_TABLE')
+
     def __init__(self):
         self._table = resource("dynamodb").Table(TABLE)
 
