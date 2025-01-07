@@ -1,6 +1,5 @@
 resource "aws_apigatewayv2_integration" "oauth_callback" {
   api_id              = var.square_gateway_id
-  credentials_arn     = aws_iam_role.gateway_sqs_write.arn
   description         = "Calls auth_callback_lambda to handle oauth callbacks."
   integration_type    = "AWS_PROXY"
   integration_uri     = aws_lambda_function.oauth_callback.invoke_arn
