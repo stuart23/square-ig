@@ -3,9 +3,9 @@ resource "aws_cloudwatch_log_group" "auth" {
   retention_in_days = 14
 }
 
-resource "aws_lambda_function" "auth" {
-  function_name = "${var.env_prefix}_auth"
-  description   = "Auth functions"
+resource "aws_lambda_function" "oauth_callback" {
+  function_name = "${var.env_prefix}_oauth_callback"
+  description   = "oAuth callback function"
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
@@ -14,7 +14,7 @@ resource "aws_lambda_function" "auth" {
   memory_size   = 256
   publish       = true
   image_config {
-    command = ["auth_lambda.handler"]
+    command = ["auth_callback_lambda.handler"]
   }
   logging_config {
     log_group  = aws_cloudwatch_log_group.auth.name

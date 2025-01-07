@@ -1,16 +1,10 @@
-resource "aws_apigatewayv2_integration" "oauth" {
+resource "aws_apigatewayv2_integration" "catalog_update_sqs" {
   api_id              = var.square_gateway_id
   credentials_arn     = aws_iam_role.gateway_sqs_write.arn
-  description         = "oauth redirect URL"
+  description         = "Calls auth_callback_lambda to handle oauth callbacks."
   integration_type    = "AWS_PROXY"
-  integration_subtype = "SQS-SendMessage"
-
-  request_parameters = {
-    "QueueUrl"    = aws_sqs_queue.auth_queue.url
-    "MessageBody" = "$request.body"
-  }
+  integration_uri     = aws_lambda_function.oauth_callback.invoke_arn
 }
-
 
 resource "aws_apigatewayv2_route" "oauth" {
   api_id    = var.square_gateway_id
