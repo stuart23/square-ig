@@ -4,9 +4,8 @@ from utils import getenv_or_raise
 
 
 class TenantClient(object):
-    TABLE = getenv_or_raise('TENANTS_TABLE')
-
     def __init__(self):
+        TABLE = getenv_or_raise('TENANTS_TABLE')
         self._table = resource("dynamodb").Table(TABLE)
 
 
