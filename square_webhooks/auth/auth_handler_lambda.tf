@@ -11,7 +11,7 @@ resource "aws_lambda_function" "auth_handler" {
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = aws_iam_role.auth_queue_sqs_write.arn
+  role          = var.lambda_role_arn
   timeout       = 5
   publish       = true
   image_config {

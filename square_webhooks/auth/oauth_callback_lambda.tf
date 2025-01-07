@@ -9,7 +9,7 @@ resource "aws_lambda_function" "oauth_callback" {
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = var.lambda_role_arn
+  role          = aws_iam_role.auth_queue_sqs_write.arn
   timeout       = 30
   memory_size   = 256
   publish       = true
