@@ -7,7 +7,7 @@ resource "aws_apigatewayv2_integration" "oauth" {
 
   request_parameters = {
     "QueueUrl"    = aws_sqs_queue.auth_queue.url
-    "MessageBody" = "$request.body"
+    # "MessageBody" = "$request.body"
   }
 }
 
