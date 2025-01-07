@@ -42,6 +42,12 @@ resource "aws_iam_role_policy_attachment" "auth_queue_sqs_write" {
 }
 
 
+resource "aws_iam_role_policy_attachment" "auth_queue_execute_policy_attachment" {
+  role       = aws_iam_role.auth_queue_sqs_write.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
+}
+
+
 resource "aws_lambda_event_source_mapping" "trigger_lambda" {
   event_source_arn = aws_sqs_queue.auth_queue.arn
   function_name    = aws_lambda_function.auth_handler.arn
