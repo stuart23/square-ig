@@ -11,5 +11,5 @@ resource "aws_apigatewayv2_route" "oauth_callback" {
   route_key = "GET /oauth"
   # authorization_type = "CUSTOM"
   # authorizer_id      = var.square_authorizer_id
-  target = "integrations/${aws_apigatewayv2_integration.oauth.id}"
+  target = "integrations/${aws_apigatewayv2_integration.oauth_callback.id}"
 }
