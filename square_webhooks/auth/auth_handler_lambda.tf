@@ -24,6 +24,8 @@ resource "aws_lambda_function" "auth_handler" {
   environment {
     variables = {
       TENANTS_TABLE = var.tenants_table
+      # The following is hard coded in as it is made interactively.
+      square_qr_codes_credentials_arn = "arn:aws:secretsmanager:us-east-1:015140017687:secret:square_qr_codes_credentials-RJAEmW"
     }
   }
 }
