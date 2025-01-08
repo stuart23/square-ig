@@ -12,4 +12,5 @@ def handler(event, context):
 
 def new_connection(**args):
     tenant_client = TenantClient()
-    tenant_client.upsert_tenant(args)
+    tenant_client.upsert_tenant(oauth_code=args['code'])
+    
