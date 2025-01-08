@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "auth_handler_tenants_access_policy_at
 
 
 resource "aws_iam_role_policy_attachment" "auth_handler_secret_access_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.auth_handler.name
   policy_arn = aws_iam_policy.read_square_credentials_secret.arn
 }
 
