@@ -38,10 +38,10 @@ resource "aws_iam_policy" "auth_queue_sqs_read_write" {
 }
 
 
-resource "aws_lambda_event_source_mapping" "trigger_lambda" {
-  event_source_arn = aws_sqs_queue.auth_queue.arn
-  function_name    = aws_lambda_function.auth_handler.arn
-}
+# resource "aws_lambda_event_source_mapping" "trigger_lambda" {
+#   event_source_arn = aws_sqs_queue.auth_queue.arn
+#   function_name    = aws_lambda_function.auth_handler.arn
+# }
 
 
 resource "aws_cloudwatch_metric_alarm" "auth_sqs_queue_alarm" {
