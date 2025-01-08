@@ -18,12 +18,15 @@ def new_connection(**args):
     square_client = Client()
     response = square_client.o_auth.obtain_token(
         body={
-            'client_id': square_application_credentials['client_id']
+            'client_id': square_application_credentials['client_id'],
             'grant_type': 'authorization_code',
-            'client_secret': square_application_credentials['client_secret']
+            'client_secret': square_application_credentials['client_secret'],
             'code': args['code']
         }
     )
+    if not response.is_success():
+        raise Exception(f'Token issue request was unsuccessful: {response}')
     print(response)
+    print(response.body)
     tenant_client = TenantClient()
-    tenant_client.upsert_tenant(oauth_code=args['code'])
+    tenant_client.upsert_tenant(oauth_code=args['code'], token_details=response.body)
