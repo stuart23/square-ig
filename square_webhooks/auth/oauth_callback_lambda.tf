@@ -3,6 +3,24 @@ resource "aws_cloudwatch_log_group" "oauth_callback" {
   retention_in_days = 14
 }
 
+
+resource "aws_iam_role" "auth_queue_sqs_write" {
+  name               = "${var.env_prefix}_auth_sqs_write"
+  assume_role_policy = local.lambda_assume_role_policy
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_queue_sqs_write" {
+  role       = aws_iam_role.auth_queue_sqs_write.name
+  policy_arn = aws_iam_policy.auth_queue_sqs_write.arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_queue_execute_policy_attachment" {
+  role       = aws_iam_role.auth_queue_sqs_write.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
+}
+
 resource "aws_lambda_function" "oauth_callback" {
   function_name = "${var.env_prefix}_oauth_callback"
   description   = "oAuth callback function"

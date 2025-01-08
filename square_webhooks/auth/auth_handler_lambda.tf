@@ -12,6 +12,12 @@ resource "aws_iam_role" "auth_handler" {
 
 resource "aws_iam_role_policy_attachment" "auth_handler_execute_policy_attachment" {
   role       = aws_iam_role.auth_handler.name
+  policy_arn = aws_iam_policy.auth_queue_sqs_read_write.arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_handler_execute_policy_attachment" {
+  role       = aws_iam_role.auth_handler.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 }
 
