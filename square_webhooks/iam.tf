@@ -107,12 +107,6 @@ resource "aws_iam_role_policy_attachment" "lambda_role_dynamo_access_policy_atta
 }
 
 
-# resource "aws_iam_role_policy_attachment" "lambda_role_secrets_policy_attachment" {
-#   role       = aws_iam_role.lambda_role.name
-#   policy_arn = aws_iam_policy.read_secret.arn
-# }
-
-
 resource "aws_iam_role_policy_attachment" "lambda_role_sns_publish_attachment" {
   role       = aws_iam_role.lambda_role.name
   policy_arn = aws_iam_policy.sns_publish.arn

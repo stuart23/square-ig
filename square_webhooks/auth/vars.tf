@@ -16,12 +16,6 @@ variable "square_gateway_execution_arn" {
 }
 
 
-variable "lambda_role_arn" {
-  type        = string
-  description = "The arn of the iam role used to execute the lambda function"
-}
-
-
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string
@@ -38,3 +32,10 @@ variable "tenants_table" {
   description = "Name of the tenants table"
   type        = string
 }
+
+
+variable "tenants_access_policy_arn" {
+  description = "Arn of the policy for accessing the tenants table."
+  type        = string
+}
+

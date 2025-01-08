@@ -3,15 +3,37 @@ resource "aws_cloudwatch_log_group" "auth_handler" {
   retention_in_days = 14
 }
 
-# Unlike most of the other lambdas, this uses its own role because
-# all it needs to do is write to the sqs queue.
+
+resource "aws_iam_role" "auth_handler" {
+  name = "${var.env_prefix}_auth_handler"
+  assume_role_policy = local.lambda_assume_role_policy
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_handler_execute_policy_attachment" {
+  role       = aws_iam_role.auth_handler.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_handler_tenants_access_policy_attachment" {
+  role       = aws_iam_role.auth_handler.name
+  policy_arn = var.tenants_access_policy_arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "auth_handler_secret_access_policy_attachment" {
+  role       = aws_iam_role.lambda_role.name
+  policy_arn = aws_iam_policy.read_square_credentials_secret.arn
+}
+
 resource "aws_lambda_function" "auth_handler" {
   function_name = "${var.env_prefix}_auth_handler"
   description   = "oAuth callback function"
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = var.lambda_role_arn
+  role          = aws_iam_role.auth_handler.arn
   timeout       = 5
   publish       = true
   image_config {
@@ -23,9 +45,8 @@ resource "aws_lambda_function" "auth_handler" {
   }
   environment {
     variables = {
-      TENANTS_TABLE = var.tenants_table
-      # The following is hard coded in as it is made interactively.
-      square_qr_codes_credentials_arn = "arn:aws:secretsmanager:us-east-1:015140017687:secret:square_qr_codes_credentials-RJAEmW"
+      tenants_table_name = var.tenants_table
+      square_qr_codes_credentials_arn = data.aws_secretsmanager_secret.square_credentials.arn
     }
   }
 }

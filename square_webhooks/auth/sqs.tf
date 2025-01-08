@@ -21,18 +21,7 @@ resource "aws_iam_policy" "auth_queue_sqs_write" {
 
 resource "aws_iam_role" "auth_queue_sqs_write" {
   name = "${var.env_prefix}_auth_sqs_write"
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "lambda.amazonaws.com"
-        }
-      },
-    ]
-  })
+  assume_role_policy = local.lambda_assume_role_policy
 }
 
 

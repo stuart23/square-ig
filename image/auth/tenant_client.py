@@ -5,8 +5,8 @@ from utils import getenv_or_raise
 
 class TenantClient(object):
     def __init__(self):
-        TABLE = getenv_or_raise('TENANTS_TABLE')
-        self._table = resource("dynamodb").Table(TABLE)
+        table_name = getenv_or_raise('tenants_table_name')
+        self._table = resource("dynamodb").Table(table_name)
 
 
     def upsert_tenant(self, oauth_code):
