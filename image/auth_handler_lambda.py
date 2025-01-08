@@ -17,12 +17,6 @@ def handler(event, context):
 def new_connection(**args):
     square_application_credentials = loads(get_secret('square_qr_codes_credentials_arn'))
     square_client = Client()
-    print({
-            'client_id': square_application_credentials['client_id'],
-            'grant_type': 'authorization_code',
-            'client_secret': square_application_credentials['client_secret'],
-            'code': args['code']
-        })
     response = square_client.o_auth.obtain_token(
         body={
             'client_id': square_application_credentials['client_id'],
