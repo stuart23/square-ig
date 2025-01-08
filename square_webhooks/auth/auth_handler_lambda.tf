@@ -56,11 +56,8 @@ resource "aws_lambda_permission" "auth_handler_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.auth_handler.function_name
-  principal     = "apigateway.amazonaws.com"
-
-  # The /* part allows invocation from any stage, method and resource path
-  # within API Gateway.
-  source_arn = "${var.square_gateway_execution_arn}/*"
+  principal     = "sqs.amazonaws.com"
+  source_arn    = aws_sqs_queue.auth_queue.arn
 }
 
 
