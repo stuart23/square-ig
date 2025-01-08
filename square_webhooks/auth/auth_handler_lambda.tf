@@ -5,7 +5,7 @@ resource "aws_cloudwatch_log_group" "auth_handler" {
 
 
 resource "aws_iam_role" "auth_handler" {
-  name = "${var.env_prefix}_auth_handler"
+  name               = "${var.env_prefix}_auth_handler"
   assume_role_policy = local.lambda_assume_role_policy
 }
 
@@ -45,7 +45,7 @@ resource "aws_lambda_function" "auth_handler" {
   }
   environment {
     variables = {
-      tenants_table_name = var.tenants_table
+      tenants_table_name              = var.tenants_table
       square_qr_codes_credentials_arn = data.aws_secretsmanager_secret.square_credentials.arn
     }
   }
