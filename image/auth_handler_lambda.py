@@ -1,3 +1,4 @@
+from json import loads
 from square.client import Client
 
 from auth import TenantClient
@@ -14,7 +15,7 @@ def handler(event, context):
 
 
 def new_connection(**args):
-    square_application_credentials = get_secret('square_qr_codes_credentials_arn')
+    square_application_credentials = loads(get_secret('square_qr_codes_credentials_arn'))
     square_client = Client()
     response = square_client.o_auth.obtain_token(
         body={
