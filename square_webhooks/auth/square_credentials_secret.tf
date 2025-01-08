@@ -21,7 +21,7 @@ resource "aws_iam_policy" "read_square_credentials_secret" {
           "secretsmanager:BatchGetSecretValue",
         ]
         Effect   = "Allow"
-        Resource = aws_secretsmanager_secret.square_credentials.arn
+        Resource = data.aws_secretsmanager_secret.square_credentials.arn
       },
     ]
   })
