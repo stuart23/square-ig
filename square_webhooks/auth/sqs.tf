@@ -19,6 +19,7 @@ resource "aws_iam_policy" "auth_queue_sqs_write" {
 }
 
 
+# This is the minimum permissions needed for the Lambda Event Source Mapping
 resource "aws_iam_policy" "auth_queue_sqs_read_write" {
   name        = "${var.env_prefix}_auth_sqs_read_write"
   description = "Write to sqs queue"
@@ -28,7 +29,8 @@ resource "aws_iam_policy" "auth_queue_sqs_read_write" {
       {
         Action = [
           "sqs:SendMessage",
-          "sqs:ReceiveMessage"
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
         ]
         Effect   = "Allow"
         Resource = aws_sqs_queue.auth_queue.arn
