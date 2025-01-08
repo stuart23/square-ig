@@ -20,7 +20,7 @@ resource "aws_iam_policy" "auth_queue_sqs_write" {
 
 
 resource "aws_iam_policy" "auth_queue_sqs_read_write" {
-  name        = "${var.env_prefix}_auth_sqs_write"
+  name        = "${var.env_prefix}_auth_sqs_read_write"
   description = "Write to sqs queue"
   policy = jsonencode({
     Version = "2012-10-17"
