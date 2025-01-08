@@ -31,6 +31,7 @@ resource "aws_iam_policy" "auth_queue_sqs_read_write" {
           "sqs:SendMessage",
           "sqs:ReceiveMessage",
           "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
         ]
         Effect   = "Allow"
         Resource = aws_sqs_queue.auth_queue.arn
