@@ -33,9 +33,9 @@ def new_connection(**args):
     tenant_client.upsert_tenant(
         access_token=token_details["access_token"],
         token_type=token_details["token_type"],
-        expires_at=expires_at,
+        expires_at=str(expires_at),
         expires_at_stamp=expires_at.timestamp(),
-        refresh_after=refresh_after,
+        refresh_after=str(refresh_after),
         refresh_after_stamp=refresh_after.timestamp(),
         merchant_id=token_details["merchant_id"],
         refresh_token=token_details["refresh_token"],
