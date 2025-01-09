@@ -48,7 +48,7 @@ class TokenServices:
         else:
             try:
                 error_detail = response['errors'][0]['detail']
-            except KeyError, IndexError:
+            except (KeyError, IndexError):
                 raise Exception(f'Request failed for an unknown reason: {response}')
             if error_detail.startswith('Authorization code is expired.'):
                 raise ExpiredAuthCode()
