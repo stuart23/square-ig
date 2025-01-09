@@ -14,7 +14,7 @@ def handler(event, context):
 
 def new_connection(**args):
     token_services = TokenServices()
-    token_details = get_token(args['code'])
+    token_details = token_services.get_token(args['code'])
     print('Token successfully retrieved for merchant {merchant_id}'.format(**token_details))
     # Not going to catch the exception on this because IDK what to do if it is not an iso date
     expires_at = datetime.fromisoformat(token_details['expires_at'])
