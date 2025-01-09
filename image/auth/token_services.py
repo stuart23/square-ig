@@ -10,9 +10,9 @@ SQUARE_QR_CODES_CREDENTIALS_ARN = 'square_qr_codes_credentials_arn'
 
 class TokenServices:
     class ExpiredAuthCode(Exception):
-    """Exception raised if Square rejects the request because the Auth Code has expired."""
-    def __str__(self):
-        return "Authorization Code has expired"
+        """Exception raised if Square rejects the request because the Auth Code has expired."""
+        def __str__(self):
+            return "Authorization Code has expired"
 
 
     def __init__(self, client_id=None, client_secret=None):
