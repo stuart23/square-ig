@@ -1,6 +1,6 @@
-from .token_services import TokenServices
+from datetime import datetime, timedelta, UTC
 
-from datetime import datetime, timedelta
+from .token_services import TokenServices
 
 
 def test_get_refresh_after_long_token():
@@ -29,3 +29,11 @@ def test_get_refresh_after_very_short_token():
     refresh_after = TokenServices.get_refresh_after(now_plus_1)
     now_minus_1 = now - timedelta(days=1)
     assert abs(now_minus_1 - refresh_after) < timedelta(seconds=1)
+
+
+def test_get_refresh_utc_aware():
+    utc_now = datetime.now(UTC)
+    utc_now_plus_30 = utc_now + timedelta(days=30)
+    refresh_after = TokenServices.get_refresh_after(utc_now_plus_30)
+    now_plus_6 = utc_now + timedelta(days=6)
+    assert abs(now_plus_6 - refresh_after) < timedelta(seconds=1)

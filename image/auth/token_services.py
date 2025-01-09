@@ -1,7 +1,7 @@
-from datetime import datetime, timedelta
-from square.client import Client
+from datetime import datetime, timedelta, UTC
 from json import loads
 
+from square.client import Client
 from utils import get_secret
 
 SQUARE_QR_CODES_CREDENTIALS_ARN = "square_qr_codes_credentials_arn"
@@ -75,7 +75,14 @@ class TokenServices:
         Tokens should last 30 days anyway, but we'll do this regardless.
         https://developer.squareup.com/docs/oauth-api/best-practices
         """
-        return min(
-            expiry - timedelta(days=2),
-            datetime.now() + timedelta(days=6)
-        )
+        if expiry.tzinfo:
+            return min(
+                expiry - timedelta(days=2),
+                datetime.now(UTC) + timedelta(days=6)
+            )
+        else:
+            return min(
+                expiry - timedelta(days=2),
+                datetime.now() + timedelta(days=6)
+            )
+
