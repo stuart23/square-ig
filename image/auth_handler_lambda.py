@@ -16,7 +16,7 @@ def new_connection(**args):
     token_services = TokenServices()
     try:
         token_details = token_services.get_token(args['code'])
-    except token_services.ExpiredAuthCode
+    except token_services.ExpiredAuthCode:
         print('Token auth code has expired. Skipping this exchange.')
         return
     print('Token successfully retrieved for merchant {merchant_id}'.format(**token_details))
