@@ -3,6 +3,7 @@ from json import loads
 
 from square.client import Client
 from utils import get_secret
+from utils import MetricsHandler
 
 SQUARE_QR_CODES_CREDENTIALS_ARN = "square_qr_codes_credentials_arn"
 
@@ -39,6 +40,7 @@ class TokenServices:
             self.client_id = client_id
             self.client_secret = client_secret
         self.square_client = Client()
+        self.metrics_handler = MetricsHandler('oAuth')
 
     def get_token(self, code):
         """
@@ -53,14 +55,28 @@ class TokenServices:
             }
         )
         if response.is_success():
+            self.metrics_handler.emit_metric(
+                metric_name='oauth_authorization_code_success',
+                value=1
+            )
             return response.body
         try:
             error_detail = response.body["errors"][0]["detail"]
         except (KeyError, IndexError) as exc:
+            self.metrics_handler.emit_metric(
+                metric_name='oauth_authorization_code_failure',
+                value=1,
+                dimensions={'reason': 'unknown'}
+            )
             raise self.UnknownAPIError(
                 f"Request failed for an unknown reason: {response}"
             ) from exc
         if error_detail.startswith("Authorization code is expired."):
+            self.metrics_handler.emit_metric(
+                metric_name='oauth_authorization_code_failure',
+                value=1,
+                dimensions={'reason': 'expired_auth_code'}
+            )
             raise self.ExpiredAuthCode()
 
     @staticmethod
