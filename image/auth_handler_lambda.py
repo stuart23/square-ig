@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, UTC
 
 from auth import TenantClient, TokenServices
 from utils import SQSDeserialize
@@ -30,9 +30,12 @@ def new_connection(**args):
     expires_at = datetime.fromisoformat(token_details["expires_at"])
     refresh_after = token_services.get_refresh_after(expires_at)
     tenant_client = TenantClient()
+    now = datetime.now(UTC)
     tenant_client.upsert_tenant(
         access_token=token_details["access_token"],
         token_type=token_details["token_type"],
+        issued_at=str(now),
+        issued_at_stamp=now.timestamp(),
         expires_at=str(expires_at),
         expires_at_stamp=expires_at.timestamp(),
         refresh_after=str(refresh_after),
