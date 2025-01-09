@@ -1,4 +1,5 @@
 from datetime import datetime, UTC
+from decimal import Decimal
 
 from auth import TenantClient, TokenServices
 from utils import SQSDeserialize
@@ -35,11 +36,11 @@ def new_connection(**args):
         access_token=token_details["access_token"],
         token_type=token_details["token_type"],
         issued_at=str(now),
-        issued_at_stamp=now.timestamp(),
+        issued_at_stamp=Decimal(now.timestamp()),
         expires_at=str(expires_at),
-        expires_at_stamp=expires_at.timestamp(),
+        expires_at_stamp=Decimal(expires_at.timestamp()),
         refresh_after=str(refresh_after),
-        refresh_after_stamp=refresh_after.timestamp(),
+        refresh_after_stamp=Decimal(refresh_after.timestamp()),
         merchant_id=token_details["merchant_id"],
         refresh_token=token_details["refresh_token"],
     )
