@@ -16,6 +16,12 @@ resource "aws_iam_role_policy_attachment" "auth_handler_sqs_read_write_attachmen
 }
 
 
+resource "aws_iam_role_policy_attachment" "cloudwatch_metrics_write_attachment" {
+  role       = aws_iam_role.auth_handler.name
+  policy_arn = var.write_metrics_policy_arn
+}
+
+
 resource "aws_iam_role_policy_attachment" "auth_handler_execute_policy_attachment" {
   role       = aws_iam_role.auth_handler.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
@@ -32,6 +38,7 @@ resource "aws_iam_role_policy_attachment" "auth_handler_secret_access_policy_att
   role       = aws_iam_role.auth_handler.name
   policy_arn = aws_iam_policy.read_square_credentials_secret.arn
 }
+
 
 resource "aws_lambda_function" "auth_handler" {
   function_name = "${var.env_prefix}_auth_handler"
