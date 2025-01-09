@@ -1,8 +1,6 @@
-from json import loads
-from square.client import Client
 
-from auth import TenantClient
-from utils import SQSDeserialize, get_secret
+from auth import TenantClient, TokenServices
+from utils import SQSDeserialize
 
 
 def handler(event, context):
@@ -15,19 +13,20 @@ def handler(event, context):
 
 
 def new_connection(**args):
-    square_application_credentials = loads(get_secret('square_qr_codes_credentials_arn'))
-    square_client = Client()
-    response = square_client.o_auth.obtain_token(
-        body={
-            'client_id': square_application_credentials['client_id'],
-            'grant_type': 'authorization_code',
-            'client_secret': square_application_credentials['client_secret'],
-            'code': args['code']
-        }
-    )
-    if not response.is_success():
-        raise Exception(f'Token issue request was unsuccessful: {response}')
-    print(response)
-    print(response.body)
+    token_services = TokenServices()
+    token_details = get_token(args['code'])
+    print('Token successfully retrieved for merchant {merchant_id}'.format(**token_details))
+    # Not going to catch the exception on this because IDK what to do if it is not an iso date
+    expires_at = datetime.fromisoformat(token_details['expires_at'])
+    refresh_after = token_services.get_refresh_after(expires_at)
     tenant_client = TenantClient()
-    tenant_client.upsert_tenant(oauth_code=args['code'], token_details=response.body)
+    tenant_client.upsert_tenant(
+        access_token=token_details['access_token'],
+        token_type=token_details['token_type'],
+        expires_at=expires_at,
+        expires_at_stamp=expires_at.timestamp(),
+        refresh_after=refresh_after,
+        refresh_after_stamp=refresh_after.timestamp(),
+        merchant_id=token_details['merchant_id'],
+        refresh_token=token_details['refresh_token']
+    )

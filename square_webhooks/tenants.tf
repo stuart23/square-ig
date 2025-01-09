@@ -1,10 +1,10 @@
 resource "aws_dynamodb_table" "tenants" {
   name         = "${var.env_prefix}_tenants"
   billing_mode = "PAY_PER_REQUEST"
-  hash_key     = "oauth_code"
+  hash_key     = "merchant_id"
 
   attribute {
-    name = "oauth_code"
+    name = "merchant_id"
     type = "S"
   }
 }

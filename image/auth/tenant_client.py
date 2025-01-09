@@ -9,25 +9,26 @@ class TenantClient(object):
         self._table = resource("dynamodb").Table(table_name)
 
 
-    def upsert_tenant(self, oauth_code):
+    def upsert_tenant(self, merchant_id, **args):
         """
         If an object does not exist in the database, it will be added.
         """
         response = self._table.query(
             KeyConditionExpression=(
-                Key("oauth_code").eq(oauth_code)
+                Key("merchant_id").eq(merchant_id)
             ),
         )
         if response['Count'] == 0:
             # No item with this sku exists.
-            print(f'Adding item to DynamoDB: {oauth_code}')
+            print(f'Adding item to DynamoDB: {merchant_id}')
             self._table.put_item(
                     Item={
-                        "oauth_code": oauth_code,
+                        "merchant_id": merchant_id,
+                        **args
                     }
                 )
             return True
         elif response['Count'] > 1:
-            raise Exception(f'There are multiple entries in Dynamo with the same oauth_code: {oauth_code}')
+            raise Exception(f'There are multiple entries in Dynamo with the same merchant_id: {merchant_id}')
         else:
             return False
