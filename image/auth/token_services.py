@@ -9,15 +9,18 @@ SQUARE_QR_CODES_CREDENTIALS_ARN = "square_qr_codes_credentials_arn"
 
 class TokenServices:
     class ExpiredAuthCode(Exception):
-        """Exception raised if Square rejects the request because the Auth Code has expired."""
+        """
+        Exception raised if Square rejects the request because the Auth Code
+        has expired.
+        """
 
         def __str__(self):
             return "Authorization Code has expired"
 
     def __init__(self, client_id=None, client_secret=None):
         """
-        Pass in BOTH square application credentials otherwise they will be retrieved
-        from the secret referenced in the envvar set above in
+        Pass in BOTH square application credentials otherwise they will be
+        retrieved from the secret referenced in the envvar set above in
         SQUARE_QR_CODES_CREDENTIALS_ARN.
         """
         if not client_id and not client_secret:
@@ -48,18 +51,21 @@ class TokenServices:
         else:
             try:
                 error_detail = response["errors"][0]["detail"]
-            except (KeyError, IndexError):
-                raise Exception(f"Request failed for an unknown reason: {response}")
+            except (KeyError, IndexError) as exc:
+                raise Exception(
+                    f"Request failed for an unknown reason: {response}"
+                ) from exc
             if error_detail.startswith("Authorization code is expired."):
-                raise ExpiredAuthCode()
+                raise self.ExpiredAuthCode()
 
     @staticmethod
     def get_refresh_after(expiry):
         """
-        According to the Square guide, we should be refreshing the token before 7 days,
-        so we'll set a refresh after timestamp at 6 days from now OR 2 days before the
-        token expires if that is less. If the token expires within 2 days, the refresh
-        after timestamp could be in the past.
+        According to the Square guide, we should be refreshing the token
+        before 7 days, so we'll set a refresh after timestamp at 6 days from
+        now OR 2 days before the token expires if that is less. If the token
+        expires within 2 days, the refresh after timestamp could be in the
+        past.
 
         Tokens should last 30 days anyway, but we'll do this regardless.
         https://developer.squareup.com/docs/oauth-api/best-practices

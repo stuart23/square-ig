@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from auth import TenantClient, TokenServices
 from utils import SQSDeserialize
 
@@ -23,7 +25,8 @@ def new_connection(**args):
             **token_details
         )
     )
-    # Not going to catch the exception on this because IDK what to do if it is not an iso date
+    # Not going to catch the exception on this because IDK what to do if it is
+    # not an iso date
     expires_at = datetime.fromisoformat(token_details["expires_at"])
     refresh_after = token_services.get_refresh_after(expires_at)
     tenant_client = TenantClient()

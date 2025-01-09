@@ -11,7 +11,7 @@ from qrcode.image.styles.colormasks import SolidFillColorMask
 
 from labels.super_rounded_module_drawer import SuperRoundedModuleDrawer
 
-MASK = Path(__file__).parent.resolve() / 'assets' / 'anthurium_mask.png'
+MASK = Path(__file__).parent.resolve() / "assets" / "anthurium_mask.png"
 
 
 class QRCode(object):
@@ -31,14 +31,13 @@ class QRCode(object):
 
         return qr_code_image
 
-
     @property
     def bw_qr(self):
         # BW Image
         qr_code_image = self.qr.make_image(
             image_factory=StyledPilImage,
             module_drawer=SuperRoundedModuleDrawer(),
-            eye_drawer=RoundedModuleDrawer(radius_ratio=0.75)
+            eye_drawer=RoundedModuleDrawer(radius_ratio=0.75),
         )._img
 
         return qr_code_image
@@ -50,5 +49,6 @@ class QRCode(object):
         qr_code.save(buffered, format="png")
         return b64encode(buffered.getvalue())
 
-if __name__ == '__main__':
-    QRCode('plantsoc.com/abcdefgh').bw_qr.save('test.png')
+
+if __name__ == "__main__":
+    QRCode("plantsoc.com/abcdefgh").bw_qr.save("test.png")

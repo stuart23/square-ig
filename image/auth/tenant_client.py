@@ -22,7 +22,8 @@ class TenantClient(object):
             return True
         elif response["Count"] > 1:
             raise Exception(
-                f"There are multiple entries in Dynamo with the same merchant_id: {merchant_id}"
+                "There are multiple entries in Dynamo with the same "
+                f"merchant_id: {merchant_id}"
             )
         else:
             return False
