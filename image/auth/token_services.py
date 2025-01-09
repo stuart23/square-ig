@@ -7,7 +7,13 @@ from utils import get_secret
 SQUARE_QR_CODES_CREDENTIALS_ARN = 'square_qr_codes_credentials_arn'
 
 
+
 class TokenServices:
+    class ExpiredAuthCode(Exception):
+    """Exception raised if Square rejects the request because the Auth Code has expired."""
+    def __str__(self):
+        return "Authorization Code has expired"
+
 
     def __init__(self, client_id=None, client_secret=None):
         '''
@@ -37,10 +43,15 @@ class TokenServices:
                 'code': code
             }
         )
-        if not response.is_success():
-            raise Exception(f'Token issue request was unsuccessful: {response}')
-        else:
+        if response.is_success():
             return response.body
+        else:
+            try:
+                error_detail = response['errors'][0]['detail']
+            except KeyError, IndexError:
+                raise Exception(f'Request failed for an unknown reason: {response}')
+            if error_detail.startswith('Authorization code is expired.'):
+                raise ExpiredAuthCode()
 
     @staticmethod
     def get_refresh_after(expiry):
