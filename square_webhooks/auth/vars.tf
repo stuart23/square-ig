@@ -39,3 +39,8 @@ variable "tenants_access_policy_arn" {
   type        = string
 }
 
+
+variable "write_metrics_policy_arn" {
+  description = "Arn of the policy for writing metrics to cloudwatch."
+  type        = string
+}

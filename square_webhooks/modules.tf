@@ -20,6 +20,7 @@ module "auth" {
   tenants_access_policy_arn    = aws_iam_policy.tenants_read_write_policy.arn
   alerts_sns_topic_arn         = module.alerts.alerts_sns_topic_arn
   env_prefix                   = var.env_prefix
+  write_metrics_policy_arn     = aws_iam_policy.write_metrics.arn
 }
 
 
