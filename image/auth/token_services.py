@@ -25,7 +25,7 @@ class TokenServices:
         self.square_client = Client()
 
 
-    def get_token(code):
+    def get_token(self, code):
         '''
         Makes a call to obtain the token.
         '''
