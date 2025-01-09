@@ -17,6 +17,14 @@ class TokenServices:
         def __str__(self):
             return "Authorization Code has expired"
 
+    class UnknownAPIError(Exception):
+        """
+        Exception raised if Square rejects the request for an unknown reason.
+        """
+
+        def __str__(self):
+            return "Unknown API Error"
+
     def __init__(self, client_id=None, client_secret=None):
         """
         Pass in BOTH square application credentials otherwise they will be
@@ -24,11 +32,9 @@ class TokenServices:
         SQUARE_QR_CODES_CREDENTIALS_ARN.
         """
         if not client_id and not client_secret:
-            square_application_credentials = loads(
-                get_secret(SQUARE_QR_CODES_CREDENTIALS_ARN)
-            )
-            self.client_id = square_application_credentials["client_id"]
-            self.client_secret = square_application_credentials["client_secret"]
+            credentials = loads(get_secret(SQUARE_QR_CODES_CREDENTIALS_ARN))
+            self.client_id = credentials["client_id"]
+            self.client_secret = credentials["client_secret"]
         else:
             self.client_id = client_id
             self.client_secret = client_secret
@@ -48,15 +54,14 @@ class TokenServices:
         )
         if response.is_success():
             return response.body
-        else:
-            try:
-                error_detail = response["errors"][0]["detail"]
-            except (KeyError, IndexError) as exc:
-                raise Exception(
-                    f"Request failed for an unknown reason: {response}"
-                ) from exc
-            if error_detail.startswith("Authorization code is expired."):
-                raise self.ExpiredAuthCode()
+        try:
+            error_detail = response.body["errors"][0]["detail"]
+        except (KeyError, IndexError) as exc:
+            raise self.UnknownAPIError(
+                f"Request failed for an unknown reason: {response}"
+            ) from exc
+        if error_detail.startswith("Authorization code is expired."):
+            raise self.ExpiredAuthCode()
 
     @staticmethod
     def get_refresh_after(expiry):
@@ -70,4 +75,7 @@ class TokenServices:
         Tokens should last 30 days anyway, but we'll do this regardless.
         https://developer.squareup.com/docs/oauth-api/best-practices
         """
-        return min(expiry - timedelta(days=2), datetime.now() + timedelta(days=6))
+        return min(
+            expiry - timedelta(days=2),
+            datetime.now() + timedelta(days=6)
+        )
