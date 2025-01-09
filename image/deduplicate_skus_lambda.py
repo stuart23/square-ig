@@ -1,10 +1,16 @@
 from square_client import SquareClient
-from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_id
+from catalog.catalog_dynamodb import (
+    get_needs_label_items,
+    get_website_needs_update_items,
+    set_website_true,
+    upsert_by_id,
+)
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
 
 # TODO: Make this a function that runs every day.
+
 
 def handler(event, context):
     square_client = SquareClient()
@@ -17,10 +23,10 @@ def handler(event, context):
             update_items.append(item)
             upsert_by_id(item)
     if update_items:
-        print(f'Updating {len(update_items)} items.')
+        print(f"Updating {len(update_items)} items.")
         square_client.patch_objects_sku(update_items)
     else:
-        print('No duplicate skus found.')
+        print("No duplicate skus found.")
 
 
 if __name__ == "__main__":

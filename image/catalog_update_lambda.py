@@ -1,5 +1,10 @@
 from square_client import SquareClient
-from catalog.catalog_dynamodb import get_needs_label_items, get_website_needs_update_items, set_website_true, upsert_by_id
+from catalog.catalog_dynamodb import (
+    get_needs_label_items,
+    get_website_needs_update_items,
+    set_website_true,
+    upsert_by_id,
+)
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
@@ -12,7 +17,7 @@ def handler(event, context):
         # update the sku with the url format or generate one if it doesn't exist.
         # If the sku is modified, that sku is then upserted into square.
         if item.update_sku():
-            print('Updating SKU for item {item}')
+            print("Updating SKU for item {item}")
             item.validate_sku()
             update_items.append(item)
         upsert_by_id(item)
@@ -32,9 +37,12 @@ def handler(event, context):
         set_website_true(item)
         new_items = True
     if new_items:
-        print('Items needed their description updated - Adding the directory and committing.')
+        print(
+            "Items needed their description updated - Adding the directory and committing."
+        )
         descriptions.update_directory(square_client.get_catalog_items())
         descriptions.commit()
+
 
 if __name__ == "__main__":
     handler(None, None)
