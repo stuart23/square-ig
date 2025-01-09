@@ -23,7 +23,7 @@ resource "aws_scheduler_schedule" "trigger_token_refresh" {
 
 
 resource "aws_iam_role" "trigger_token_refresh" {
-  name               = "${var.env_prefix}_auth_handler"
+  name               = "${var.env_prefix}_trigger_token_refresh"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
