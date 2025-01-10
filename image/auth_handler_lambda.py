@@ -67,6 +67,10 @@ def find_tokens_to_refresh():
     '''
     tenant_client = TenantClient()
     response = tenant_client.find_tokens_to_refresh()
+    if response['Count'] == 0:
+        print('No tokens need to be refreshed')
+    else:
+        print('{} tokens require refresh'.format(response['Count']))
     for item in response['Items']:
         print(f'Token for {item} requires refresh.')
         publish(
