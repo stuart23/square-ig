@@ -2,8 +2,9 @@ from datetime import UTC, datetime
 from decimal import Decimal
 
 from boto3 import resource
-from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Attr, Key
 from utils import getenv_or_raise
+from auth.token_queue import publish
 
 
 class TenantClient(object):

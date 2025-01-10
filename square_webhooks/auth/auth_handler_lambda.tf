@@ -60,6 +60,7 @@ resource "aws_lambda_function" "auth_handler" {
     variables = {
       tenants_table_name              = var.tenants_table
       square_qr_codes_credentials_arn = data.aws_secretsmanager_secret.square_credentials.arn
+      QUEUE_URL                       = aws_sqs_queue.auth_queue.url
     }
   }
 }
