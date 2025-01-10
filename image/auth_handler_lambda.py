@@ -44,7 +44,7 @@ def new_connection(**args):
         )
     )
     tenant_client = TenantClient()
-    tenant_client.write_token(token_details)
+    tenant_client.upsert_token(token_details)
 
 
 def find_tokens_to_refresh():
@@ -74,9 +74,10 @@ def refresh_token(merchant_id):
     Refreshes the token of a tenant.
     '''
     token_services = TokenServices()
+    tenant_client = TenantClient()
     response = tenant_client.get_merchant(merchant_id, check_single=True)
     merchant_details = response['Items'][0]
     token_details = token_services.get_token(
         refresh_token=merchant_details['refresh_token']
     )
-    tenant_client = TenantClient()
+    tenant_client.upsert_token(token_details)
