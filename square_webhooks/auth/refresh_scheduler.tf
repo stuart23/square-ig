@@ -5,8 +5,7 @@ resource "aws_scheduler_schedule" "trigger_token_refresh" {
     mode = "OFF"
   }
 
-  #   schedule_expression = "rate(6 hours)"
-  schedule_expression = "rate(5 minutes)"
+  schedule_expression = "rate(6 hours)"
 
   target {
     arn      = aws_sqs_queue.auth_queue.arn
