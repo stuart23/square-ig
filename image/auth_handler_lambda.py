@@ -72,10 +72,11 @@ def find_tokens_to_refresh():
     else:
         print('{} tokens require refresh'.format(response['Count']))
     for item in response['Items']:
-        print(f'Token for {item} requires refresh.')
+        merchant_id = item['merchant_id']
+        print(f'Token for {merchant_id} requires refresh.')
         publish(
             {
                 "action": "refresh_token",
-                "data": {"merchant_id": item},
+                "data": {"merchant_id": merchant_id},
             }
         )
