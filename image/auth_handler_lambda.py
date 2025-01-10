@@ -1,4 +1,3 @@
-from datetime import datetime, UTC
 from decimal import Decimal
 
 from auth import TenantClient, TokenServices
@@ -35,7 +34,7 @@ def handler(event, context):
 def new_connection(**args):
     token_services = TokenServices()
     try:
-        token_details = token_services.get_token(args["code"])
+        token_details = token_services.get_token(code=args["code"])
     except token_services.ExpiredAuthCode:
         print("Token auth code has expired. Skipping this exchange.")
         return
@@ -44,24 +43,8 @@ def new_connection(**args):
             **token_details
         )
     )
-    # Not going to catch the exception on this because IDK what to do if it is
-    # not an iso date
-    expires_at = datetime.fromisoformat(token_details["expires_at"])
-    refresh_after = token_services.get_refresh_after(expires_at)
     tenant_client = TenantClient()
-    now = datetime.now(UTC)
-    tenant_client.upsert_tenant(
-        access_token=token_details["access_token"],
-        token_type=token_details["token_type"],
-        issued_at=str(now),
-        issued_at_stamp=Decimal(now.timestamp()),
-        expires_at=str(expires_at),
-        expires_at_stamp=Decimal(expires_at.timestamp()),
-        refresh_after=str(refresh_after),
-        refresh_after_stamp=Decimal(refresh_after.timestamp()),
-        merchant_id=token_details["merchant_id"],
-        refresh_token=token_details["refresh_token"],
-    )
+    tenant_client.write_token(token_details)
 
 
 def find_tokens_to_refresh():
@@ -90,8 +73,10 @@ def refresh_token(merchant_id):
     '''
     Refreshes the token of a tenant.
     '''
-    tenant_client = TenantClient()
+    token_services = TokenServices()
     response = tenant_client.get_merchant(merchant_id, check_single=True)
     merchant_details = response['Items'][0]
-    refresh = merchant_details['refresh_token']
-    print(refresh)
+    token_details = token_services.get_token(
+        refresh_token=merchant_details['refresh_token']
+    )
+    tenant_client = TenantClient()

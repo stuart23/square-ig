@@ -42,17 +42,26 @@ class TokenServices:
         self.square_client = Client()
         self.metrics_handler = MetricsHandler('oAuth')
 
-    def get_token(self, code):
+    def get_token(self, code=None, refresh_token=None):
         """
         Makes a call to obtain the token.
         """
+        body = {
+            "client_id": self.client_id,
+            "client_secret": self.client_secret,
+        }
+        if code:
+            body["grant_type"] = "authorization_code"
+            body["code"] = code
+        elif refresh_token:
+            body["grant_type"] = "refresh_token"
+            body["refresh_token"] = refresh_token
+        else:
+            raise ValueError(
+                'code or refresh_token must be passed to get_token'
+            )
         response = self.square_client.o_auth.obtain_token(
-            body={
-                "client_id": self.client_id,
-                "grant_type": "authorization_code",
-                "client_secret": self.client_secret,
-                "code": code,
-            }
+            body=body
         )
         if response.is_success():
             self.metrics_handler.emit_metric(
