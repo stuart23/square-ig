@@ -2,6 +2,7 @@ from datetime import datetime, UTC
 from decimal import Decimal
 
 from auth import TenantClient, TokenServices
+from auth.token_queue import publish
 from utils import SQSDeserialize
 
 
@@ -17,8 +18,11 @@ def handler(event, context):
     for body in SQSDeserialize(event):
         action = body["action"]
         if action == "new_connection":
-            new_connection(**body["data"])
+            data = body['data']
+            print(f'Calling new_connection with data: {data}')
+            new_connection(**data)
         elif action == "find_tokens_to_refresh":
+            print('Calling find_tokens_to_refresh')
             find_tokens_to_refresh()
         else:
             raise ValueError(f"No function for action {action}")
@@ -65,3 +69,9 @@ def find_tokens_to_refresh():
     response = tenant_client.find_tokens_to_refresh()
     for item in response['Items']:
         print(f'Token for {item} requires refresh.')
+        publish(
+            {
+                "action": "refresh_token",
+                "data": {"merchant_id": item},
+            }
+        )
