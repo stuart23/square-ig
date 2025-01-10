@@ -24,6 +24,10 @@ def handler(event, context):
         elif action == "find_tokens_to_refresh":
             print('Calling find_tokens_to_refresh')
             find_tokens_to_refresh()
+        elif action == "refresh_token":
+            merchant_id = body['data']['merchant_id']
+            print(f'Calling refresh token for merchant {merchant_id}')
+            refresh_token(merchant_id)
         else:
             raise ValueError(f"No function for action {action}")
 

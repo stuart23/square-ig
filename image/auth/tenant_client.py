@@ -16,21 +16,18 @@ class TenantClient(object):
         """
         If an object does not exist in the database, it will be added.
         """
-        response = self._table.query(
-            KeyConditionExpression=(Key("merchant_id").eq(merchant_id)),
-        )
+        response = self.get_merchant(merchant_id)
         if response["Count"] == 0:
             # No item with this sku exists.
             print(f"Adding item to DynamoDB: {merchant_id}")
             self._table.put_item(Item={"merchant_id": merchant_id, **args})
             return True
-        elif response["Count"] > 1:
+        if response["Count"] > 1:
             raise Exception(
                 "There are multiple entries in Dynamo with the same "
                 f"merchant_id: {merchant_id}"
             )
-        else:
-            return False
+        return False
 
     def find_tokens_to_refresh(self):
         """
@@ -54,4 +51,22 @@ class TenantClient(object):
         response = self._table.scan(
             FilterExpression=Attr('refresh_after_stamp').lt(now_timestamp),
             )
+        return response
+
+    def get_merchant(self, merchant_id, check_single=False):
+        '''
+        Returns details on a merchant.
+
+        If check_single is true, will test to make sure that there is
+        exactly one record and will raise an exception if that is not true.
+        '''
+        response = self._table.query(
+            KeyConditionExpression=(Key("merchant_id").eq(merchant_id)),
+        )
+        if not check_single:
+            return response
+        if response["Count"] == 0:
+            raise ValueError(f'No merchant found for {merchant_id}')
+        elif response["Count"] > 1:
+            raise ValueError(f'More than one merchant found for {merchant_id}')
         return response
