@@ -24,7 +24,7 @@ class TokenServices:
         """
 
         def __str__(self):
-            return "Unknown API Error"
+            return "Unknown API Error: {}".format(self.args[0])
 
     def __init__(self, client_id=None, client_secret=None):
         """
