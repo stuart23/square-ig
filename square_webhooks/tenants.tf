@@ -8,11 +8,6 @@ resource "aws_dynamodb_table" "tenants" {
     type = "S"
   }
 
-  attribute {
-    name = "refresh_after_stamp"
-    type = "N"
-  }
-
 }
 
 
