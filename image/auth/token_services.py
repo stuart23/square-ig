@@ -78,6 +78,9 @@ class TokenServices:
                 dimensions={'reason': 'expired_auth_code'}
             )
             raise self.ExpiredAuthCode()
+        raise self.UnknownAPIError(
+            f"Request failed for an unknown reason: {response}"
+        )
 
     @staticmethod
     def get_refresh_after(expiry):
