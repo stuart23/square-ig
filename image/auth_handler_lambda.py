@@ -61,4 +61,7 @@ def find_tokens_to_refresh():
     Reads the database to see if there are any tokens that need to be
     refreshed.
     '''
-    print('Finding tokens to refresh')
+    tenant_client = TenantClient()
+    response = tenant_client.find_tokens_to_refresh()
+    for item in response['Items']:
+        print(f'Token for {item} requires refresh.')

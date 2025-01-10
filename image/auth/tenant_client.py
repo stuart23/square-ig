@@ -1,8 +1,9 @@
-from boto3 import resource
-from boto3.dynamodb.conditions import Key
-from utils import getenv_or_raise
-from datetime import datetime, UTC
+from datetime import UTC, datetime
 from decimal import Decimal
+
+from boto3 import resource
+from boto3.dynamodb.conditions import Attr
+from utils import getenv_or_raise
 
 
 class TenantClient(object):
@@ -34,15 +35,22 @@ class TenantClient(object):
         """
         Gets all the tenants with tokens that have refresh_after dates in
         the past.
+
+        This is a full table scan, which sucks, but I need a better index
+        to search.
+
+        Return looks like:
+        ```
+        {
+            'Items': [],
+            'Count': 0,
+            'ScannedCount': 0,
+            'ResponseMetadata': {}
+        }
+        ```
         """
         now_timestamp = Decimal(datetime.now(UTC).timestamp())
-        response = self._table.query(
-                ProjectionExpression="#refresh_after_stamp, merchant_id",
-                ExpressionAttributeNames={
-                    "#refresh_after_stamp": "refresh_after_stamp"
-                },
-                KeyConditionExpression=(
-                    Key("refresh_after_stamp").lt(now_timestamp)
-                ),
+        response = self._table.scan(
+            FilterExpression=Attr('refresh_after_stamp').lt(now_timestamp),
             )
         return response
