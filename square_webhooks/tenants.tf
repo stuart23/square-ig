@@ -2,6 +2,7 @@ resource "aws_dynamodb_table" "tenants" {
   name         = "${var.env_prefix}_tenants"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "merchant_id"
+  range_key    = "refresh_after_stamp"
 
   attribute {
     name = "merchant_id"
