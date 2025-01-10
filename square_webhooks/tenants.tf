@@ -7,6 +7,18 @@ resource "aws_dynamodb_table" "tenants" {
     name = "merchant_id"
     type = "S"
   }
+
+  attribute {
+    name = "refresh_after_stamp"
+    type = "N"
+  }
+
+  global_secondary_index {
+    name            = "refresh_after_stamp"
+    hash_key        = "refresh_after_stamp"
+    projection_type = "KEYS_ONLY"
+  }
+
 }
 
 

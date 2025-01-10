@@ -1,6 +1,8 @@
 from boto3 import resource
 from boto3.dynamodb.conditions import Key
 from utils import getenv_or_raise
+from datetime import datetime, UTC
+from decimal import Decimal
 
 
 class TenantClient(object):
@@ -27,3 +29,20 @@ class TenantClient(object):
             )
         else:
             return False
+
+    def find_tokens_to_refresh(self):
+        """
+        Gets all the tenants with tokens that have refresh_after dates in
+        the past.
+        """
+        now_timestamp = Decimal(datetime.now(UTC).timestamp())
+        response = self._table.query(
+                ProjectionExpression="#refresh_after_stamp, merchant_id",
+                ExpressionAttributeNames={
+                    "#refresh_after_stamp": "refresh_after_stamp"
+                },
+                KeyConditionExpression=(
+                    Key("refresh_after_stamp").lt(now_timestamp)
+                ),
+            )
+        return response
