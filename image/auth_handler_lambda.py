@@ -3,7 +3,7 @@ from decimal import Decimal
 
 from auth import TenantClient, TokenServices
 from auth.token_queue import publish
-from utils import SQSDeserialize
+from utils import SQSDeserialize, MetricsHandler
 
 
 def handler(event, context):
@@ -80,3 +80,14 @@ def find_tokens_to_refresh():
                 "data": {"merchant_id": merchant_id},
             }
         )
+
+
+def refresh_token(merchant_id):
+    '''
+    Refreshes the token of a tenant.
+    '''
+    tenant_client = TenantClient()
+    response = tenant_client.get_merchant(merchant_id, check_single=True)
+    merchant_details = response['Items'][0]
+    refresh = merchant_details['refresh_token']
+    print(refresh)
