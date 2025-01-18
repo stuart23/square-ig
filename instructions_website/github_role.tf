@@ -23,7 +23,7 @@ resource "aws_iam_role" "s3_upload_role" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Effect = "Allow"
         Principal = {
-          Federated = [ data.aws_iam_openid_connect_provider.github.arn]
+          Federated = [data.aws_iam_openid_connect_provider.github.arn]
         }
         Condition = {
           StringLike = {
@@ -46,11 +46,11 @@ resource "aws_iam_policy" "s3_write_policy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Action   = [
+        Action = [
           "s3:PutObject",
           "s3:DeleteObject"
         ]
-        Effect   = "Allow"
+        Effect = "Allow"
         Resource = [
           aws_s3_bucket.website_bucket.arn,
           "${aws_s3_bucket.website_bucket.arn}/*",
