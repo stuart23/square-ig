@@ -37,3 +37,12 @@ module "alerts" {
   source     = "./alerts"
   env_prefix = var.env_prefix
 }
+
+
+module "webhooks_management" {
+  source               = "./webhooks_management"
+  alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
+  api_stage_url        = aws_apigatewayv2_stage.square_webhooks_stage.invoke_url
+  lambda_image         = var.lambda_image
+  env_prefix           = var.env_prefix
+}
