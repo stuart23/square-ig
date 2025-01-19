@@ -17,8 +17,6 @@ def handler(event, context):
     api_stage_url = getenv_or_raise('catalog_update_endpoint')
     print(api_stage_url)
 
-
-def configure_webhooks():
     SQUARE_QR_CODES_CREDENTIALS_ARN = "square_qr_codes_token_arn"
 
     credentials = loads(get_secret(SQUARE_QR_CODES_CREDENTIALS_ARN))
@@ -30,19 +28,19 @@ def configure_webhooks():
         environment='production'
     )
     print(client.webhook_subscriptions.list_webhook_subscriptions())
-    body = {
-        'subscription': {
-            'name': 'Example Webhook Subscription',
-            'event_types': [
-                'catalog.version.updated'
-            ],
-            'notification_url': 'https://example-webhook-url.com',
-            'api_version': '2021-12-15'
-        },
-        'idempotency_key': '63f84c6c-2200-4c99-846c-2670a1311fbf'
-    }
+    # body = {
+    #     'subscription': {
+    #         'name': 'Example Webhook Subscription',
+    #         'event_types': [
+    #             'catalog.version.updated'
+    #         ],
+    #         'notification_url': 'https://example-webhook-url.com',
+    #         'api_version': '2021-12-15'
+    #     },
+    #     'idempotency_key': '63f84c6c-2200-4c99-846c-2670a1311fbf'
+    # }
 
-    result = client.webhook_subscriptions.create_webhook_subscription(body)
+    # result = client.webhook_subscriptions.create_webhook_subscription(body)
 
 
 if __name__ == '__main__':
