@@ -15,7 +15,7 @@ variable "env_prefix" {
   type        = string
 }
 
-variable "api_stage_url" {
-  description = "URL of the API Gateway stage"
+variable "catalog_update_endpoint" {
+  description = "URL of the catalog update endpoint"
   type        = string
 }

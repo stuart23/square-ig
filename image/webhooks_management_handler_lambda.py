@@ -14,7 +14,7 @@ def handler(event, context):
     Current actions are:
     - configure_webhooks: Will add the webhooks to the catalog endpoint.
     '''
-    api_stage_url = getenv_or_raise('api_stage_url')
+    api_stage_url = getenv_or_raise('catalog_update_endpoint')
     print(api_stage_url)
 
 

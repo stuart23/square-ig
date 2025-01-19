@@ -33,17 +33,17 @@ resource "aws_lambda_function" "webhooks_management_handler" {
   image_config {
     command = ["webhooks_management_handler_lambda.handler"]
   }
-  logging_config {  
+  logging_config {
     log_group  = aws_cloudwatch_log_group.webhooks_management.name
     log_format = "Text"
   }
   environment {
     variables = {
-      square_qr_codes_token_arn  = data.aws_secretsmanager_secret.square_token.arn
-      api_stage_url              = var.api_stage_url
+      square_qr_codes_token_arn = data.aws_secretsmanager_secret.square_token.arn
+      catalog_update_endpoint   = var.catalog_update_endpoint
 
-# aws_apigatewayv2_integration
-# api_endpoint
+      # aws_apigatewayv2_integration
+      # api_endpoint
     }
   }
 }
