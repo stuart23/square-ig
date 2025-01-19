@@ -3,5 +3,5 @@ locals {
 }
 
 output "catalog_update_route" {
-  value = locals.catalog_update_route
+  value = local.catalog_update_route
 }
