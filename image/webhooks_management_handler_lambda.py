@@ -26,26 +26,32 @@ def handler(event, context):
         environment='production'
     )
 
-    current_subscriptions = \
-        client.webhook_subscriptions.list_webhook_subscriptions()
-
+    response = client.webhook_subscriptions.list_webhook_subscriptions()
+    assert response.is_success(), f'Request Failed due to: {response.errors}'
+    current_subscriptions = response.body.get('subscriptions', [])
     print(f'Current subscriptions: {current_subscriptions}')
 
-    if not current_subscriptions:
+    subscription_details = {
+        'name': f'{env_prefix} Catalog Update Webhooksss',
+        'event_types': [
+            'catalog.version.updated'
+        ],
+        'notification_url': catalog_update_endpoint,
+        'api_version': '2021-12-15'
+    }
+
+    for test_subscription in current_subscriptions:
+        if test_subscription['name'] == subscription_details['name'] \
+                and test_subscription['notification_url'] == subscription_details['notification_url']:
+            # There is already a subscription with this name and url.
+            print('Subscription exists - not adding a new subscription.')
+            break
+    else:
         print(f'Adding subscription for {catalog_update_endpoint}')
         body = {
-            'subscription': {
-                'name': f'{env_prefix} Catalog Update Webhook',
-                'event_types': [
-                    'catalog.version.updated'
-                ],
-                'notification_url': catalog_update_endpoint,
-                'api_version': '2021-12-15'
-            },
+            'subscription': subscription_details,
             'idempotency_key': '63f84c6c-2200-4c99-846c-2670a1311fbf'
         }
 
         result = client.webhook_subscriptions.create_webhook_subscription(body)
-        print(result)
-    else:
-        print('Not adding a new subscription.')
+        assert result.is_success()
