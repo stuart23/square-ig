@@ -41,9 +41,7 @@ resource "aws_lambda_function" "webhooks_management_handler" {
     variables = {
       square_qr_codes_token_arn = data.aws_secretsmanager_secret.square_token.arn
       catalog_update_endpoint   = var.catalog_update_endpoint
-
-      # aws_apigatewayv2_integration
-      # api_endpoint
+      env_prefix                = var.env_prefix
     }
   }
 }
