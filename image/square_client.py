@@ -1,7 +1,7 @@
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from square.client import Client
 
-from json import dumps
+from json import dumps, loads
 from hashlib import sha256
 from time import sleep, time
 from uuid import uuid4
@@ -11,7 +11,7 @@ from catalog import Item
 from utils import batch, get_secret
 
 
-SQUARE_TOKEN_ARN_ENV = "square_token_arn"
+SQUARE_TOKEN_ARN_ENV = "square_qr_codes_token_arn"
 
 
 class SquareClient(object):
@@ -23,9 +23,11 @@ class SquareClient(object):
         """
         Gets the the square API key from AWS secrets manager and return a client with that.
         """
-        square_token = get_secret(SQUARE_TOKEN_ARN_ENV)
+        credentials = loads(get_secret(SQUARE_TOKEN_ARN_ENV))
+        production_token = credentials["production_token"]
+        square_creds = BearerAuthCredentials(access_token=production_token)
         return Client(
-            bearer_auth_credentials=BearerAuthCredentials(access_token=square_token),
+            bearer_auth_credentials=square_creds,
             environment="production",
         )
 
@@ -157,39 +159,29 @@ class SquareClient(object):
                 f"Could not upsert item {item} due to: {upsert_response.errors}"
             )
 
-    def create_catalog_image(item, image):
-        raise NotImplementedError()
-        pass
-        # catalog = get_square_client().catalog
-        # item_name = "{0} - {1}".format(item.item_str, item.variation_str)
-        # print(f'Saving image to item: {item}')
-        # for try_number in range(5):
-        #     response = catalog.create_catalog_image(
-        #         request={
-        #             "idempotency_key": generate_idempotency_key(item),
-        #             "object_id": item.item_id,
-        #             "image": {
-        #                 "type": "ITEM",
-        #                 "id": "#TEMP_ID",
-        #                 "image_data": {
-        #                     "name": item_name,
-        #                     "sku": item.sku,
-        #                     "caption": "QR Code"
-        #                 },
-        #                 "type": "IMAGE",
-        #                 "is_deleted": False,
-        #             }
-        #         },
-        #         image_file=image
-        #     )
-        #     if response.is_success():
-        #         return response
-        #     elif any([x['category'] == 'RATE_LIMIT_ERROR' for x in response.errors]):
-        #         sleep_time = 10 * try_number
-        #         print(f'Upload failed due to rate limit. Waiting {sleep_time} seconds to retry')
-        #         sleep(sleep_time)
-        # else:
-        #     raise Exception(f'Could not add image to item {item} due to: {response.errors}')
+    def get_webhooks(self):
+        """
+        Returns all the webhooks for the application.
+        """
+        webhook_subscriptions = self._client.webhook_subscriptions
+        response = webhook_subscriptions.list_webhook_subscriptions()
+        assert response.is_success(), \
+            f'Request Failed due to: {response.errors}'
+        current_subscriptions = response.body.get('subscriptions', [])
+        return current_subscriptions
+
+    def add_webhook(self, details):
+        """
+        Adds a webhook with details as specified in the API spec.
+        """
+        body = {
+            'subscription': details,
+            'idempotency_key': generate_idempotency_key(details)
+        }
+
+        result = self._client.webhook_subscriptions.create_webhook_subscription(body)
+        assert result.is_success()
+
 
     def getInstagramHandle(self, customer_id):
         """
@@ -233,7 +225,10 @@ def generate_idempotency_key(item):
     Creates an idempotency key by hashing the dict.
     """
     return sha256(
-        dumps({"item": item.__dict__, "timestamp": time()}, sort_keys=True).encode(
+        dumps(
+            {"item": item.__dict__, "timestamp": time()},
+            sort_keys=True
+        ).encode(
             "utf-8"
         )
     ).hexdigest()

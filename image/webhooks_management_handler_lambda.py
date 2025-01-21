@@ -1,8 +1,5 @@
-from json import loads
-
-from square.client import Client
-from square.http.auth.o_auth_2 import BearerAuthCredentials
-from utils import get_secret, getenv_or_raise
+from square_client import SquareClient
+from utils import getenv_or_raise
 
 
 def handler(event, context):
@@ -15,24 +12,13 @@ def handler(event, context):
     catalog_update_endpoint = getenv_or_raise('catalog_update_endpoint')
     env_prefix = getenv_or_raise('env_prefix')
 
-    SQUARE_QR_CODES_CREDENTIALS_ARN = "square_qr_codes_token_arn"
+    client = SquareClient()
 
-    credentials = loads(get_secret(SQUARE_QR_CODES_CREDENTIALS_ARN))
-    production_token = credentials["production_token"]
-    client = Client(
-        bearer_auth_credentials=BearerAuthCredentials(
-            access_token=production_token
-        ),
-        environment='production'
-    )
-
-    response = client.webhook_subscriptions.list_webhook_subscriptions()
-    assert response.is_success(), f'Request Failed due to: {response.errors}'
-    current_subscriptions = response.body.get('subscriptions', [])
+    current_subscriptions = client.get_webhooks()
     print(f'Current subscriptions: {current_subscriptions}')
 
     subscription_details = {
-        'name': f'{env_prefix} Catalog Update Webhooksss',
+        'name': f'{env_prefix} Catalog Update Webhook',
         'event_types': [
             'catalog.version.updated'
         ],
@@ -48,10 +34,4 @@ def handler(event, context):
             break
     else:
         print(f'Adding subscription for {catalog_update_endpoint}')
-        body = {
-            'subscription': subscription_details,
-            'idempotency_key': '63f84c6c-2200-4c99-846c-2670a1311fbf'
-        }
-
-        result = client.webhook_subscriptions.create_webhook_subscription(body)
-        assert result.is_success()
+        client.add_webhook(subscription_details)
