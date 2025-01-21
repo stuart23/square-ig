@@ -3,7 +3,7 @@ from uuid import uuid4
 from os import getenv
 from pytest import raises
 
-from square_client import SquareClient, SQUARE_TOKEN_ARN_ENV
+from square_client import SquareClient, SQUARE_TOKEN_ARN_ENV, generate_idempotency_key
 from catalog import Item
 
 
@@ -116,3 +116,29 @@ def test_get_categories():
     }
     categories = client.get_categories(item_data)
     assert categories == [{"id": "ODMHZODS4WHR7NV3UAVE43PB", "name": "Pins"}]
+
+
+def test_idempotency_key_dict():
+    my_dict = {'hello': 123}
+    result = generate_idempotency_key(my_dict)
+    assert isinstance(result, str)
+    assert len(result) > 1
+
+
+def test_idempotency_key_item():
+    my_item = Item(
+        sku="plantsoc.com/abcd1234",
+        price=123,
+        item_str="abc",
+        variation_str="abc",
+        item_id="qwerty",
+        variation_id="asdfg",
+        pet_safe=True,
+        categories=[
+            {"id": "abcd", "name": "my_category"},
+            {"id": "efgh", "name": "my_category_69"},
+        ],
+    )
+    result = generate_idempotency_key(my_item)
+    assert isinstance(result, str)
+    assert len(result) > 1

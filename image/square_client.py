@@ -224,9 +224,13 @@ def generate_idempotency_key(item):
     """
     Creates an idempotency key by hashing the dict.
     """
+    if isinstance(item, dict):
+        item_dict = item
+    else:
+        item_dict = item.__dict__
     return sha256(
         dumps(
-            {"item": item.__dict__, "timestamp": time()},
+            {"item": item_dict, "timestamp": time()},
             sort_keys=True
         ).encode(
             "utf-8"
