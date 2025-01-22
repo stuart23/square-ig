@@ -179,9 +179,9 @@ class SquareClient(object):
             'idempotency_key': generate_idempotency_key(details)
         }
 
-        result = self._client.webhook_subscriptions.create_webhook_subscription(body)
-        assert result.is_success()
-
+        response = self._client.webhook_subscriptions.create_webhook_subscription(body)
+        assert response.is_success(), \
+            f'Request Failed due to: {response.errors}'
 
     def getInstagramHandle(self, customer_id):
         """
