@@ -16,7 +16,7 @@ resource "aws_iam_role_policy_attachment" "tenants_read_only_policy_arn" {
 
 
 resource "aws_iam_role_policy_attachment" "webhooks_management_handler_execute_policy_attachment" {
-  role       = aws_iam_role.webhooks_management.name
+  role       = aws_iam_role.catalog_update.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 }
 
