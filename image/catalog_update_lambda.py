@@ -10,6 +10,9 @@ from descriptions import DescriptionsGit
 
 
 def handler(event, context):
+    print(event)
+    print(context)
+    return
     square_client = SquareClient()
     items = square_client.get_catalog_items()
     update_items = []
