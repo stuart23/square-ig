@@ -15,6 +15,7 @@ variable "env_prefix" {
   type        = string
 }
 
+
 variable "catalog_update_endpoint" {
   description = "URL of the catalog update endpoint"
   type        = string

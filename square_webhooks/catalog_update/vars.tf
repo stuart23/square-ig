@@ -16,9 +16,15 @@ variable "square_gateway_execution_arn" {
 }
 
 
-variable "lambda_role_arn" {
+variable "tenants_read_only_policy_arn" {
   type        = string
-  description = "The arn of the iam role used to execute the lambda function"
+  description = "The arn of the iam role used to read the tenants table"
+}
+
+
+variable "tenants_table_arn" {
+  type        = string
+  description = "The arn of the tenants table"
 }
 
 

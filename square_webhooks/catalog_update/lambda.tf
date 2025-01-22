@@ -3,6 +3,24 @@ resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
   retention_in_days = 14
 }
 
+
+resource "aws_iam_role" "catalog_update" {
+  name               = "${var.env_prefix}_catalog_update"
+  assume_role_policy = local.lambda_assume_role_policy
+}
+
+resource "aws_iam_role_policy_attachment" "tenants_read_only_policy_arn" {
+  role       = aws_iam_role.catalog_update.name
+  policy_arn = var.tenants_read_only_policy_arn
+}
+
+
+resource "aws_iam_role_policy_attachment" "webhooks_management_handler_execute_policy_attachment" {
+  role       = aws_iam_role.webhooks_management.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
+}
+
+
 resource "aws_lambda_function" "catalog_update" {
   function_name                  = "${var.env_prefix}_catalog_update"
   description                    = "Triggered when the catalog updates. Updates the Dynamo table with the items."
@@ -10,7 +28,7 @@ resource "aws_lambda_function" "catalog_update" {
   architectures                  = ["arm64"]
   reserved_concurrent_executions = 1
   image_uri                      = var.lambda_image
-  role                           = var.lambda_role_arn
+  role                           = aws_iam_role.catalog_update
   timeout                        = 30
   memory_size                    = 256
   publish                        = true
