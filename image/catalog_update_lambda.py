@@ -8,10 +8,14 @@ from catalog.catalog_dynamodb import (
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 
+from json import loads
 
 def handler(event, context):
-    print(event)
-    print(context)
+    records = event['Records']
+    for record in records:
+        body = loads(record['body'])
+        merchant_id = body['merchant_id']
+        print(f'Updating catalog for Merchant ID: {merchant_id}')
     return
     square_client = SquareClient()
     items = square_client.get_catalog_items()
