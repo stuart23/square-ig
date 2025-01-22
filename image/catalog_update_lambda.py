@@ -7,15 +7,21 @@ from catalog.catalog_dynamodb import (
 )
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
+from auth import TenantClient
 
 from json import loads
 
 def handler(event, context):
     records = event['Records']
+    tenant_client = TenantClient()
+
     for record in records:
         body = loads(record['body'])
         merchant_id = body['merchant_id']
         print(f'Updating catalog for Merchant ID: {merchant_id}')
+        merchant_details = tenant_client.get_merchant(merchant_id)
+        print(merchant_details)
+
     return
     square_client = SquareClient()
     items = square_client.get_catalog_items()
