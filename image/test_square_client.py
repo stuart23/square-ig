@@ -119,13 +119,20 @@ def test_get_categories():
 
 
 def test_idempotency_key_dict():
+    '''
+    Square enforces that the idempotency key must not be greater than 45 chars
+    '''
     my_dict = {'hello': 123}
     result = generate_idempotency_key(my_dict)
     assert isinstance(result, str)
     assert len(result) > 1
+    assert len(result) < 45
 
 
 def test_idempotency_key_item():
+    '''
+    Square enforces that the idempotency key must not be greater than 45 chars
+    '''
     my_item = Item(
         sku="plantsoc.com/abcd1234",
         price=123,

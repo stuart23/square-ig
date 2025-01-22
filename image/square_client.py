@@ -223,6 +223,8 @@ class SquareClient(object):
 def generate_idempotency_key(item):
     """
     Creates an idempotency key by hashing the dict.
+    Square enforces that the idempotency key must not be greater than 45 chars
+    so we just return the first 32 chars.
     """
     if isinstance(item, dict):
         item_dict = item
@@ -235,4 +237,4 @@ def generate_idempotency_key(item):
         ).encode(
             "utf-8"
         )
-    ).hexdigest()
+    ).hexdigest()[:32]
