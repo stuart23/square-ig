@@ -5,7 +5,7 @@ module "catalog_update" {
   square_gateway_execution_arn = aws_apigatewayv2_api.square_webhooks_gateway.execution_arn
   # square_authorizer_id         = aws_apigatewayv2_authorizer.square_webhooks_gateway_authorizer.id
   tenants_read_only_policy_arn = aws_iam_policy.tenants_read_only_policy.arn
-  tenants_table_arn            = aws_dynamodb_table.tenants.arn
+  tenants_table_name           = aws_dynamodb_table.tenants.name
   generate_label_sns_topic_arn = module.generate_label.generate_label_sns_topic_arn
   alerts_sns_topic_arn         = module.alerts.alerts_sns_topic_arn
   env_prefix                   = var.env_prefix

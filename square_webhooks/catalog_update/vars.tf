@@ -22,9 +22,9 @@ variable "tenants_read_only_policy_arn" {
 }
 
 
-variable "tenants_table_arn" {
+variable "tenants_table_name" {
   type        = string
-  description = "The arn of the tenants table"
+  description = "The name of the tenants table"
 }
 
 
