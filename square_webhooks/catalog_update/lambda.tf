@@ -9,6 +9,11 @@ resource "aws_iam_role" "catalog_update" {
   assume_role_policy = local.lambda_assume_role_policy
 }
 
+resource "aws_iam_role_policy_attachment" "catalog_update_sqs_read_write_attachment" {
+  role       = aws_iam_role.catalog_update.name
+  policy_arn = aws_iam_policy.catalog_update_sqs_read_write.arn
+}
+
 resource "aws_iam_role_policy_attachment" "tenants_read_only_policy_arn" {
   role       = aws_iam_role.catalog_update.name
   policy_arn = var.tenants_read_only_policy_arn

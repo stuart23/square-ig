@@ -3,7 +3,7 @@ resource "aws_sqs_queue" "catalog_update" {
 }
 
 
-resource "aws_iam_policy" "sqs_write" {
+resource "aws_iam_policy" "catalog_update_sqs_read" {
   name        = "${var.env_prefix}_catalog_update_sqs_write"
   description = "Write to sqs queue"
   policy = jsonencode({
@@ -11,6 +11,27 @@ resource "aws_iam_policy" "sqs_write" {
     Statement = [
       {
         Action   = "sqs:SendMessage"
+        Effect   = "Allow"
+        Resource = aws_sqs_queue.catalog_update.arn
+      },
+    ]
+  })
+}
+
+
+resource "aws_iam_policy" "catalog_update_sqs_read_write" {
+  name        = "${var.env_prefix}_catalog_update_sqs_read_write"
+  description = "Read and write to sqs queue"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "sqs:SendMessage",
+          "sqs:ReceiveMessage",
+          "sqs:DeleteMessage",
+          "sqs:GetQueueAttributes"
+        ]
         Effect   = "Allow"
         Resource = aws_sqs_queue.catalog_update.arn
       },
@@ -38,7 +59,7 @@ resource "aws_iam_role" "gateway_sqs_write" {
 
 resource "aws_iam_role_policy_attachment" "gateway_sqs_write" {
   role       = aws_iam_role.gateway_sqs_write.name
-  policy_arn = aws_iam_policy.sqs_write.arn
+  policy_arn = aws_iam_policy.catalog_update_sqs_read_write.arn
 }
 
 
