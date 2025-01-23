@@ -41,13 +41,13 @@ class TenantClient(object):
             'refresh_after_stamp': Decimal(refresh_after.timestamp()),
             'refresh_token': token_details["refresh_token"],
         }
-        response = self.get_merchant(merchant_id)
-        if response["Count"] == 0:
+        merchants = self.get_merchant(merchant_id)
+        if len(merchants) == 0:
             # No item with this sku exists.
             print(f"Adding item to DynamoDB: {merchant_id}")
             self._table.put_item(Item={"merchant_id": merchant_id, **args})
             return True
-        if response["Count"] == 1:
+        if len(merchants) == 1:
             # Merchant already exists in db. Patching.
             print(f"Patching item to DynamoDB: {merchant_id}")
             inputs = self._generate_dynamo_update_props(args)
@@ -57,7 +57,7 @@ class TenantClient(object):
                 ExpressionAttributeValues=inputs['ExpressionAttributeValues'],
             )
             return True
-        if response["Count"] > 1:
+        if len(merchants) > 1:
             raise Exception(
                 "There are multiple entries in Dynamo with the same "
                 f"merchant_id: {merchant_id}"
@@ -106,20 +106,20 @@ class TenantClient(object):
             )
         return response
 
-    def get_merchant(self, merchant_id, check_single=False):
+    def get_merchant(self, merchant_id, single_record=False):
         '''
         Returns details on a merchant.
 
-        If check_single is true, will test to make sure that there is
+        If single_record is true, will test to make sure that there is
         exactly one record and will raise an exception if that is not true.
         '''
         response = self._table.query(
             KeyConditionExpression=(Key("merchant_id").eq(merchant_id)),
         )
-        if not check_single:
-            return response
+        if not single_record:
+            return response['Items']
         if response["Count"] == 0:
             raise ValueError(f'No merchant found for {merchant_id}')
         elif response["Count"] > 1:
             raise ValueError(f'More than one merchant found for {merchant_id}')
-        return response
+        return response['Items'][0]

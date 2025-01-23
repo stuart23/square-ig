@@ -19,12 +19,14 @@ def handler(event, context):
         body = loads(record['body'])
         merchant_id = body['merchant_id']
         print(f'Updating catalog for Merchant ID: {merchant_id}')
-        merchant_details = tenant_client.get_merchant(merchant_id)
-        print(merchant_details)
+        merchant_details = tenant_client.get_merchant(
+            merchant_id, single_record=True
+        )
+        access_token = merchant_details['access_token']
+        square_client = SquareClient(access_token)
+        items = square_client.get_catalog_items()
 
     return
-    square_client = SquareClient()
-    items = square_client.get_catalog_items()
     update_items = []
     for item in items:
         # update the sku with the url format or generate one if it doesn't exist.

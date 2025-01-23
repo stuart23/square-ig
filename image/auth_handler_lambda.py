@@ -75,8 +75,9 @@ def refresh_token(merchant_id):
     '''
     token_services = TokenServices()
     tenant_client = TenantClient()
-    response = tenant_client.get_merchant(merchant_id, check_single=True)
-    merchant_details = response['Items'][0]
+    merchant_details = tenant_client.get_merchant(
+        merchant_id, single_record=True
+    )
     token_details = token_services.get_token(
         refresh_token=merchant_details['refresh_token']
     )

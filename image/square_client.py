@@ -1,27 +1,35 @@
-from square.http.auth.o_auth_2 import BearerAuthCredentials
-from square.client import Client
-
-from json import dumps, loads
+from functools import cached_property
 from hashlib import sha256
+from json import dumps, loads
 from time import sleep, time
 from uuid import uuid4
-from functools import cached_property
 
 from catalog import Item
+from square.client import Client
+from square.http.auth.o_auth_2 import BearerAuthCredentials
 from utils import batch, get_secret
-
 
 SQUARE_TOKEN_ARN_ENV = "square_qr_codes_token_arn"
 
 
 class SquareClient(object):
-    def __init__(self):
-        self._client = self._get_square_client()
+    def __init__(self, access_token=None):
+        if access_token:
+            square_creds = BearerAuthCredentials(
+                access_token=access_token
+            )
+            self._client = Client(
+                bearer_auth_credentials=square_creds,
+                environment="production",
+            )
+        else:
+            self._client = self._get_square_client()
 
     @staticmethod
     def _get_square_client():
         """
-        Gets the the square API key from AWS secrets manager and return a client with that.
+        Gets the the square API key from AWS secrets manager and return a
+        client with that.
         """
         credentials = loads(get_secret(SQUARE_TOKEN_ARN_ENV))
         production_token = credentials["production_token"]
