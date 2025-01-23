@@ -55,11 +55,8 @@ resource "aws_lambda_permission" "catalog_update_permission" {
   statement_id  = "AllowAPIInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.catalog_update.function_name
-  principal     = "apigateway.amazonaws.com"
-
-  # The /* part allows invocation from any stage, method and resource path
-  # within API Gateway.
-  source_arn = "${var.square_gateway_execution_arn}/*"
+  principal     = "sqs.amazonaws.com"
+  source_arn    = aws_sqs_queue.catalog_update.arn
 }
 
 
