@@ -28,7 +28,7 @@ resource "aws_lambda_function" "catalog_update" {
   architectures                  = ["arm64"]
   reserved_concurrent_executions = 1
   image_uri                      = var.lambda_image
-  role                           = aws_iam_role.catalog_update
+  role                           = aws_iam_role.catalog_update.arn
   timeout                        = 30
   memory_size                    = 256
   publish                        = true
