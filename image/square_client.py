@@ -39,6 +39,19 @@ class SquareClient(object):
             environment="production",
         )
 
+    def merchant(self):
+        """
+        Gets details about the merchant that the token belongs to.
+        """
+        response = self._client.merchants.list_merchants().body
+        assert response.is_success(), response.errors
+        merchants = response.body['merchant']
+        assert len(merchants) == 1, (
+            'More than one merchant returned for the token. '
+            f'Merchants are {merchants}'
+        )
+        return merchants[0]
+
     @cached_property
     def categories(self):
         """
@@ -51,6 +64,7 @@ class SquareClient(object):
         Returns a generator of all the catalog items.
         """
         items = self._get_records_from_square()
+        merchant_id = self.merchant()['id']
 
         for item in items:
             item_data = item["item_data"]
@@ -63,6 +77,7 @@ class SquareClient(object):
                     variation_details,
                     custom_attribute_values,
                     categories=categories,
+                    merchant_id=merchant_id
                 )
 
     def get_categories(self, item_data):
@@ -123,8 +138,8 @@ class SquareClient(object):
                 if cursor is None:
                     break  # No more pages
             else:
+                # Stop on error
                 raise Exception(f"Could not retrieve objects due to: {response.errors}")
-                break  # Stop on error
 
         return objects  # Why is this returning if it is already a generator??
 

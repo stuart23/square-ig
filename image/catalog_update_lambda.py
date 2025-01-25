@@ -12,6 +12,10 @@ from auth import TenantClient
 from json import loads
 
 def handler(event, context):
+    '''
+    If the merchant record has update_skus set to true, then skus will be 
+    mutated.
+    '''
     records = event['Records']
     tenant_client = TenantClient()
 
@@ -26,19 +30,19 @@ def handler(event, context):
         square_client = SquareClient(access_token)
         items = square_client.get_catalog_items()
 
+        update_skus = merchant_details.get('update_skus', False)
+        update_items = []
+        for item in items:
+            # update the sku with the url format or generate one if it doesn't exist.
+            # If the sku is modified, that sku is then upserted into square.
+            if update_skus and item.update_sku():
+                print("Updating SKU for item {item}")
+                item.validate_sku()
+                update_items.append(item)
+            upsert_by_id(item)
+        if update_items:
+            square_client.patch_objects_sku(items=update_items)
     return
-    update_items = []
-    for item in items:
-        # update the sku with the url format or generate one if it doesn't exist.
-        # If the sku is modified, that sku is then upserted into square.
-        if item.update_sku():
-            print("Updating SKU for item {item}")
-            item.validate_sku()
-            update_items.append(item)
-        upsert_by_id(item)
-    if update_items:
-        square_client.patch_objects_sku(items=update_items)
-
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
         publish(item.__dict__)

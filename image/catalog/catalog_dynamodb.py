@@ -3,9 +3,11 @@ from boto3.dynamodb.conditions import Key
 from decimal import Decimal
 from datetime import datetime
 
+from utils import getenv_or_raise
 from .item import Item
 
-table = resource("dynamodb").Table("catalog")
+table_name = getenv_or_raise("catalog_table_name")
+table = resource("dynamodb").Table(table_name)
 
 
 def get_website_needs_update_items():
@@ -116,6 +118,7 @@ def upsert_by_id(item):
                 "variation_str": item.variation_str,
                 "item_id": item.item_id,
                 "variation_id": item.variation_id,
+                "merchant_id": item.merchant_id,
                 "pet_safe": item.pet_safe,
                 "label": "N",
                 "website": "N",
@@ -130,13 +133,15 @@ def upsert_by_id(item):
         print(f"Item {item} has changed. Updating Dynamo")
         table.update_item(
             Key={"variation_id": item.variation_id},
-            UpdateExpression="SET SKU = :SKU, price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, pet_safe = :pet_safe, label = :label, website = :website",
+            UpdateExpression="SET SKU = :SKU, price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, variation_id = :variation_id, merchant_id = :merchant_id, pet_safe = :pet_safe, label = :label, website = :website",
             ExpressionAttributeValues={
                 ":SKU": item.sku,
                 ":price": item.price,
                 ":item_str": item.item_str,
                 ":variation_str": item.variation_str,
                 ":item_id": item.item_id,
+                ":variation_id": item.variation_id,
+                ":merchant_id": item.merchant_id,
                 ":pet_safe": item.pet_safe,
                 ":label": "N",
                 ":website": "N",

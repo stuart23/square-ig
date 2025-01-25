@@ -19,11 +19,13 @@ class Item:
     item_id: str
     variation_id: str
     pet_safe: bool
+    merchant_id: Optional[str] = None
     categories: Optional[list] = None
 
     @classmethod
     def fromSquareDetails(
-        cls, item_str, variation_details, custom_attribute_values={}, categories=None
+        cls, item_str, variation_details, custom_attribute_values={},
+        categories=None, merchant_id=None
     ):
         """
         Creates a new item from the item string and variation details.
@@ -49,6 +51,7 @@ class Item:
         except KeyError:
             item_details["price"] = 0
         item_details["categories"] = categories
+        item_details["merchant_id"] = merchant_id
         return cls(**item_details)
 
     def __eq__(self, other):
