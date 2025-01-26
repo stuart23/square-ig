@@ -14,7 +14,7 @@ resource "aws_dynamodb_table" "tenants" {
 # IAM policy for interacting with Dynamo table
 resource "aws_iam_policy" "tenants_read_write_policy" {
   name        = "${var.env_prefix}_tenants_read_write_access"
-  description = "Access DynamoDB table with catalog data"
+  description = "Access DynamoDB table with tenants data"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -58,7 +58,7 @@ resource "aws_iam_policy" "tenants_read_write_policy" {
 # IAM policy for interacting with Dynamo table
 resource "aws_iam_policy" "tenants_read_only_policy" {
   name        = "${var.env_prefix}_tenants_read_only_policy"
-  description = "Access DynamoDB table with catalog data"
+  description = "Access DynamoDB table with tenants data"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [

@@ -22,9 +22,21 @@ variable "tenants_read_only_policy_arn" {
 }
 
 
+variable "catalog_read_write_policy_arn" {
+  type        = string
+  description = "The arn of the iam role used to read and write to the catalog table"
+}
+
+
 variable "tenants_table_name" {
   type        = string
   description = "The name of the tenants table"
+}
+
+
+variable "catalog_table_name" {
+  type        = string
+  description = "The name of the catalog table"
 }
 
 

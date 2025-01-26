@@ -14,13 +14,17 @@ resource "aws_iam_role_policy_attachment" "catalog_update_sqs_read_write_attachm
   policy_arn = aws_iam_policy.catalog_update_sqs_read_write.arn
 }
 
-resource "aws_iam_role_policy_attachment" "tenants_read_only_policy_arn" {
+resource "aws_iam_role_policy_attachment" "tenants_read_only_attachment" {
   role       = aws_iam_role.catalog_update.name
   policy_arn = var.tenants_read_only_policy_arn
 }
 
+resource "aws_iam_role_policy_attachment" "catalog_read_write_attachment" {
+  role       = aws_iam_role.catalog_update.name
+  policy_arn = var.catalog_read_write_policy_arn
+}
 
-resource "aws_iam_role_policy_attachment" "webhooks_management_handler_execute_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "catalog_update_execute_policy_attachment" {
   role       = aws_iam_role.catalog_update.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 }
@@ -48,6 +52,7 @@ resource "aws_lambda_function" "catalog_update" {
     variables = {
       sns_topic_arn      = var.generate_label_sns_topic_arn
       tenants_table_name = var.tenants_table_name
+      catalog_table_name = var.catalog_table_name
     }
   }
   ephemeral_storage {
