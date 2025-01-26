@@ -39,11 +39,12 @@ class SquareClient(object):
             environment="production",
         )
 
+    @cached_property
     def merchant(self):
         """
         Gets details about the merchant that the token belongs to.
         """
-        response = self._client.merchants.list_merchants().body
+        response = self._client.merchants.list_merchants()
         assert response.is_success(), response.errors
         merchants = response.body['merchant']
         assert len(merchants) == 1, (
@@ -64,7 +65,7 @@ class SquareClient(object):
         Returns a generator of all the catalog items.
         """
         items = self._get_records_from_square()
-        merchant_id = self.merchant()['id']
+        merchant_id = self.merchant['id']
 
         for item in items:
             item_data = item["item_data"]

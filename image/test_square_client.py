@@ -118,6 +118,12 @@ def test_get_categories():
     assert categories == [{"id": "ODMHZODS4WHR7NV3UAVE43PB", "name": "Pins"}]
 
 
+def test_merchant():
+    client = SquareClient()
+    merchant = client.merchant
+    assert merchant['id']
+
+
 def test_idempotency_key_dict():
     '''
     Square enforces that the idempotency key must not be greater than 45 chars
