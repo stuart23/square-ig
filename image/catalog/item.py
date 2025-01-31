@@ -94,8 +94,8 @@ class Item:
 
         If there is no sku, one will be generated and True will be returned
 
-        If it does not begin with the URL_PREFIX, it will be rewritten in the variation dict
-        with a sku beginning with the URL_PREFIX.
+        If it does not begin with the URL_PREFIX, it will be rewritten in the
+        variation dict with a sku beginning with the URL_PREFIX.
 
         If the item has the name `no_sku*`, then it will not be changed.
         """

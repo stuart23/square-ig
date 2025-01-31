@@ -8,13 +8,15 @@ from catalog.catalog_dynamodb import (
 from catalog.catalog_queue import publish
 from descriptions import DescriptionsGit
 from auth import TenantClient
+from utils import should_mutate_sku
 
 from json import loads
 
+
 def handler(event, context):
     '''
-    If the merchant record has update_skus set to true, then skus will be 
-    mutated.
+    If the merchant record has update_skus set to true for the env
+    (e.g. dev_update_skus), then skus will be mutated.
     '''
     records = event['Records']
     tenant_client = TenantClient()
@@ -30,7 +32,7 @@ def handler(event, context):
         square_client = SquareClient(access_token)
         items = square_client.get_catalog_items()
 
-        update_skus = merchant_details.get('update_skus', False)
+        update_skus = should_mutate_sku(merchant_details)
         update_items = []
         for item in items:
             # update the sku with the url format or generate one if it doesn't exist.
