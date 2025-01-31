@@ -35,12 +35,17 @@ def handler(event, context):
         update_skus = should_mutate_sku(merchant_details)
         update_items = []
         for item in items:
-            # update the sku with the url format or generate one if it doesn't exist.
-            # If the sku is modified, that sku is then upserted into square.
+            # update the sku with the url format or generate one if it doesn't
+            # exist. If the sku is modified, that sku is then upserted into
+            # square.
             if update_skus and item.update_sku():
                 print("Updating SKU for item {item}")
                 item.validate_sku()
                 update_items.append(item)
+            else:
+                # Dirty patch so we can create skus for items even if they're
+                # not mutated in square
+                item.validate_sku()
             upsert_by_id(item)
         if update_items:
             square_client.patch_objects_sku(items=update_items)
