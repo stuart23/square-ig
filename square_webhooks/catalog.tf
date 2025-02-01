@@ -86,7 +86,7 @@ resource "aws_iam_policy" "catalog_read_write_policy" {
         ]
         Effect = "Allow"
         Resource = [
-          "${aws_dynamodb_table.tenants.arn}/*",
+          "${aws_dynamodb_table.catalog.arn}/*",
           aws_dynamodb_table.catalog.arn
         ]
       },
