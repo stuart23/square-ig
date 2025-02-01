@@ -9,7 +9,8 @@ def should_mutate_sku(merchant_details):
     try:
         env = getenv_or_raise('env')
     except KeyError:
-        print('`env` variable is not set in environment, returning False')
+        print('`env` variable is not set in environment. '
+              'skus will not be mutated.')
         return False
 
     key = f'{env}_update_skus'
