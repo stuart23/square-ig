@@ -50,7 +50,7 @@ def handler(event, context):
             upsert_by_id(item)
         if update_items:
             square_client.patch_objects_sku(items=update_items)
-    return
+    # Here's where MT is tested up to
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
         publish(item.__dict__)
