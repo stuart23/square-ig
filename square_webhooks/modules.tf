@@ -4,13 +4,14 @@ module "catalog_update" {
   square_gateway_id            = aws_apigatewayv2_api.square_webhooks_gateway.id
   square_gateway_execution_arn = aws_apigatewayv2_api.square_webhooks_gateway.execution_arn
   # square_authorizer_id         = aws_apigatewayv2_authorizer.square_webhooks_gateway_authorizer.id
-  tenants_read_only_policy_arn = aws_iam_policy.tenants_read_only_policy.arn
-  tenants_table_name           = aws_dynamodb_table.tenants.name
-  catalog_read_write_policy_arn = aws_iam_policy.catalog_read_write_policy.arn
-  catalog_table_name           = aws_dynamodb_table.catalog.name
-  generate_label_sns_topic_arn = module.generate_label.generate_label_sns_topic_arn
-  alerts_sns_topic_arn         = module.alerts.alerts_sns_topic_arn
-  env_prefix                   = var.env_prefix
+  tenants_read_only_policy_arn          = aws_iam_policy.tenants_read_only_policy.arn
+  tenants_table_name                    = aws_dynamodb_table.tenants.name
+  catalog_read_write_policy_arn         = aws_iam_policy.catalog_read_write_policy.arn
+  catalog_table_name                    = aws_dynamodb_table.catalog.name
+  generate_label_sns_topic_arn          = module.generate_label.generate_label_sns_topic_arn
+  generate_label_sns_publish_policy_arn = module.generate_label.generate_label_sns_publish_policy_arn
+  alerts_sns_topic_arn                  = module.alerts.alerts_sns_topic_arn
+  env_prefix                            = var.env_prefix
 }
 
 

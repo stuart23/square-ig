@@ -52,6 +52,12 @@ variable "generate_label_sns_topic_arn" {
 }
 
 
+variable "generate_label_sns_publish_policy_arn" {
+  type        = string
+  description = "ARN of the policy that allows publishing to the sns topic."
+}
+
+
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string

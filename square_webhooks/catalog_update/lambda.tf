@@ -24,6 +24,11 @@ resource "aws_iam_role_policy_attachment" "catalog_read_write_attachment" {
   policy_arn = var.catalog_read_write_policy_arn
 }
 
+resource "aws_iam_role_policy_attachment" "generate_label_sns_publish_attachment" {
+  role       = aws_iam_role.catalog_update.name
+  policy_arn = var.generate_label_sns_publish_policy_arn
+}
+
 resource "aws_iam_role_policy_attachment" "catalog_update_execute_policy_attachment" {
   role       = aws_iam_role.catalog_update.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
