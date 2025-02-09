@@ -17,7 +17,7 @@ resource "aws_iam_role_policy_attachment" "catalog_read_write_attachment" {
 
 
 resource "aws_iam_role_policy_attachment" "lambda_role_execute_policy_attachment" {
-  role       = aws_iam_role.lambda_role.name
+  role       = aws_iam_role.generate_label.name
   policy_arn = "arn:aws:iam::aws:policy/AWSLambdaExecute"
 }
 
