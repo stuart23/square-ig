@@ -28,7 +28,7 @@ resource "aws_lambda_function" "generate_label" {
   package_type  = "Image"
   architectures = ["arm64"]
   image_uri     = var.lambda_image
-  role          = aws_iam_role.generate_label
+  role          = aws_iam_role.generate_label.arn
   timeout       = 60
   memory_size   = 1024
   image_config {
