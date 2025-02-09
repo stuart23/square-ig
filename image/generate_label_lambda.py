@@ -24,8 +24,8 @@ def handler(event, context):
 
         s3_write_image(label, filename)
 
-        description = dumps(item.__dict__)
-        gdrive_write_image(label, filename, description, overwrite=True)
+        # description = dumps(item.__dict__)
+        # gdrive_write_image(label, filename, description, overwrite=True)
         set_label_true(item)
 
 
