@@ -41,6 +41,7 @@ resource "aws_lambda_function" "generate_label" {
   environment {
     variables = {
       catalog_bucket_name = aws_s3_bucket.label_bucket.id
+      catalog_table_name  = var.catalog_table_name
     }
   }
   ephemeral_storage {

@@ -31,12 +31,13 @@ module "auth" {
 
 
 module "generate_label" {
-  source               = "./generate_label"
-  lambda_image         = var.lambda_image
-  alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
-  env_prefix           = var.env_prefix
-  lambda_assume_role_policy    = local.lambda_assume_role_policy
-  catalog_read_write_policy_arn         = aws_iam_policy.catalog_read_write_policy.arn
+  source                        = "./generate_label"
+  lambda_image                  = var.lambda_image
+  alerts_sns_topic_arn          = module.alerts.alerts_sns_topic_arn
+  env_prefix                    = var.env_prefix
+  catalog_table_name            = aws_dynamodb_table.catalog.name
+  lambda_assume_role_policy     = local.lambda_assume_role_policy
+  catalog_read_write_policy_arn = aws_iam_policy.catalog_read_write_policy.arn
 }
 
 
@@ -47,10 +48,10 @@ module "alerts" {
 
 
 module "webhooks_management" {
-  source                  = "./webhooks_management"
-  alerts_sns_topic_arn    = module.alerts.alerts_sns_topic_arn
-  lambda_image            = var.lambda_image
-  env_prefix              = var.env_prefix
-  catalog_update_endpoint = "${aws_apigatewayv2_stage.square_webhooks_stage.invoke_url}${module.catalog_update.catalog_update_route}"
-  lambda_assume_role_policy    = local.lambda_assume_role_policy
+  source                    = "./webhooks_management"
+  alerts_sns_topic_arn      = module.alerts.alerts_sns_topic_arn
+  lambda_image              = var.lambda_image
+  env_prefix                = var.env_prefix
+  catalog_update_endpoint   = "${aws_apigatewayv2_stage.square_webhooks_stage.invoke_url}${module.catalog_update.catalog_update_route}"
+  lambda_assume_role_policy = local.lambda_assume_role_policy
 }
