@@ -4,12 +4,6 @@ variable "lambda_image" {
 }
 
 
-variable "lambda_role_arn" {
-  type        = string
-  description = "The arn of the iam role used to execute the lambda function"
-}
-
-
 variable "alerts_sns_topic_arn" {
   description = "ARN of SNS Topic to send alerts to"
   type        = string

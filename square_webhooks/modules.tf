@@ -33,7 +33,6 @@ module "auth" {
 module "generate_label" {
   source               = "./generate_label"
   lambda_image         = var.lambda_image
-  lambda_role_arn      = aws_iam_role.lambda_role.arn
   alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
   env_prefix           = var.env_prefix
   lambda_assume_role_policy    = local.lambda_assume_role_policy
