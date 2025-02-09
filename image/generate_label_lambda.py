@@ -6,7 +6,7 @@ from labels import generate_label
 from s3 import write_image as s3_write_image
 from catalog import Item
 from catalog.catalog_dynamodb import set_label_true
-from gdrive import write_image as gdrive_write_image
+# from gdrive import write_image as gdrive_write_image
 
 
 def handler(event, context):
