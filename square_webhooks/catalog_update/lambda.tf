@@ -71,7 +71,7 @@ resource "aws_lambda_permission" "catalog_update_permission" {
 
 
 resource "aws_cloudwatch_metric_alarm" "catalog_update_failure_alarm" {
-  alarm_name        = "catalog_update_failure_alarm"
+  alarm_name        = "${var.env_prefix}_catalog_update_failure_alarm"
   alarm_description = "Errors in Lambda Function on catalog updates"
   namespace         = "AWS/Lambda"
   metric_name       = "Errors"
