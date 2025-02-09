@@ -20,3 +20,15 @@ variable "env_prefix" {
   description = "Prefix for all the resources, e.g. dev, stage, prod"
   type        = string
 }
+
+
+variable "lambda_assume_role_policy" {
+  description = "Assume role policy to allow lambda function to call role."
+  type        = string
+}
+
+
+variable "catalog_read_write_policy_arn" {
+  type        = string
+  description = "The arn of the iam role used to read and write to the catalog table"
+}

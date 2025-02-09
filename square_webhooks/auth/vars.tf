@@ -44,3 +44,9 @@ variable "write_metrics_policy_arn" {
   description = "Arn of the policy for writing metrics to cloudwatch."
   type        = string
 }
+
+
+variable "lambda_assume_role_policy" {
+  description = "Assume role policy to allow lambda function to call role."
+  type        = string
+}

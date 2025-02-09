@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "oauth_callback" {
 
 resource "aws_iam_role" "auth_queue_sqs_write" {
   name               = "${var.env_prefix}_auth_sqs_write"
-  assume_role_policy = local.lambda_assume_role_policy
+  assume_role_policy = var.lambda_assume_role_policy
 }
 
 

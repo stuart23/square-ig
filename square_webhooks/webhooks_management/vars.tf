@@ -20,3 +20,9 @@ variable "catalog_update_endpoint" {
   description = "URL of the catalog update endpoint"
   type        = string
 }
+
+
+variable "lambda_assume_role_policy" {
+  description = "Assume role policy to allow lambda function to call role."
+  type        = string
+}

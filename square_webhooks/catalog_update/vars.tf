@@ -68,3 +68,9 @@ variable "env_prefix" {
   description = "Prefix for all the resources, e.g. dev, stage, prod"
   type        = string
 }
+
+
+variable "lambda_assume_role_policy" {
+  description = "Assume role policy to allow lambda function to call role."
+  type        = string
+}

@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "webhooks_management" {
 
 resource "aws_iam_role" "webhooks_management" {
   name               = "${var.env_prefix}_webhooks_management"
-  assume_role_policy = local.lambda_assume_role_policy
+  assume_role_policy = var.lambda_assume_role_policy
 }
 
 resource "aws_iam_role_policy_attachment" "webhooks_management_read_square_token_secret_attachment" {

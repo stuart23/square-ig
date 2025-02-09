@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "auth_handler" {
 
 resource "aws_iam_role" "auth_handler" {
   name               = "${var.env_prefix}_auth_handler"
-  assume_role_policy = local.lambda_assume_role_policy
+  assume_role_policy = var.lambda_assume_role_policy
 }
 
 

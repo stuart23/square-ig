@@ -12,6 +12,7 @@ module "catalog_update" {
   generate_label_sns_publish_policy_arn = module.generate_label.generate_label_sns_publish_policy_arn
   alerts_sns_topic_arn                  = module.alerts.alerts_sns_topic_arn
   env_prefix                            = var.env_prefix
+  lambda_assume_role_policy             = local.lambda_assume_role_policy
 }
 
 
@@ -25,6 +26,7 @@ module "auth" {
   alerts_sns_topic_arn         = module.alerts.alerts_sns_topic_arn
   env_prefix                   = var.env_prefix
   write_metrics_policy_arn     = aws_iam_policy.write_metrics.arn
+  lambda_assume_role_policy    = local.lambda_assume_role_policy
 }
 
 
@@ -34,6 +36,8 @@ module "generate_label" {
   lambda_role_arn      = aws_iam_role.lambda_role.arn
   alerts_sns_topic_arn = module.alerts.alerts_sns_topic_arn
   env_prefix           = var.env_prefix
+  lambda_assume_role_policy    = local.lambda_assume_role_policy
+  catalog_read_write_policy_arn         = aws_iam_policy.catalog_read_write_policy.arn
 }
 
 
@@ -49,4 +53,5 @@ module "webhooks_management" {
   lambda_image            = var.lambda_image
   env_prefix              = var.env_prefix
   catalog_update_endpoint = "${aws_apigatewayv2_stage.square_webhooks_stage.invoke_url}${module.catalog_update.catalog_update_route}"
+  lambda_assume_role_policy    = local.lambda_assume_role_policy
 }

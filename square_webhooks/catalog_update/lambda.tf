@@ -6,7 +6,7 @@ resource "aws_cloudwatch_log_group" "catalog_update_lambda_logs" {
 
 resource "aws_iam_role" "catalog_update" {
   name               = "${var.env_prefix}_catalog_update"
-  assume_role_policy = local.lambda_assume_role_policy
+  assume_role_policy = var.lambda_assume_role_policy
 }
 
 resource "aws_iam_role_policy_attachment" "catalog_update_sqs_read_write_attachment" {
