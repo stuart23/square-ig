@@ -55,7 +55,9 @@ def handler(event, context):
     for item in needs_label_items:
         publish(item.__dict__)
 
-    # Generate website descriptions for new items - this should probably be another function triggered by an sns
+    return
+    # Generate website descriptions for new items - this should probably be
+    # another function triggered by an sns
     website_needs_update_items = get_website_needs_update_items()
     descriptions = DescriptionsGit()
     new_items = False
