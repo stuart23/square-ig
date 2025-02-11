@@ -12,7 +12,9 @@ from utils import should_mutate_sku
 
 from json import loads
 
+from line_profiler import profile
 
+@profile
 def handler(event, context):
     '''
     If the merchant record has update_skus set to true for the env

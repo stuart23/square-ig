@@ -58,6 +58,7 @@ resource "aws_lambda_function" "catalog_update" {
       sns_topic_arn      = var.generate_label_sns_topic_arn
       tenants_table_name = var.tenants_table_name
       catalog_table_name = var.catalog_table_name
+      LINE_PROFILE       = 1 # REMOVEME
     }
   }
   ephemeral_storage {
