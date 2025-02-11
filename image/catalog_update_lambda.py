@@ -46,7 +46,7 @@ def handler(event, context):
                 # Dirty patch so we can create skus for items even if they're
                 # not mutated in square
                 item.validate_sku()
-            print(f'upserting item {item}')
+            # print(f'upserting item {item}')
             upsert_by_id(item)
         if update_items:
             square_client.patch_objects_sku(items=update_items)
