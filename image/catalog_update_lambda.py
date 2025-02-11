@@ -20,7 +20,7 @@ def handler(event, context):
     '''
     records = event['Records']
     tenant_client = TenantClient()
-
+    print('Processing {0} records from queue.')
     for record in records:
         body = loads(record['body'])
         merchant_id = body['merchant_id']
