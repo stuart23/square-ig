@@ -25,6 +25,11 @@ resource "aws_dynamodb_table" "catalog" {
     type = "S"
   }
 
+  attribute {
+    name = "merchant_id"
+    type = "S"
+  }
+
   global_secondary_index {
     name            = "skuIndex"
     hash_key        = "SKU"
@@ -47,6 +52,14 @@ resource "aws_dynamodb_table" "catalog" {
     projection_type = "ALL"
     read_capacity   = 2
     write_capacity  = 2
+  }
+
+  global_secondary_index {
+    name            = "merchantIndex"
+    hash_key        = "merchant_id"
+    projection_type = "ALL"
+    read_capacity   = 5
+    write_capacity  = 5
   }
 }
 
