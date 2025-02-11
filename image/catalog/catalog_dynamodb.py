@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 
 from utils import getenv_or_raise
-from item import Item
+from .item import Item
 
 table_name = getenv_or_raise("catalog_table_name")
 table = resource("dynamodb").Table(table_name)
