@@ -34,6 +34,7 @@ def handler(event, context):
 
         update_skus = should_mutate_sku(merchant_details)
         update_items = []
+        print('Starting item upsert loop')
         for item in items:
             # update the sku with the url format or generate one if it doesn't
             # exist. If the sku is modified, that sku is then upserted into
@@ -48,6 +49,7 @@ def handler(event, context):
                 item.validate_sku()
             # print(f'upserting item {item}')
             upsert_by_id(item)
+        print('Finish item upsert loop')
         if update_items and update_skus:
             square_client.patch_objects_sku(items=update_items)
         elif update_items and not update_skus:
