@@ -4,10 +4,73 @@ from decimal import Decimal
 from datetime import datetime
 
 from utils import getenv_or_raise
-from .item import Item
+from item import Item
 
 table_name = getenv_or_raise("catalog_table_name")
 table = resource("dynamodb").Table(table_name)
+
+
+class Catalog():
+    def __init__(self, merchant_id):
+        self.items = list(get_items_by_merchant_id(merchant_id))
+
+    def get_item_by_variation_id(self, variation_id):
+        return [
+            item for item in self.items if item.variation_id == variation_id
+        ]
+
+    def upsert_item(self, item):
+        """
+        Looks for an object and checks that the fields are all the same. If they
+        are, it returns false.
+
+        If the record does not exist, or if it is different, it will update the
+        record but with the label and website fields set to False so they
+        regenerate.
+        """
+        dynamo_items = self.get_item_by_variation_id(item.variation_id)
+        if len(dynamo_items) == 0:
+            # No item with this sku exists, adding it.
+            print(f"Adding item to DynamoDB: {item.item_str} - {item.variation_str}")
+            table.put_item(
+                Item={
+                    "SKU": item.sku,
+                    "price": item.price,
+                    "item_str": item.item_str,
+                    "variation_str": item.variation_str,
+                    "item_id": item.item_id,
+                    "variation_id": item.variation_id,
+                    "merchant_id": item.merchant_id,
+                    "pet_safe": item.pet_safe,
+                    "label": "N",
+                    "website": "N",
+                }
+            )
+            return True
+        if len(dynamo_items) > 1:
+            raise Exception(f'More than one item has variation id {item.variation_id}')
+        if dynamo_items[0] == item:
+            # Item is the same in Dynamo
+            return False
+        else:
+            # Item is different in Dynamo, updating
+            print(f"Item {item} has changed. Updating Dynamo")
+            table.update_item(
+                Key={"variation_id": item.variation_id},
+                UpdateExpression="SET SKU = :SKU, price = :price, item_str = :item_str, variation_str = :variation_str, item_id = :item_id, merchant_id = :merchant_id, pet_safe = :pet_safe, label = :label, website = :website",
+                ExpressionAttributeValues={
+                    ":SKU": item.sku,
+                    ":price": item.price,
+                    ":item_str": item.item_str,
+                    ":variation_str": item.variation_str,
+                    ":item_id": item.item_id,
+                    ":merchant_id": item.merchant_id,
+                    ":pet_safe": item.pet_safe,
+                    ":label": "N",
+                    ":website": "N",
+                },
+            )
+            return True
 
 
 def get_website_needs_update_items():
@@ -74,6 +137,42 @@ def get_item_by_sku(sku):
                 variation_str=item_detail.get("variation_str"),
                 item_str=item_detail.get("item_str"),
             )
+
+
+def get_items_by_merchant_id(merchant_id):
+    """
+    Gets all the items for a merchant id. Will resolve paginated responses.
+    """
+    LastEvaluatedKey = None
+    while True:
+        if LastEvaluatedKey:
+            response = table.query(
+                IndexName="merchantIndex",
+                KeyConditionExpression=Key("merchant_id").eq(merchant_id),
+                ExclusiveStartKey=LastEvaluatedKey
+            )
+        else:
+            response = table.query(
+                IndexName="merchantIndex",
+                KeyConditionExpression=Key("merchant_id").eq(merchant_id),
+            )
+        if "Items" not in response.keys():
+            raise ValueError("Items not found")
+        else:
+            items_details = response["Items"]
+            for item_detail in items_details:
+                yield Item(
+                    sku=item_detail["SKU"],
+                    price=int(item_detail.get("price")),
+                    item_id=item_detail.get("item_id"),
+                    variation_id=item_detail.get("variation_id"),
+                    pet_safe=item_detail.get("pet_safe"),
+                    variation_str=item_detail.get("variation_str"),
+                    item_str=item_detail.get("item_str"),
+                )
+        LastEvaluatedKey = response.get('LastEvaluatedKey')
+        if not LastEvaluatedKey:
+            break
 
 
 def get_item_by_variation_id(variation_id):
