@@ -38,7 +38,7 @@ def handler(event, context):
             # update the sku with the url format or generate one if it doesn't
             # exist. If the sku is modified, that sku is then upserted into
             # square.
-            if update_skus and item.update_sku():
+            if update_skus:
                 print("Updating SKU for item {item}")
                 item.validate_sku()
                 update_items.append(item)
@@ -48,8 +48,12 @@ def handler(event, context):
                 item.validate_sku()
             # print(f'upserting item {item}')
             upsert_by_id(item)
-        if update_items:
+        if update_items and update_skus:
             square_client.patch_objects_sku(items=update_items)
+        elif update_items and not update_skus:
+            print('{0} items need to update skus but wont be mutated.')
+        else:
+            print('No items need skus updated.')
     # Here's where MT is tested up to
     needs_label_items = get_needs_label_items()
     for item in needs_label_items:
