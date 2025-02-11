@@ -102,14 +102,15 @@ def upsert_by_id(item):
     Looks for an object and checks that the fields are all the same. If they
     are, it returns false.
 
-    If the record does not exist, or if it is different, it will update the record
-    but with the label and website fields set to False so they regenerate.
+    If the record does not exist, or if it is different, it will update the
+    record but with the label and website fields set to False so they
+    regenerate.
     """
     try:
         dynamo_item = get_item_by_variation_id(item.variation_id)
     except ValueError:
         # No item with this sku exists, adding it.
-        print(f"Adding item to DynamoDB: {item.item_str} - {item.variation_str}")
+        # print(f"Adding item to DynamoDB: {item.item_str} - {item.variation_str}")
         table.put_item(
             Item={
                 "SKU": item.sku,
