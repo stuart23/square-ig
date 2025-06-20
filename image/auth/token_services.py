@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta, UTC
 from json import loads
 
-from square.client import Client
+from square import Square
 from utils import get_secret
 from utils import MetricsHandler
 
@@ -39,7 +39,7 @@ class TokenServices:
         else:
             self.client_id = client_id
             self.client_secret = client_secret
-        self.square_client = Client()
+        self.square_client = Square()
         self.metrics_handler = MetricsHandler('oAuth')
 
     def get_token(self, code=None, refresh_token=None):
