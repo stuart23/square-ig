@@ -5,7 +5,7 @@ from time import sleep, time
 from uuid import uuid4
 
 from catalog import Item
-from square.client import Client
+from square import Square
 from square.http.auth.o_auth_2 import BearerAuthCredentials
 from utils import batch, get_secret
 
@@ -18,7 +18,7 @@ class SquareClient(object):
             square_creds = BearerAuthCredentials(
                 access_token=access_token
             )
-            self._client = Client(
+            self._client = Square(
                 bearer_auth_credentials=square_creds,
                 environment="production",
             )
