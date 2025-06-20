@@ -1,8 +1,7 @@
-# Square-IG
+# Square-QR
 
-This repo contains tooling for integrating the Square API with Instagram. The integration supports the following:
+This repo contains tooling for integrating the Square API. The integration supports the following:
 
-- Adding users in instagram when the user is added or updated in square.
 - Creating QR codes when an item is updated in square.
 
 ## Setup
@@ -29,10 +28,8 @@ called `CICD_ROLE_ARN` with the ARN as the value. Create variables with the foll
 
 This is a one-time setup, so there is no need to store the tf state file after it is created.
 
-### Setup google drive
-Create a google drive and share it with the email address given in the `service_account` output from terraform.
-You should give it Content Manager (or Manager?) permissions to read and write to the drive.
-Setup another Github Actions `drive_name` = Name of the google drive to use.
+### Setup square
+Create a square application through the 
 
 If you get a 404 error in the `Get Google Drive ID` Github actions step, the drive may not have been shared
 correctly.
@@ -62,3 +59,10 @@ Once signed up, create an API key by following [these instructions](https://supp
 Copy the API key to a new GitHub Actions secret called `PAGERDUTY_API_KEY`.
 
 Also create another secret called `PAGERDUTY_EMAIL` with the email of account that should receive the alerts.
+
+### Authorizing Square
+
+Use the following link to trigger square to connect to the app.
+https://connect.squareup.com/oauth2/authorize?client_id=sq0idp-nTcUzfRRR61mToWQfNDXSw&scope=ITEMS_READ+ITEMS_WRITE+MERCHANT_PROFILE_READ&session=false&state=82201dd8d83d23cc8a48caf5aa
+
+https://connect.squareup.com/oauth2/authorize?client_id=sandbox-sq0idb-c6zr6Dd7GbHWvK_NlY6_rg&scope=ITEMS_READ+ITEMS_WRITE+MERCHANT_PROFILE_READ&session=false&state=82201dd8d83d23cc8a48caf52b
